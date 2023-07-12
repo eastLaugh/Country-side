@@ -27,7 +27,10 @@ public abstract partial class Slot
         this.map = map;
         this.position = position;
 
-        gameObject = MonoBehaviour.Instantiate(Resources.Load<GameObject>(GetType().Name), /*new Vector3(position.x, 0, position.y)*/GameManager.one.grid.GetCellCenterWorld(new Vector3Int(((int)position.x),0,((int)position.y))) , Quaternion.identity,GameManager.one.grid.transform); //暂时这么写，后续用Addressable替代
+        gameObject = MonoBehaviour.Instantiate(Resources.Load<GameObject>(GetType().Name), /*new Vector3(position.x, 0, position.y)*/GameManager.one.grid.CellToWorld(new Vector3Int(((int)position.x), 0, ((int)position.y))), Quaternion.identity, GameManager.one.grid.transform); //暂时用Resources.Load，后续可以试试用Addressable替代
         slotRender = gameObject.GetComponent<SlotRender>();
+        slotRender.slot = this;
     }
+
+
 }
