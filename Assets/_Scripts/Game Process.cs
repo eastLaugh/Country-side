@@ -1,11 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
-public class Window : MonoBehaviour
+public class GameProcess : MonoBehaviour
 {
-    public bool AllowClose;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,13 +14,5 @@ public class Window : MonoBehaviour
     void Update()
     {
         
-    }
-
-    public UnityEvent OnClose;
-    public void Close(){
-        if(AllowClose){
-            Destroy(gameObject);
-            OnClose.Invoke();
-        }
     }
 }

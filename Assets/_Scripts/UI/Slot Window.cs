@@ -14,27 +14,25 @@ public class SlotWindow : MonoBehaviour
     private void Awake()
     {
     }
-    void Start()
+
+    private void OnEnable()
     {
-        Mouse.OnSelectionChange += OnSelectionChange;
+        SlotRender.OnSlotSelected += OnSlotSelected;
     }
 
-    void OnSelectionChange(IClickable obj)
+    private void OnDisable()
     {
-        if (obj is SlotRender slotRender)
-        {
-            JObject jObject = JObject.FromObject(slotRender.slot, JsonSerializer.CreateDefault(GameManager.SerializeSettings));
-            jObject.Remove("map");
-            content.SetText(jObject.ToString());
-            //忽略map属性
-        }
-        else
-        {
-            content.SetText("未选中单元格");
-        }
-
-
+        SlotRender.OnSlotSelected -= OnSlotSelected;
     }
+
+    void OnSlotSelected(SlotRender slotRender)
+    {
+        JObject jObject = JObject.FromObject(slotRender.slot, JsonSerializer.CreateDefault(GameManager.SerializeSettings));
+        jObject.Remove("map");
+        content.SetText(jObject.ToString());
+    }
+
+
 
 
 }

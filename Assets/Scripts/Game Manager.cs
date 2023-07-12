@@ -5,6 +5,9 @@ using Newtonsoft.Json;
 using System.IO;
 using System;
 using System.Runtime.Serialization;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class GameManager : MonoBehaviour
 {
@@ -30,6 +33,14 @@ public class GameManager : MonoBehaviour
         TypeNameHandling = TypeNameHandling.Auto
     };
 
+    private void Start()
+    {
+        InfoWindow.Create("创建并保存、加载地图在左上角UGUI中");
+        InfoWindow.Create("初步搭建好了一些系统：窗体、地图序列化等");
+        InfoWindow.Create("目前这只是个Demo");
+        InfoWindow.Create("这是一个窗口，点击右下角关闭");
+    }
+
     private void Awake()
     {
         one = this;
@@ -38,26 +49,42 @@ public class GameManager : MonoBehaviour
     }
     private void OnGUI()
     {
-        if (GUILayout.Button("生成地图并保存在本地"))
+        if (GUILayout.Button("生成新地图并加载"))
         {
             //生成地图
-            var map = GenerateMap(size);
-
-            //序列化
-            string gameData = JsonConvert.SerializeObject(map, SerializeSettings);
-
-            //本地化
-            Directory.CreateDirectory(SaveDirectory);
-            File.WriteAllText(FileName, gameData);
-            UnityEditor.EditorUtility.OpenWithDefaultApp(FileName);
-
+            map = GenerateMap(size);
+        }
+        if (GUILayout.Button("生成新地图并加载、保存"))
+        {
+            //生成地图
+            map = GenerateMap(size);
+            SaveLocalFile();
         }
         if (GUILayout.Button("加载本地地图"))
         {
             UnLoad();
             LoadFile();
         }
+        if (GUILayout.Button("保存本地地图"))
+        {
+            SaveLocalFile();
+        }
 
+    }
+    Map map;
+    void SaveLocalFile()
+    {
+        if(map==null){
+            InfoWindow.Create("请确保地图已加载");
+            return;
+        }
+        //序列化
+        string gameData = JsonConvert.SerializeObject(map, SerializeSettings);
+
+        //本地化
+        Directory.CreateDirectory(SaveDirectory);
+        File.WriteAllText(FileName, gameData);
+        UnityEditor.EditorUtility.OpenWithDefaultApp(FileName);
     }
 
     void UnLoad()
