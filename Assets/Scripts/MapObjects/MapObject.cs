@@ -16,16 +16,21 @@ partial class Slot
 
         public MapObject()
         {
-            
+
         }
         
-
+        /// <summary>
+        /// 尝试将自己注入到slot中
+        /// </summary>
+        /// <param name="slot"></param>
+        /// <returns></returns>
         public bool Inject(Slot slot)
         {
             if (slot.mapObjects.Accessible(GetType()))
             {
                 this.slot = slot;
                 slot.mapObjects.Add(this);
+                slot.OnSlotUpdate?.Invoke();
                 OnSlot();
                 return true;
             }
@@ -40,11 +45,11 @@ partial class Slot
 }
 
 
-public class House : MapObject, IReject<House>, IReject<Road>
+public class House : MapObject /* , IReject<House>, IReject<Road> */
 {
     protected override void OnSlot()
     {
-
+        InfoWindow.Create("House 已创建");
     }
 }
 
@@ -52,6 +57,6 @@ public class Road : MapObject
 {
     protected override void OnSlot()
     {
-        
+        InfoWindow.Create("Road 已创建");
     }
 }

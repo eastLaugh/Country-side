@@ -8,7 +8,7 @@ public class BuildingWindow : MonoBehaviour
 {
     public RectTransform Content;
     public GameObject ButtonPattern;
-    public static readonly Type[] BuiltMapObject = new Type[] { typeof(House) ,typeof(Road)};
+    public static readonly Type[] BuiltMapObject = new Type[] { typeof(House) ,typeof(Road)};//WORKFLOW : 可安置建筑类型
     // Start is called before the first frame update
     void Start()
     {
@@ -30,12 +30,7 @@ public class BuildingWindow : MonoBehaviour
     void OnButtonClick(Type builtType)
     {
         SelectiveType = builtType;
-        MouseAnimator.SetTrigger("Build");
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        // MouseAnimator.SetTrigger("Build");
+        MouseAnimator.Play("Build Mode");
     }
 }

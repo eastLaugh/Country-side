@@ -21,6 +21,7 @@ public abstract partial class Slot
     [JsonIgnore]
     public GameObject gameObject { get; private set; }
 
+    public event Action OnSlotUpdate;
 
     public Slot(Map map, Vector2 position)
     {

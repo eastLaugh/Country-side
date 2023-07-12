@@ -51,12 +51,10 @@ public class GameManager : MonoBehaviour
     {
         if (GUILayout.Button("生成新地图并加载"))
         {
-            //生成地图
             map = GenerateMap(size);
         }
         if (GUILayout.Button("生成新地图并加载、保存"))
         {
-            //生成地图
             map = GenerateMap(size);
             SaveLocalFile();
         }
@@ -69,12 +67,23 @@ public class GameManager : MonoBehaviour
         {
             SaveLocalFile();
         }
+        if (GUILayout.Button("关闭地图"))
+        {
+            UnLoad();
+
+        }
+
+        if (map == null)
+        {
+            GUILayout.Label("地图未存在");
+        }
 
     }
     Map map;
     void SaveLocalFile()
     {
-        if(map==null){
+        if (map == null)
+        {
             InfoWindow.Create("请确保地图已加载");
             return;
         }
@@ -93,9 +102,11 @@ public class GameManager : MonoBehaviour
         {
             Destroy(grid.transform.GetChild(i).gameObject);
         }
+        map = null;
     }
     Map GenerateMap(Vector2Int size)
     {
+        UnLoad();
         var slots = new Slot[100];
         var map = new Map(size, slots);
         for (int i = 0; i < size.x; i++)
@@ -119,6 +130,7 @@ public class GameManager : MonoBehaviour
             string jsonText = File.ReadAllText(FileName);
             Map map = JsonConvert.DeserializeObject<Map>(jsonText, SerializeSettings);
             LoadMap(map);
+            this.map = map;
         }
     }
 
