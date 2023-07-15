@@ -8,6 +8,5 @@ public class ReadOnlyAttributeDrawer : PropertyDrawer
     {
         GUI.enabled = false;
         EditorGUI.PropertyField(position, property, label);
-
     }
 }

@@ -23,14 +23,20 @@ public abstract partial class Slot
 
     public event Action OnSlotUpdate;
 
-    public Slot(Map map, Vector2 position)
+    public Slot(Map map, Vector2 position,HashSet<MapObject> mapObjects)
     {
         this.map = map;
         this.position = position;
+        this.mapObjects = mapObjects ?? new();
 
-        gameObject = MonoBehaviour.Instantiate(Resources.Load<GameObject>(GetType().Name), /*new Vector3(position.x, 0, position.y)*/GameManager.one.grid.CellToWorld(new Vector3Int(((int)position.x), 0, ((int)position.y))), Quaternion.identity, GameManager.one.grid.transform); //暂时用Resources.Load，后续可以试试用Addressable替代
+        var offset = new Vector3(0.5f, 0, 0.5f);
+        gameObject = MonoBehaviour.Instantiate(Resources.Load<GameObject>(GetType().Name), /*new Vector3(position.x, 0, position.y)*/GameManager.one.grid.CellToWorld(new Vector3Int(((int)position.x), 0, ((int)position.y))) + offset, Quaternion.identity, GameManager.one.grid.transform); //暂时用Resources.Load，后续可以试试用Addressable替代
         slotRender = gameObject.GetComponent<SlotRender>();
         slotRender.slot = this;
+
+        if(mapObjects.Count>0){
+            
+        }
     }
 
 

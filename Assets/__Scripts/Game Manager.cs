@@ -35,9 +35,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        InfoWindow.Create("创建并保存、加载地图在左上角UGUI中");
-        InfoWindow.Create("初步搭建好了一些系统：窗体、地图序列化等");
-        InfoWindow.Create("目前这只是个Demo");
         InfoWindow.Create("这是一个窗口，点击右下角关闭");
     }
 
@@ -49,18 +46,17 @@ public class GameManager : MonoBehaviour
     }
     private void OnGUI()
     {
-        if (GUILayout.Button("生成新地图并加载"))
+        if (GUILayout.Button("生成新地图"))
         {
             map = GenerateMap(size);
         }
-        if (GUILayout.Button("生成新地图并加载、保存"))
+        if (GUILayout.Button("生成新地图并保存"))
         {
             map = GenerateMap(size);
             SaveLocalFile();
         }
-        if (GUILayout.Button("加载本地地图"))
+        if (GUILayout.Button("加载已保存地图"))
         {
-            UnLoad();
             LoadFile();
         }
         if (GUILayout.Button("保存本地地图"))
@@ -70,7 +66,6 @@ public class GameManager : MonoBehaviour
         if (GUILayout.Button("关闭地图"))
         {
             UnLoad();
-
         }
 
         if (map == null)
@@ -79,7 +74,7 @@ public class GameManager : MonoBehaviour
         }
 
     }
-    Map map;
+    public Map map { get; private set; }
     void SaveLocalFile()
     {
         if (map == null)
@@ -98,6 +93,7 @@ public class GameManager : MonoBehaviour
 
     void UnLoad()
     {
+
         for (int i = grid.transform.childCount - 1; i >= 0; i--)
         {
             Destroy(grid.transform.GetChild(i).gameObject);
@@ -113,7 +109,7 @@ public class GameManager : MonoBehaviour
         {
             for (int j = 0; j < size.y; j++)
             {
-                slots[i * size.y + j] = new Plain(map, new Vector2(i, j));
+                slots[i * size.y + j] = new Plain(map, new Vector2(i, j),new());
             }
         }
         return map;
@@ -127,6 +123,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            UnLoad();
             string jsonText = File.ReadAllText(FileName);
             Map map = JsonConvert.DeserializeObject<Map>(jsonText, SerializeSettings);
             LoadMap(map);
@@ -135,11 +132,10 @@ public class GameManager : MonoBehaviour
     }
 
     public static event Action<Map> OnLoadMap;
-    public static Map CurrentMap { get; private set; }
     void LoadMap(Map map)
     {
         OnLoadMap?.Invoke(map);
-        CurrentMap = map;
+
     }
 }
 
