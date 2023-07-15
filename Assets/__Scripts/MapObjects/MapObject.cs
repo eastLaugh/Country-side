@@ -11,6 +11,10 @@ partial class Slot
 {
     public abstract class MapObject
     {
+
+        public static readonly Type[] BuiltMapObject = new Type[] { typeof(House), typeof(Road) };//WORKFLOW : 可安置建筑类型
+        public static readonly Type[] AllMapObject = new Type[] { typeof(House), typeof(Road) };//WORKFLOW : 枚举所有类型
+
         [JsonProperty]
         public Slot slot { get; private set; } = null;
 
