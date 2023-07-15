@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 
 
+[System.Obsolete("简单矩阵。若要更高级功能请用Matrix4x4（unity api）")]
 public static class MartixExtension
 {
     //注：Vector[]是“列”向量的集合
