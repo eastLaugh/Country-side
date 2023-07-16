@@ -44,17 +44,15 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
 
     }
-    static float delay;
     const float Totaltime = 1.5f;
     private void Start()
     {
         
-        var num = GameManager.one.size.x * GameManager.one.size.y;
-
-        transform.DOMoveY(10f,  0.4f).From().SetEase(Ease.InOutQuad).SetDelay(delay);
-        delay += Totaltime/num;
-
-        
+        var totalNum = slot.map.size.x * slot.map.size.y;
+        var pos = slot.position;
+        var index = (int)(pos.x * slot.map.size.y + pos.y);
+        var delay = Mathf.Min(index, totalNum - index) / (float)totalNum * Totaltime;
+        transform.DOLocalMoveY(10f,  0.4f).From().SetEase(Ease.InOutQuad).SetDelay(delay);
     }
 
 }

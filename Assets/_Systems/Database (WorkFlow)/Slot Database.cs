@@ -5,24 +5,24 @@ using UnityEngine;
 using AYellowpaper.SerializedCollections;
 
 
-[CreateAssetMenu(fileName = "MapObjectDatabase", menuName = "Country side/Database/MapObject", order = 0)]
-public class MapObjectDatabase : ScriptableObject
+[CreateAssetMenu(fileName = "Slot Database", menuName = "Country side/Database/Slot", order = 0)]
+public class SlotDatabase : ScriptableObject
 {
-    public static MapObjectDatabase main;
+    public static SlotDatabase main;
     
     public void OnEnable()
     {
         main = this;
     }
 
-
-    [SerializedDictionary("Map Object", "Config")]
-    public SerializedDictionary<Element, Config> ElementDescriptions;
+    [SerializeField]
+    [SerializedDictionary("Slot", "Config")]
+    SerializedDictionary<Element, Config> Dict;
 
     [System.Serializable]
     public struct Element
     {
-        [MapObject]
+        [TypeToString(typeof(Slot))]
         public string _;
     }
     [System.Serializable]
@@ -33,5 +33,11 @@ public class MapObjectDatabase : ScriptableObject
 
         [NaughtyAttributes.ResizableTextArea]
         public string 备注;
+    }
+
+    public Config this[Type type]{
+        get{
+            return Dict[new Element{_=type.Name}];
+        }
     }
 }

@@ -7,6 +7,8 @@ using UnityEngine;
 //[JsonConverter(typeof(SlotConvertor))]
 public abstract partial class Slot
 {
+    public static Type[] AllTypes = {typeof(Plain)};//WORKFLOW : 枚举所有类型
+
     [JsonProperty]
     public Map map { get; private set; }
     [JsonProperty]
@@ -30,12 +32,14 @@ public abstract partial class Slot
         this.mapObjects = mapObjects ?? new();
 
         var offset = new Vector3(0.5f, 0, 0.5f);
-        gameObject = MonoBehaviour.Instantiate(Resources.Load<GameObject>(GetType().Name), /*new Vector3(position.x, 0, position.y)*/GameManager.one.grid.CellToWorld(new Vector3Int(((int)position.x), 0, ((int)position.y))) + offset, Quaternion.identity, GameManager.one.grid.transform); //暂时用Resources.Load，后续可以试试用Addressable替代
+        var prefab= GameManager.current.SlotDatabase[GetType()].Prefab;
+        gameObject = MonoBehaviour.Instantiate(prefab, GameManager.current.grid.CellToWorld(new Vector3Int(((int)position.x), 0, ((int)position.y))) + offset, Quaternion.identity, GameManager.current.grid.transform); 
         slotRender = gameObject.GetComponent<SlotRender>();
         slotRender.slot = this;
 
-        if(mapObjects.Count>0){
-            
+        foreach (var item in mapObjects)
+        {
+            item.Inject(this,true);//反序列化注入
         }
     }
 

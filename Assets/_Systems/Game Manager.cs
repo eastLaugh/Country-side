@@ -8,11 +8,12 @@ using System.Runtime.Serialization;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-
+using NaughtyAttributes;
 public class GameManager : MonoBehaviour
 {
-    [Header("引用")]
-    public static GameManager one;
+    public static event Action<Map> OnMapLoaded;
+    public static GameManager current;
+
     public Grid grid;
     public GameObject PlainPrefab;
 
@@ -20,10 +21,14 @@ public class GameManager : MonoBehaviour
     public Vector2Int size;
     [Header("存储")]
 
-    [ReadOnly]
+    [NaughtyAttributes.ReadOnly]
     public string SaveDirectory;
-    [ReadOnly]
+    [NaughtyAttributes.ReadOnly]
     public string FileName;
+
+    [NaughtyAttributes.Foldout("数据库")]
+    public MapObjectDatabase MapObjectDatabase;
+    public SlotDatabase SlotDatabase;
 
     public static JsonSerializerSettings SerializeSettings = new JsonSerializerSettings
     {
@@ -35,17 +40,27 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        UnLoad();
         InfoWindow.Create("这是一个窗口，点击右下角关闭");
     }
 
     private void Awake()
     {
-        one = this;
+        current = this;
         SaveDirectory = Path.Combine(Application.persistentDataPath, "beta");
         FileName = Path.Combine(SaveDirectory, "GameSave1.zmq");
     }
+    int seed = -1;
     private void OnGUI()
     {
+        if (int.TryParse(GUILayout.TextField(seed.ToString()), out int newSeed))
+        {
+            seed = newSeed;
+        }
+        else
+        {
+            seed = -1;
+        }
         if (GUILayout.Button("生成新地图"))
         {
             map = GenerateMap(size);
@@ -93,7 +108,6 @@ public class GameManager : MonoBehaviour
 
     void UnLoad()
     {
-
         for (int i = grid.transform.childCount - 1; i >= 0; i--)
         {
             Destroy(grid.transform.GetChild(i).gameObject);
@@ -103,15 +117,18 @@ public class GameManager : MonoBehaviour
     Map GenerateMap(Vector2Int size)
     {
         UnLoad();
+
         var slots = new Slot[100];
-        var map = new Map(size, slots);
+        UnityEngine.Random.InitState(seed);
+        var map = new Map(size, slots, seed);
         for (int i = 0; i < size.x; i++)
         {
             for (int j = 0; j < size.y; j++)
             {
-                slots[i * size.y + j] = new Plain(map, new Vector2(i, j),new());
+                slots[i * size.y + j] = new Plain(map, new Vector2(i, j), new());
             }
         }
+        OnMapLoaded?.Invoke(map);
         return map;
     }
 
@@ -126,29 +143,27 @@ public class GameManager : MonoBehaviour
             UnLoad();
             string jsonText = File.ReadAllText(FileName);
             Map map = JsonConvert.DeserializeObject<Map>(jsonText, SerializeSettings);
-            LoadMap(map);
             this.map = map;
+            this.seed = map.RandomSeed;
+            OnMapLoaded?.Invoke(map);
         }
     }
 
-    public static event Action<Map> OnLoadMap;
-    void LoadMap(Map map)
-    {
-        OnLoadMap?.Invoke(map);
-
-    }
 }
 
 public class Map
 {
     [JsonProperty]
+    public readonly int RandomSeed;
+    [JsonProperty]
     private Slot[] Slots;
     [JsonProperty]
     public Vector2Int size { get; private set; }
-    public Map(Vector2Int size, Slot[] Slots)
+    public Map(Vector2Int size, Slot[] Slots, int RandomSeed)
     {
         this.size = size;
         this.Slots = Slots;
+        this.RandomSeed = RandomSeed;
     }
 
     public Map()

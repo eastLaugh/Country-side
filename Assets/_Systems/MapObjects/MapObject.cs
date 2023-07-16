@@ -12,8 +12,8 @@ partial class Slot
     public abstract class MapObject
     {
 
-        public static readonly Type[] BuiltMapObject = new Type[] { typeof(House), typeof(Road) };//WORKFLOW : 可安置建筑类型
-        public static readonly Type[] AllMapObject = new Type[] { typeof(House), typeof(Road) };//WORKFLOW : 枚举所有类型
+        public static readonly Type[] BuiltMapObject =  { typeof(House),typeof(Tree) };
+        public static readonly Type[] AllTypes = { typeof(House), typeof(Road),typeof(Tree) };//WORKFLOW : 枚举所有类型
 
         [JsonProperty]
         public Slot slot { get; private set; } = null;
@@ -23,37 +23,39 @@ partial class Slot
 
         }
 
-        public bool Inject(Slot slot)
+        public bool Inject(Slot slot, bool force = false)
         {
-            if (slot.mapObjects.Accessible(GetType()))
+            if (!slot.mapObjects.Contains(this) || force)
             {
-                this.slot = slot;
-                slot.mapObjects.Add(this);
-                slot.OnSlotUpdate?.Invoke();
-                OnSlot();
-                return true;
+                if (slot.mapObjects.Accessible(GetType()))
+                {
+                    this.slot = slot;
+                    slot.mapObjects.Add(this);
+                    slot.OnSlotUpdate?.Invoke();
+
+                    Render(GameManager.current.MapObjectDatabase[GetType()].Prefab, slot.slotRender.transform,slot.map);
+                    OnSlot();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
                 return false;
             }
+
         }
 
         protected abstract void OnSlot();
+
+        protected virtual void Render(GameObject prefab,Transform parent,Map map)
+        {
+            MonoBehaviour.Instantiate(prefab, parent);
+        }
     }
 }
 
 
-public class House : MapObject /* , IReject<House>, IReject<Road> */
-{
-    protected override void OnSlot()
-    {
-    }
-}
-
-public class Road : MapObject
-{
-    protected override void OnSlot()
-    {
-    }
-}

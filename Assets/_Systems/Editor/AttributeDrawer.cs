@@ -13,13 +13,13 @@ public class ReadOnlyAttributeDrawer : PropertyDrawer
     }
 }
 
-[CustomPropertyDrawer(typeof(MapObjectAttribute))]
+[CustomPropertyDrawer(typeof(TypeToString))]
 public class MapObjectAttributeDrawer : PropertyDrawer
 {
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        if (attribute is MapObjectAttribute attr)
+        if (attribute is TypeToString attr)
         {
             GUIContent[] TypeNames = attr.types.Select(type => new GUIContent(type.Name)).ToArray();
             string stringValue = property.stringValue;

@@ -9,19 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 961841d0b5d633144a60787c48db72ad, type: 3}
-  m_Name: Map Object Database
+  m_Script: {fileID: 11500000, guid: c93fef3064cbe6c4881212ca6f1ab3cc, type: 3}
+  m_Name: Slot Database
   m_EditorClassIdentifier: 
-  ElementDescriptions:
+  Dict:
     _serializedList:
     - Key:
-        _: House
+        _: Plain
       Value:
-        Prefab: {fileID: 919132149155446097, guid: e389191a0adf3094e97a6da0295330a2,
+        Prefab: {fileID: 3275510535045769556, guid: 592cb1eccb49c544ba1aa2cb95a6af41,
           type: 3}
-        "\u5907\u6CE8": "\u623F\u5B50"
-    - Key:
-        _: Road
-      Value:
-        Prefab: {fileID: 0}
         "\u5907\u6CE8": 
