@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.EventSystems;
+using System;
+
 public class MouseIndicator : MonoBehaviour
 {
     public Renderer MainIndicator;
@@ -11,13 +14,23 @@ public class MouseIndicator : MonoBehaviour
     {
         SlotRender.OnSlotEnter += OnSlotEnter;
         SlotRender.OnSlotExit -= OnSlotExit;
+        SlotRender.OnDragSlot += OnDragSlot;
     }
+
+    private void OnDragSlot(SlotRender render, PointerEventData data)
+    {
+        MainIndicator.gameObject.SetActive(false);
+    }
+
     private void OnDisable()
     {
         SlotRender.OnSlotEnter -= OnSlotEnter;
+        SlotRender.OnSlotExit -= OnSlotExit;
+
     }
     private void OnSlotEnter(SlotRender slotRender)
     {
+        MainIndicator.gameObject.SetActive(true);
         MainIndicator.transform.DOMove(slotRender.transform.position + PlaneIndicator.position, 0.1f);
         MainIndicator.material.SetFloat("_Thickness", 0.2f);
         DOTween.To(()=>MainIndicator.material.GetFloat("_Thickness"),t=>MainIndicator.material.SetFloat("_Thickness",t),0.2f,0.15f).From(DefaultMaterial.GetFloat("_Thickness")).SetEase(Ease.InOutQuad);
@@ -29,7 +42,7 @@ public class MouseIndicator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        OnSlotExit(null);
+
     }
 
     // Update is called once per frame

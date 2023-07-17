@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class BuildingWindow : MonoBehaviour
@@ -9,28 +10,66 @@ public class BuildingWindow : MonoBehaviour
     public RectTransform Content;
     public GameObject ButtonPattern;
 
+    List<Button> OptionButtons = new List<Button>();
     // Start is called before the first frame update
     void Start()
     {
 
+        OptionButtons.Clear();
         foreach (Type mapObjectType in Slot.MapObject.BuiltMapObject)
+        {
+            Button button = NewOption(mapObjectType.Name, button =>
+            {
+                OnButtonClick(mapObjectType, button);
+            });
+            OptionButtons.Add(button);
+        }
+
+
+
+        ButtonPattern.gameObject.SetActive(false);
+
+        Button NewOption(string title, UnityAction<Button> callback)
         {
             GameObject buttonGameObject = Instantiate(ButtonPattern, Vector3.zero, Quaternion.identity, Content);
             Button button = buttonGameObject.GetComponent<Button>();
-            buttonGameObject.GetComponentInChildren<TMPro.TextMeshProUGUI>().SetText(mapObjectType.Name);
+            buttonGameObject.GetComponentInChildren<TMPro.TextMeshProUGUI>().SetText(title);
 
-            button.onClick.AddListener(() => OnButtonClick(mapObjectType));
+            button.onClick.AddListener(() => callback(button));
+            return button;
         }
-
-        ButtonPattern.gameObject.SetActive(false);
     }
 
     public Animator MouseAnimator;
-    public static Type SelectiveType{get;private set;}
-    void OnButtonClick(Type builtType)
+    public static Type SelectedType { get; private set; }
+    static Button lastSelectedButton;
+    void OnButtonClick(Type builtType, Button selectedButton)
     {
-        SelectiveType = builtType;
-        // MouseAnimator.SetTrigger("Build");
-        MouseAnimator.Play("Build Mode");
+        if (MouseAnimator.GetCurrentAnimatorStateInfo(0).IsName("Build Mode"))
+        {
+            lastSelectedButton.GetComponent<Image>().color = Color.white;
+            if (builtType == SelectedType)
+            {
+                //反选
+                MouseAnimator.SetTrigger("BuildEnd");
+            }
+            else
+            {
+                //另选
+                BuildMode();
+            }
+        }
+        else
+        {
+            BuildMode();
+        }
+
+        void BuildMode()
+        {
+            selectedButton.GetComponent<Image>().color = Color.green;
+            SelectedType = builtType;
+            lastSelectedButton = selectedButton;
+            MouseAnimator.Play("Build Mode");
+        }
     }
 }

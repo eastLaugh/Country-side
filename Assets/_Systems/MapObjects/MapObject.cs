@@ -6,22 +6,39 @@ using Newtonsoft.Json;
 using System.Linq;
 
 using static Slot;
+using DG.Tweening;
 
 partial class Slot
 {
     public abstract class MapObject
     {
 
-        public static readonly Type[] BuiltMapObject =  { typeof(House),typeof(Tree) };
-        public static readonly Type[] AllTypes = { typeof(House), typeof(Road),typeof(Tree) };//WORKFLOW : 枚举所有类型
+        public static readonly Type[] BuiltMapObject = { typeof(House), typeof(Tree) };
+        public static readonly Type[] AllTypes = { typeof(House), typeof(Road), typeof(Tree) };//WORKFLOW : 枚举所有类型
 
         [JsonProperty]
         public Slot slot { get; private set; } = null;
 
-        public MapObject()
-        {
+        [JsonProperty]
+        int AppearanceSeed;
 
+        protected System.Random random { get; private set; }
+
+
+        public MapObject(int AppearanceSeed)
+        {
+            if (AppearanceSeed == -1)
+            {
+                this.AppearanceSeed = UnityEngine.Random.Range(0, int.MaxValue);
+            }
+            else
+            {
+                this.AppearanceSeed = AppearanceSeed;
+            }
+
+            random = new System.Random(this.AppearanceSeed);
         }
+
 
         public bool Inject(Slot slot, bool force = false)
         {
@@ -33,7 +50,8 @@ partial class Slot
                     slot.mapObjects.Add(this);
                     slot.OnSlotUpdate?.Invoke();
 
-                    Render(GameManager.current.MapObjectDatabase[GetType()].Prefab, slot.slotRender.transform,slot.map);
+                    var config = GameManager.current.MapObjectDatabase[GetType()];
+                    Render(config.Prefab, config.Prefabs, slot.slotRender);
                     OnSlot();
                     return true;
                 }
@@ -51,9 +69,11 @@ partial class Slot
 
         protected abstract void OnSlot();
 
-        protected virtual void Render(GameObject prefab,Transform parent,Map map)
+        protected virtual GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
         {
-            MonoBehaviour.Instantiate(prefab, parent);
+            GameObject obj = MonoBehaviour.Instantiate(prefab, slotRender.transform) ;
+            obj.transform.DOScale(Vector3.zero, Enums.建筑时物体缓动持续时间).From().SetEase(Ease.OutBack);
+            return new[] {obj};
         }
     }
 }

@@ -44,9 +44,12 @@ public class SlotWindow : MonoBehaviour
     {
         GetComponent<RectTransform>().DOShakeAnchorPos(0.2f, 10, 100, 90, false, true);
         
-        JObject jObject = JObject.FromObject(selected, JsonSerializer.CreateDefault(GameManager.SerializeSettings));
-        jObject.Remove("map");
-        content.SetText(jObject.ToString());
+        // var text = JsonConvert.SerializeObject(selected, GameManager.SerializeSettings);
+        // JObject jObject = JObject.FromObject(selected, JsonSerializer.CreateDefault(GameManager.SerializeSettings));
+        // jObject.Remove("map");
+        // content.SetText(jObject.ToString());
+
+        GetComponent<Window>().SetTitle(selected.GetType().Name);
 
 
     }

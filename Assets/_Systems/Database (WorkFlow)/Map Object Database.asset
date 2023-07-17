@@ -19,10 +19,14 @@ MonoBehaviour:
       Value:
         Prefab: {fileID: 919132149155446097, guid: e389191a0adf3094e97a6da0295330a2,
           type: 3}
+        Prefabs: []
         "\u5907\u6CE8": 
     - Key:
         _: Tree
       Value:
-        Prefab: {fileID: 7773328470535275780, guid: 344e7951583d53f4883a988fbe6c3d4b,
+        Prefab: {fileID: 919132149155446097, guid: 003a7f6256ac5f6489151533beef0788,
           type: 3}
+        Prefabs:
+        - {fileID: 919132149155446097, guid: 003a7f6256ac5f6489151533beef0788, type: 3}
+        - {fileID: 919132149155446097, guid: 33deef01251064942bdfb4b84e68c980, type: 3}
         "\u5907\u6CE8": 

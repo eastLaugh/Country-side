@@ -3,13 +3,17 @@ using UnityEngine.EventSystems;
 using DG.Tweening;
 using System;
 
-public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IDragHandler
 {
     public Slot slot;
 
     public static event Action<SlotRender> OnSlotSelected;
     public static event Action<SlotRender> OnSlotEnter;
     public static event Action<SlotRender> OnSlotExit;
+
+    public static event Action<SlotRender, PointerEventData> OnDragSlot;
+
+
     public void OnClick()
     {
     }
@@ -44,15 +48,20 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
 
     }
-    const float Totaltime = 1.5f;
+
+    //加载动画
+    const float LongestTime = 1f;
     private void Start()
     {
-        
         var totalNum = slot.map.size.x * slot.map.size.y;
         var pos = slot.position;
         var index = (int)(pos.x * slot.map.size.y + pos.y);
-        var delay = Mathf.Min(index, totalNum - index) / (float)totalNum * Totaltime;
-        transform.DOLocalMoveY(10f,  0.4f).From().SetEase(Ease.InOutQuad).SetDelay(delay);
+        var proportion = 2 * Mathf.Min(index, totalNum - index) / (float)totalNum;
+        transform.DOLocalMoveY(Enums.相机初始高度, (-proportion*proportion + 1f) * 2f).From().SetEase(Ease.OutBack).SetDelay(LongestTime * (1f - proportion));
     }
 
+    public void OnDrag(PointerEventData eventData)
+    {
+        OnDragSlot?.Invoke(this, eventData);
+    }
 }

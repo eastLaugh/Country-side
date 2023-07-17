@@ -15,7 +15,6 @@ public class GameManager : MonoBehaviour
     public static GameManager current;
 
     public Grid grid;
-    public GameObject PlainPrefab;
 
 
     public Vector2Int size;
@@ -46,6 +45,9 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        DG.Tweening.DOTween.Init();
+        DG.Tweening.DOTween.SetTweensCapacity(size.x * size.y, 50);
+
         current = this;
         SaveDirectory = Path.Combine(Application.persistentDataPath, "beta");
         FileName = Path.Combine(SaveDirectory, "GameSave1.zmq");
@@ -53,6 +55,10 @@ public class GameManager : MonoBehaviour
     int seed = -1;
     private void OnGUI()
     {
+        if (GUILayout.Button("-1将自动生成"))
+        {
+            seed = -1;
+        }
         if (int.TryParse(GUILayout.TextField(seed.ToString()), out int newSeed))
         {
             seed = newSeed;
@@ -61,27 +67,30 @@ public class GameManager : MonoBehaviour
         {
             seed = -1;
         }
-        if (GUILayout.Button("生成新地图"))
+        if (GUILayout.Button("创建"))
         {
-            map = GenerateMap(size);
+            var map = GenerateMap(size);
+            LoadMap(map);
         }
-        if (GUILayout.Button("生成新地图并保存"))
+        // if (GUILayout.Button("生成新地图并保存"))
+        // {
+        //     var map = GenerateMap(size);
+        //     LoadMap(map);
+        //     SaveCurrentMap();
+        // }
+        if (GUILayout.Button("加载"))
         {
-            map = GenerateMap(size);
-            SaveLocalFile();
+            var map = GenerateFromLocalFile();
+            LoadMap(map);
         }
-        if (GUILayout.Button("加载已保存地图"))
+        if (GUILayout.Button("保存"))
         {
-            LoadFile();
+            SaveCurrentMap();
         }
-        if (GUILayout.Button("保存本地地图"))
-        {
-            SaveLocalFile();
-        }
-        if (GUILayout.Button("关闭地图"))
-        {
-            UnLoad();
-        }
+        // if (GUILayout.Button("关闭"))
+        // {
+        //     UnLoad();
+        // }
 
         if (map == null)
         {
@@ -90,7 +99,7 @@ public class GameManager : MonoBehaviour
 
     }
     public Map map { get; private set; }
-    void SaveLocalFile()
+    void SaveCurrentMap()
     {
         if (map == null)
         {
@@ -103,7 +112,9 @@ public class GameManager : MonoBehaviour
         //本地化
         Directory.CreateDirectory(SaveDirectory);
         File.WriteAllText(FileName, gameData);
+#if UNITY_EDITOR
         UnityEditor.EditorUtility.OpenWithDefaultApp(FileName);
+#endif
     }
 
     void UnLoad()
@@ -117,9 +128,11 @@ public class GameManager : MonoBehaviour
     Map GenerateMap(Vector2Int size)
     {
         UnLoad();
-
-        var slots = new Slot[100];
-        UnityEngine.Random.InitState(seed);
+        var slots = new Slot[size.x * size.y];
+        if (seed == -1)
+        {
+            seed = UnityEngine.Random.Range(0, int.MaxValue);
+        }
         var map = new Map(size, slots, seed);
         for (int i = 0; i < size.x; i++)
         {
@@ -128,49 +141,33 @@ public class GameManager : MonoBehaviour
                 slots[i * size.y + j] = new Plain(map, new Vector2(i, j), new());
             }
         }
-        OnMapLoaded?.Invoke(map);
         return map;
     }
 
-    void LoadFile()
+    Map GenerateFromLocalFile()
     {
         if (!File.Exists(FileName))
         {
-            Debug.LogError(FileName + " not exist .");
+            throw new FileNotFoundException(FileName + " not exist .");
         }
         else
         {
             UnLoad();
             string jsonText = File.ReadAllText(FileName);
             Map map = JsonConvert.DeserializeObject<Map>(jsonText, SerializeSettings);
-            this.map = map;
-            this.seed = map.RandomSeed;
-            OnMapLoaded?.Invoke(map);
+            return map;
         }
     }
 
-}
-
-public class Map
-{
-    [JsonProperty]
-    public readonly int RandomSeed;
-    [JsonProperty]
-    private Slot[] Slots;
-    [JsonProperty]
-    public Vector2Int size { get; private set; }
-    public Map(Vector2Int size, Slot[] Slots, int RandomSeed)
+    public void LoadMap(Map map)
     {
-        this.size = size;
-        this.Slots = Slots;
-        this.RandomSeed = RandomSeed;
+        this.map = map;
+        OnMapLoaded?.Invoke(map);
+        seed = map.MainRandomSeed;
+        grid.transform.position = new Vector3(-map.size.x * grid.cellSize.x / 2f, 0, -map.size.y * grid.cellSize.z / 2f);
+
     }
 
-    public Map()
-    {
-
-    }
-    public Slot this[Vector2 pos] => this[(int)pos.x, (int)pos.y];
-    public Slot this[int x, int y] => Slots[x * size.y + y];
 }
+
 

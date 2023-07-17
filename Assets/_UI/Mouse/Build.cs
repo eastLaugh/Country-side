@@ -8,18 +8,18 @@ public class Build : StateMachineBehaviour
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        InfoWindow infoWindow = InfoWindow.Create("你已进入建造模式\n点击右下角×以退出");
-        infoWindow.GetComponent<Window>().OnClose.AddListener(() =>
-        {
-            animator.SetTrigger("BuildEnd");
-        });
+        // InfoWindow infoWindow = InfoWindow.Create("你已进入建造模式\n点击右下角×以退出");
+        // infoWindow.GetComponent<Window>().OnClose.AddListener(() =>
+        // {
+        //     animator.SetTrigger("BuildEnd");
+        // });
 
         SlotRender.OnSlotSelected += OnSlotSelected;
     }
 
     void OnSlotSelected(SlotRender slotRender)
     {
-        Type selectiveType = BuildingWindow.SelectiveType;
+        Type selectiveType = BuildingWindow.SelectedType;
         Slot.MapObject mapObject = Activator.CreateInstance(selectiveType) as Slot.MapObject;
         mapObject.Inject(slotRender.slot);
     }

@@ -7,6 +7,7 @@ using DG.Tweening;
 public class Dragable : MonoBehaviour,IDragHandler,IBeginDragHandler,IEndDragHandler
 {
     public RectTransform rectTransform;
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         rectTransform.GetComponent<CanvasGroup>().alpha = 0.2f;
@@ -15,6 +16,7 @@ public class Dragable : MonoBehaviour,IDragHandler,IBeginDragHandler,IEndDragHan
     public void OnDrag(PointerEventData eventData)
     {
         rectTransform.anchoredPosition += eventData.delta;
+        
     }
 
     public void OnEndDrag(PointerEventData eventData)

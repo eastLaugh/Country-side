@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class Plain : Slot
 {
-    public Plain(Map map, Vector2 position ,HashSet<MapObject> mapObjects) : base(map, position,mapObjects)
+    public Plain(Map map, Vector2 position, HashSet<MapObject> mapObjects) : base(map, position, mapObjects)
     {
-
+        if (UnityEngine.Random.Range(0, 100) < 10){
+            new Tree().Inject(this);
+        }
     }
 
 

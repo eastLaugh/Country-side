@@ -30,6 +30,9 @@ public class MapObjectDatabase : ScriptableObject
     {
         [NaughtyAttributes.ShowAssetPreview]
         public GameObject Prefab;
+        [NaughtyAttributes.ShowAssetPreview]
+
+        public GameObject[] Prefabs;
 
         [NaughtyAttributes.ResizableTextArea]
         public string 备注;
