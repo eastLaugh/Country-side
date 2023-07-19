@@ -10,6 +10,10 @@ public class Map
     [JsonProperty]
     public Vector2Int size { get; private set; }
 
+    [JsonProperty]
+    public Country country { get; private set; }
+
+
     public Map(Vector2Int size, Slot[] Slots, int RandomSeed)
     {
         this.size = size;

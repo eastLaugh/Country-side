@@ -12,8 +12,8 @@ public class MouseIndicator : MonoBehaviour
     public Material DefaultMaterial;
     private void OnEnable()
     {
-        SlotRender.OnSlotEnter += OnSlotEnter;
-        SlotRender.OnSlotExit -= OnSlotExit;
+        SlotRender.OnAnySlotEnter += OnSlotEnter;
+        SlotRender.OnAnySlotExit -= OnSlotExit;
         SlotRender.OnDragSlot += OnDragSlot;
     }
 
@@ -24,8 +24,8 @@ public class MouseIndicator : MonoBehaviour
 
     private void OnDisable()
     {
-        SlotRender.OnSlotEnter -= OnSlotEnter;
-        SlotRender.OnSlotExit -= OnSlotExit;
+        SlotRender.OnAnySlotEnter -= OnSlotEnter;
+        SlotRender.OnAnySlotExit -= OnSlotExit;
 
     }
     private void OnSlotEnter(SlotRender slotRender)

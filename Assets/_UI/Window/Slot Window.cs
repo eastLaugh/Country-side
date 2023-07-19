@@ -18,12 +18,12 @@ public class SlotWindow : MonoBehaviour
 
     private void OnEnable()
     {
-        SlotRender.OnSlotSelected += OnSlotSelected;
+        SlotRender.OnAnySlotClicked += OnSlotSelected;
     }
 
     private void OnDisable()
     {
-        SlotRender.OnSlotSelected -= OnSlotSelected;
+        SlotRender.OnAnySlotClicked -= OnSlotSelected;
     }
 
     void OnSlotSelected(SlotRender slotRender)

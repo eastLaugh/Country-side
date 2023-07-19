@@ -25,6 +25,8 @@ partial class Slot
         protected System.Random random { get; private set; }
 
 
+        private Transform father;
+
         public MapObject(int AppearanceSeed)
         {
             if (AppearanceSeed == -1)
@@ -42,38 +44,38 @@ partial class Slot
 
         public bool Inject(Slot slot, bool force = false)
         {
-            if (!slot.mapObjects.Contains(this) || force)
+            if ((!slot.mapObjects.Contains(this) && slot.mapObjects.Accessible(GetType())) || force /*强制通true:仅在序列化等硬操作时起用*/)
             {
-                if (slot.mapObjects.Accessible(GetType()))
-                {
-                    this.slot = slot;
-                    slot.mapObjects.Add(this);
-                    slot.OnSlotUpdate?.Invoke();
+                this.slot = slot;
+                slot.mapObjects.Add(this);
+                slot.OnSlotUpdate?.Invoke();
 
-                    var config = GameManager.current.MapObjectDatabase[GetType()];
-                    Render(config.Prefab, config.Prefabs, slot.slotRender);
-                    OnSlot();
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                var config = GameManager.current.MapObjectDatabase[GetType()];
+
+                father = new GameObject(GetType().Name).transform;
+                father.SetParent(slot.slotRender.transform);
+                father.localPosition = Vector3.zero;
+
+                slot.slotRender.OnRender += () => Render(config.Prefab, config.Prefabs, slot.slotRender, father);
+                slot.OnSlotClicked += OnClick;
+                return true;
             }
             else
             {
                 return false;
             }
+        }
+
+        //protected abstract void OnSlot();
+        protected virtual void OnClick(){
 
         }
 
-        protected abstract void OnSlot();
-
-        protected virtual GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
+        protected virtual GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender, Transform father)
         {
-            GameObject obj = MonoBehaviour.Instantiate(prefab, slotRender.transform) ;
-            obj.transform.DOScale(Vector3.zero, Enums.建筑时物体缓动持续时间).From().SetEase(Ease.OutBack);
-            return new[] {obj};
+            GameObject obj = MonoBehaviour.Instantiate(prefab,  father);
+            obj.transform.DOScale(Vector3.zero, Settings.建筑时物体缓动持续时间).From().SetEase(Ease.OutBack);
+            return new[] { obj };
         }
     }
 }

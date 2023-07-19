@@ -25,6 +25,10 @@ public abstract partial class Slot
 
     public event Action OnSlotUpdate;
 
+    event Action OnSlotClicked;
+    public void Click(){
+        OnSlotClicked?.Invoke();
+    }
     public Slot(Map map, Vector2 position,HashSet<MapObject> mapObjects)
     {
         this.map = map;

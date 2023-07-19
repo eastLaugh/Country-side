@@ -40,7 +40,10 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         UnLoad();
-        InfoWindow.Create("这是一个窗口，点击右下角关闭");
+        //InfoWindow.Create("这是一个窗口，点击右下角关闭");
+
+        var map = GenerateMap(size);
+        LoadMap(map);
     }
 
     private void Awake()
@@ -119,10 +122,7 @@ public class GameManager : MonoBehaviour
 
     void UnLoad()
     {
-        for (int i = grid.transform.childCount - 1; i >= 0; i--)
-        {
-            Destroy(grid.transform.GetChild(i).gameObject);
-        }
+        grid.transform.DestroyAllChild();
         map = null;
     }
     Map GenerateMap(Vector2Int size)
@@ -138,7 +138,14 @@ public class GameManager : MonoBehaviour
         {
             for (int j = 0; j < size.y; j++)
             {
-                slots[i * size.y + j] = new Plain(map, new Vector2(i, j), new());
+                var newSlot = new Plain(map, new Vector2(i, j), new());
+
+                if (UnityEngine.Random.Range(0, 100) < 10)
+                {
+                    new Tree(-1).Inject(newSlot);
+                }
+
+                slots[i * size.y + j] = newSlot;
             }
         }
         return map;
@@ -164,7 +171,7 @@ public class GameManager : MonoBehaviour
         this.map = map;
         OnMapLoaded?.Invoke(map);
         seed = map.MainRandomSeed;
-        grid.transform.position = new Vector3(-map.size.x * grid.cellSize.x / 2f, 0, -map.size.y * grid.cellSize.z / 2f);
+        grid.transform.position = new Vector3(-map.size.x * grid.cellSize.x / 2f, 0, /*-map.size.y * grid.cellSize.z / 2f*/0);
 
     }
 

@@ -1,19 +1,18 @@
 using Newtonsoft.Json;
+using UnityEngine;
 using static Slot;
 public class House : MapObject /* , IReject<House>, IReject<Road> */
 {
-    [JsonConstructor]
     public House(int AppearanceSeed) : base(AppearanceSeed)
     {
     }
 
-    public House():base(-1)
+    protected override GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender, Transform father)
     {
-        
-    }
-    protected override void OnSlot()
-    {
+        IconPattern iconPattern = IconPattern.Create(father,Vector3.zero);
+        iconPattern.New("Building Icon");
 
+        return base.Render(prefab, prefabs, slotRender, father);
     }
 }
 
@@ -23,11 +22,4 @@ public class Road : MapObject
     {
     }
 
-    public Road():base(-1)
-    {
-        
-    }
-    protected override void OnSlot()
-    {
-    }
 }
