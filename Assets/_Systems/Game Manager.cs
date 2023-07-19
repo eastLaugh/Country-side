@@ -128,27 +128,7 @@ public class GameManager : MonoBehaviour
     Map GenerateMap(Vector2Int size)
     {
         UnLoad();
-        var slots = new Slot[size.x * size.y];
-        if (seed == -1)
-        {
-            seed = UnityEngine.Random.Range(0, int.MaxValue);
-        }
-        var map = new Map(size, slots, seed);
-        for (int i = 0; i < size.x; i++)
-        {
-            for (int j = 0; j < size.y; j++)
-            {
-                var newSlot = new Plain(map, new Vector2(i, j), new());
-
-                if (UnityEngine.Random.Range(0, 100) < 10)
-                {
-                    new Tree(-1).Inject(newSlot);
-                }
-
-                slots[i * size.y + j] = newSlot;
-            }
-        }
-        return map;
+        return Map.Generate(size, seed);
     }
 
     Map GenerateFromLocalFile()

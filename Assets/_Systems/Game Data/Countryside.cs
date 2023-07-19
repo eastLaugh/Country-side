@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Country
+public struct Economy
 {
-    public float 储备资金;
 
     public float 人口;
     public float 总收入;
     public float 人均可支配收入 => 总收入 / 人口;
+
+    public float 集约程度;
+    public float 扶贫资金 => 总收入 * 集约程度;
 
     public int 城镇等级 => 人口 switch
     {
@@ -19,4 +21,6 @@ public class Country
 
         _ => throw new System.NotImplementedException()
     };
+
+
 }
