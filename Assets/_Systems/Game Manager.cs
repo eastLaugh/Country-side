@@ -22,8 +22,6 @@ public class GameManager : MonoBehaviour
 
     [NaughtyAttributes.ReadOnly]
     public string SaveDirectory;
-    [NaughtyAttributes.ReadOnly]
-    public string FileName;
 
     [NaughtyAttributes.Foldout("数据库")]
     public MapObjectDatabase MapObjectDatabase;
@@ -42,8 +40,8 @@ public class GameManager : MonoBehaviour
         UnLoad();
         //InfoWindow.Create("这是一个窗口，点击右下角关闭");
 
-        var map = GenerateMap(size);
-        LoadMap(map);
+        // var map = GenerateMap(size);
+        // LoadMap(map);
     }
 
     private void Awake()
@@ -53,15 +51,14 @@ public class GameManager : MonoBehaviour
 
         current = this;
         SaveDirectory = Path.Combine(Application.persistentDataPath, "beta");
-        FileName = Path.Combine(SaveDirectory, "GameSave1.zmq");
     }
     int seed = -1;
     private void OnGUI()
     {
-        if (GUILayout.Button("-1将自动生成"))
-        {
-            seed = -1;
-        }
+        // if (GUILayout.Button("-1将自动生成"))
+        // {
+        //     seed = -1;
+        // }
         if (int.TryParse(GUILayout.TextField(seed.ToString()), out int newSeed))
         {
             seed = newSeed;
@@ -70,39 +67,46 @@ public class GameManager : MonoBehaviour
         {
             seed = -1;
         }
+        if (seed != -1)
+        {
+            if (GUILayout.Button("重新创建"))
+            {
+                seed = -1;
+                var map = GenerateMap(size);
+                LoadMap(map);
+            }
+        }
         if (GUILayout.Button("创建"))
         {
             var map = GenerateMap(size);
             LoadMap(map);
         }
-        // if (GUILayout.Button("生成新地图并保存"))
-        // {
-        //     var map = GenerateMap(size);
-        //     LoadMap(map);
-        //     SaveCurrentMap();
-        // }
         if (GUILayout.Button("加载"))
         {
-            var map = GenerateFromLocalFile();
+            var map = GenerateFromLocalFile(Path.Combine(SaveDirectory, "GameSave1.zmq"));
             LoadMap(map);
         }
-        if (GUILayout.Button("保存"))
-        {
-            SaveCurrentMap();
-        }
-        // if (GUILayout.Button("关闭"))
-        // {
-        //     UnLoad();
-        // }
+
 
         if (map == null)
         {
             GUILayout.Label("地图未存在");
         }
+        else
+        {
+            if (GUILayout.Button("保存"))
+            {
+                SaveCurrentMap(Path.Combine(SaveDirectory, "GameSave1.zmq"));
+            }
+            if (GUILayout.Button("[调试]"))
+            {
+                SaveCurrentMap(Path.Combine(SaveDirectory, "调试.zmq"));
+            }
+        }
 
     }
     public Map map { get; private set; }
-    void SaveCurrentMap()
+    void SaveCurrentMap(string fileName)
     {
         if (map == null)
         {
@@ -114,9 +118,9 @@ public class GameManager : MonoBehaviour
 
         //本地化
         Directory.CreateDirectory(SaveDirectory);
-        File.WriteAllText(FileName, gameData);
+        File.WriteAllText(fileName, gameData);
 #if UNITY_EDITOR
-        UnityEditor.EditorUtility.OpenWithDefaultApp(FileName);
+        UnityEditor.EditorUtility.OpenWithDefaultApp(fileName);
 #endif
     }
 
@@ -131,7 +135,7 @@ public class GameManager : MonoBehaviour
         return Map.Generate(size, seed);
     }
 
-    Map GenerateFromLocalFile()
+    Map GenerateFromLocalFile(string FileName)
     {
         if (!File.Exists(FileName))
         {

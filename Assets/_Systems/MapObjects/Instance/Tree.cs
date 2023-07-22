@@ -9,7 +9,7 @@ public class Tree : MapObject /* , IReject<House>, IReject<Road> */
     {
     }
 
-    protected override GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender, Transform father)
+    protected override GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
     {
         // base.Render(prefab, prefabs, slotRender);
         Vector3 halfCellSize = GameManager.current.grid.cellSize / 2f;
@@ -20,6 +20,16 @@ public class Tree : MapObject /* , IReject<House>, IReject<Road> */
             trees[i] = MonoBehaviour.Instantiate(prefabs[random.Next(0, prefabs.Length)], slotRender.transform.position + offset, Quaternion.identity, father);
             trees[i].transform.DOScale(Vector3.zero, Settings.建筑时物体缓动持续时间).From().SetEase(Ease.OutBack);
         }
+
+        iconPattern = IconPattern.Create(father, Vector3.zero);
         return trees;
+    }
+
+    IconPattern iconPattern;
+    protected override void OnClick()
+    {
+        base.OnClick();
+
+        iconPattern.New("Chopping Icon");
     }
 }

@@ -25,7 +25,7 @@ partial class Slot
         protected System.Random random { get; private set; }
 
 
-        private Transform father;
+        protected Transform father{get;private set;}
 
         public MapObject(int AppearanceSeed)
         {
@@ -56,7 +56,7 @@ partial class Slot
                 father.SetParent(slot.slotRender.transform);
                 father.localPosition = Vector3.zero;
 
-                slot.slotRender.OnRender += () => Render(config.Prefab, config.Prefabs, slot.slotRender, father);
+                slot.slotRender.OnRender += () => Render(config.Prefab, config.Prefabs, slot.slotRender);
                 slot.OnSlotClicked += OnClick;
                 return true;
             }
@@ -71,7 +71,7 @@ partial class Slot
 
         }
 
-        protected virtual GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender, Transform father)
+        protected virtual GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
         {
             GameObject obj = MonoBehaviour.Instantiate(prefab,  father);
             obj.transform.DOScale(Vector3.zero, Settings.建筑时物体缓动持续时间).From().SetEase(Ease.OutBack);

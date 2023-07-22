@@ -51,16 +51,17 @@ public class IconPattern : MonoBehaviour
 
     }
 
-    public void New(string key)
+    public GameObject New(string key)
     {
         if (Prefabs.TryGetValue(key, out GameObject prefab))
         {
             GameObject instance = Instantiate(prefab, prefab.transform.parent);
             instance.SetActive(true);
+            return instance;
         }
         else
         {
-            Debug.LogError("Icon Pattern: No such Prefab");
+            throw new Exception("Icon Pattern: No such Prefab");
         }
 
     }

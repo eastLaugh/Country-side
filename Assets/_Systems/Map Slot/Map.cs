@@ -5,7 +5,7 @@ public class Map
 {
 
     [JsonProperty]
-    public Economy eco { get; private set; }
+    public EconomyWrapper economy { get; private set; }
     [JsonProperty]
     public readonly int MainRandomSeed;
     [JsonProperty]
@@ -13,17 +13,19 @@ public class Map
     [JsonProperty]
     public Vector2Int size { get; private set; }
 
-
-    public Map(Vector2Int size, Slot[] Slots, int RandomSeed, Economy eco)
+    public Map(Vector2Int size, Slot[] Slots, int RandomSeed, EconomyWrapper economyWrapper)
     {
+        Debug.Log("Map公共有参构造函数");
         this.size = size;
         this.Slots = Slots;
         this.MainRandomSeed = RandomSeed;
-        this.eco = eco;
+        this.economy = economyWrapper;
     }
 
+    [JsonConstructor]
     public Map()
     {
+        Debug.Log("Map公共无参构造函数");
     }
     public Slot this[Vector2 pos] => this[(int)pos.x, (int)pos.y];
     public Slot this[int x, int y] => Slots[x * size.y + y];
@@ -31,23 +33,27 @@ public class Map
     public static Map Generate(Vector2Int size, int seed = -1)
     {
         var slots = new Slot[size.x * size.y];
+
+        //设置随机数种子
         if (seed == -1)
         {
             seed = UnityEngine.Random.Range(0, int.MaxValue);
         }
         UnityEngine.Random.InitState(seed);
-        var map = new Map(size, slots, seed, new Economy()
-        {
-            人口 = 200,
-            总收入 = 400000,
-            集约程度 = 1f
-        });
+
+
+        //创建地图
+        var map = new Map(size, slots, seed,
+            new EconomyWrapper(new EconomyVector(Random.Range(100f, 1000f), Random.Range(10000f, 1000000f), Random.Range(0f, 1f)), new() { new UniversalMiddleware<EconomyVector>() }));
+
+        //遍历格子
         for (int i = 0; i < size.x; i++)
         {
             for (int j = 0; j < size.y; j++)
             {
                 var newSlot = new Plain(map, new Vector2(i, j), new());
 
+                //按概率生成🌳
                 if (UnityEngine.Random.Range(0, 100) < 10)
                 {
                     new Tree(-1).Inject(newSlot);

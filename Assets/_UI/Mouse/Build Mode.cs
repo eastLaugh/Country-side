@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Build : StateMachineBehaviour
+public class BuildMode : StateMachineBehaviour
 {
+    public static event Action OnBuildModeEnter;
+    public static event Action OnBuildModeExit;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -14,15 +16,19 @@ public class Build : StateMachineBehaviour
         //     animator.SetTrigger("BuildEnd");
         // });
 
-        SlotRender.OnAnySlotClicked += OnSlotSelected;
+        SlotRender.OnAnySlotClicked += OnAnySlotClicked;
+
+        OnBuildModeEnter?.Invoke();
     }
 
-    void OnSlotSelected(SlotRender slotRender)
+    void OnAnySlotClicked(SlotRender slotRender)
     {
         Type selectiveType = BuildingWindow.SelectedType;
         Slot.MapObject mapObject = Activator.CreateInstance(selectiveType,-1) as Slot.MapObject;
         mapObject.Inject(slotRender.slot);
         slotRender.Refresh();
+
+        
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -34,7 +40,9 @@ public class Build : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        SlotRender.OnAnySlotClicked -= OnSlotSelected;
+        SlotRender.OnAnySlotClicked -= OnAnySlotClicked;
+
+        OnBuildModeExit?.Invoke();
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

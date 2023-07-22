@@ -21,17 +21,21 @@ public class MapObjectAttributeDrawer : PropertyDrawer
     {
         if (attribute is TypeToString attr)
         {
-            GUIContent[] TypeNames = attr.types.Select(type => new GUIContent(type.Name)).ToArray();
-            string stringValue = property.stringValue;
-            int index = -1;
-            index = Array.FindIndex(attr.types, type => type.Name == stringValue);
-
-            index = EditorGUI.Popup(position, label, index, TypeNames);
-            if (index >= 0)
+            if (property.type != "string")
             {
-                property.stringValue = attr.types[index].Name;
-            }
+                GUIContent[] TypeNames = attr.types.Select(type => new GUIContent(type.Name)).ToArray();
+                string stringValue = property.stringValue;
+                int index = -1;
+                index = Array.FindIndex(attr.types, type => type.Name == stringValue);
 
+                index = EditorGUI.Popup(position, label, index, TypeNames);
+                if (index >= 0)
+                {
+                    property.stringValue = attr.types[index].Name;
+                }
+            }else{
+                EditorGUI.LabelField(position, label, new GUIContent("TypeToString只能用于string类型"));
+            }
         }
     }
 }

@@ -16,7 +16,7 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public static event Action<SlotRender, PointerEventData> OnDragSlot;
 
-    public event Action OnRender;
+    public event Action OnRender;  //不得不设置为public，因为要在MapObject中调用，当然用函数封装也可以，但太麻烦算了
     public void OnClick()
     {
     }
