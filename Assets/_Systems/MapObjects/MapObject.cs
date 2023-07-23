@@ -22,10 +22,11 @@ partial class Slot
         [JsonProperty]
         int AppearanceSeed;
 
+        
         protected System.Random random { get; private set; }
 
 
-        protected Transform father{get;private set;}
+        protected Transform father { get; private set; }
 
         public MapObject(int AppearanceSeed)
         {
@@ -44,7 +45,7 @@ partial class Slot
 
         public bool Inject(Slot slot, bool force = false)
         {
-            if ((!slot.mapObjects.Contains(this) && slot.mapObjects.Accessible(GetType())) || force /*强制通true:仅在序列化等硬操作时起用*/)
+            if ((!slot.mapObjects.Contains(this) && slot.mapObjects.Accessible(GetType())) || force /*强制为true:仅在序列化等硬操作时起用*/)
             {
                 this.slot = slot;
                 slot.mapObjects.Add(this);
@@ -56,7 +57,7 @@ partial class Slot
                 father.SetParent(slot.slotRender.transform);
                 father.localPosition = Vector3.zero;
 
-                slot.slotRender.OnRender += () => Render(config.Prefab, config.Prefabs, slot.slotRender);
+                slot.slotRender.RegisterRender(() => Render(config.Prefab, config.Prefabs, slot.slotRender));
                 slot.OnSlotClicked += OnClick;
                 return true;
             }
@@ -66,14 +67,14 @@ partial class Slot
             }
         }
 
-        //protected abstract void OnSlot();
-        protected virtual void OnClick(){
+        protected virtual void OnClick()
+        {
 
         }
 
         protected virtual GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
         {
-            GameObject obj = MonoBehaviour.Instantiate(prefab,  father);
+            GameObject obj = MonoBehaviour.Instantiate(prefab, father);
             obj.transform.DOScale(Vector3.zero, Settings.建筑时物体缓动持续时间).From().SetEase(Ease.OutBack);
             return new[] { obj };
         }

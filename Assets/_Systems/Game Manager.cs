@@ -27,12 +27,21 @@ public class GameManager : MonoBehaviour
     public MapObjectDatabase MapObjectDatabase;
     public SlotDatabase SlotDatabase;
 
-    public static JsonSerializerSettings SerializeSettings = new JsonSerializerSettings
+    public static readonly JsonSerializerSettings SerializeSettings = new JsonSerializerSettings
     {
         Formatting = Formatting.Indented,
         ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
         PreserveReferencesHandling = PreserveReferencesHandling.Objects,
         TypeNameHandling = TypeNameHandling.Auto
+    };
+
+    public static readonly JsonSerializerSettings DebugSerializeSettings = new JsonSerializerSettings
+    {
+        Formatting = Formatting.Indented,
+        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+        PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+        TypeNameHandling = TypeNameHandling.Auto,
+        ContractResolver = new MapPropertyIgnore()
     };
 
     private void Start()
@@ -44,6 +53,15 @@ public class GameManager : MonoBehaviour
         // LoadMap(map);
     }
 
+    SlotRender debugSlotRender = null;
+    private void OnEnable()
+    {
+        SlotRender.OnAnySlotClicked += slotRender =>
+        {
+            debugSlotRender = slotRender;
+
+        };
+    }
     private void Awake()
     {
         DG.Tweening.DOTween.Init();
@@ -98,9 +116,26 @@ public class GameManager : MonoBehaviour
             {
                 SaveCurrentMap(Path.Combine(SaveDirectory, "GameSave1.zmq"));
             }
-            if (GUILayout.Button("[调试]"))
+            if (GUILayout.Button("[调试|查看地图信息]"))
             {
                 SaveCurrentMap(Path.Combine(SaveDirectory, "调试.zmq"));
+            }
+        }
+
+        if (debugSlotRender != null)
+        {
+            GUILayout.Label("调试地块：" + debugSlotRender.slot.position);
+            GUILayout.Label(JsonConvert.SerializeObject(debugSlotRender.slot, DebugSerializeSettings), new GUIStyle(GUI.skin.label)
+            {
+                fontSize = 30,
+                normal = new GUIStyleState()
+                {
+                    textColor = Color.black
+                }
+            });
+            if (GUILayout.Button("刷新地块"))
+            {
+                debugSlotRender.Refresh();
             }
         }
 

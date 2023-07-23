@@ -10,16 +10,20 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 {
     public Slot slot;
 
+    public static event Action<SlotRender> OnAnySlotClickedInBuildMode;
     public static event Action<SlotRender> OnAnySlotClicked;
     public static event Action<SlotRender> OnAnySlotEnter;
     public static event Action<SlotRender> OnAnySlotExit;
 
     public static event Action<SlotRender, PointerEventData> OnDragSlot;
 
-    public event Action OnRender;  //不得不设置为public，因为要在MapObject中调用，当然用函数封装也可以，但太麻烦算了
-    public void OnClick()
+    event Action OnRender;
+
+    public void RegisterRender(Action onRender)
     {
+        OnRender += onRender;
     }
+
     public void Refresh()
     {
         OnRender?.Invoke();
@@ -28,8 +32,15 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        OnAnySlotClicked?.Invoke(this); //全局
-        slot.Click(); //处理MapObject点击事件
+        if (BuildMode.hasEntered)
+        {
+            OnAnySlotClickedInBuildMode?.Invoke(this); //仅建造模式
+        }
+        else
+        {
+            OnAnySlotClicked?.Invoke(this); //全局
+            slot.Click(); //处理MapObject点击事件
+        }
 
 #if UNITY_EDITOR
         Selection.SetActiveObjectWithContext(gameObject, null);

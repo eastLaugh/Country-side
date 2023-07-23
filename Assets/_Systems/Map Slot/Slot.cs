@@ -23,7 +23,7 @@ public abstract partial class Slot
     [JsonIgnore]
     public GameObject gameObject { get; private set; }
 
-    public event Action OnSlotUpdate;
+    public event Action OnSlotUpdate; //当Slot更新时触发
 
     event Action OnSlotClicked;
     public void Click(){

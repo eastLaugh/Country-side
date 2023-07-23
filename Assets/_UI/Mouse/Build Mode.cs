@@ -5,30 +5,35 @@ using UnityEngine;
 
 public class BuildMode : StateMachineBehaviour
 {
+
+    //是否进入建造模式
+    public static bool hasEntered { get; private set; }
     public static event Action OnBuildModeEnter;
     public static event Action OnBuildModeExit;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        // 
         // InfoWindow infoWindow = InfoWindow.Create("你已进入建造模式\n点击右下角×以退出");
         // infoWindow.GetComponent<Window>().OnClose.AddListener(() =>
         // {
         //     animator.SetTrigger("BuildEnd");
         // });
 
-        SlotRender.OnAnySlotClicked += OnAnySlotClicked;
+        hasEntered = true;
+        SlotRender.OnAnySlotClickedInBuildMode += OnAnySlotClickedInBuildMode;
 
         OnBuildModeEnter?.Invoke();
     }
 
-    void OnAnySlotClicked(SlotRender slotRender)
+    void OnAnySlotClickedInBuildMode(SlotRender slotRender)
     {
         Type selectiveType = BuildingWindow.SelectedType;
-        Slot.MapObject mapObject = Activator.CreateInstance(selectiveType,-1) as Slot.MapObject;
+        Slot.MapObject mapObject = Activator.CreateInstance(selectiveType, -1) as Slot.MapObject;
         mapObject.Inject(slotRender.slot);
         slotRender.Refresh();
 
-        
+
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -40,7 +45,8 @@ public class BuildMode : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        SlotRender.OnAnySlotClicked -= OnAnySlotClicked;
+        hasEntered = false;
+        SlotRender.OnAnySlotClickedInBuildMode -= OnAnySlotClickedInBuildMode;
 
         OnBuildModeExit?.Invoke();
     }
