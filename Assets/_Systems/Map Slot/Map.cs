@@ -1,9 +1,11 @@
+using System;
 using Newtonsoft.Json;
 using UnityEngine;
-
+using Random = UnityEngine.Random;
+using Newtonsoft.Json.Serialization;
 public class Map
 {
-
+    public event Action<Map> OnLoad;
     [JsonProperty]
     public EconomyWrapper economy { get; private set; }
     [JsonProperty]
@@ -56,12 +58,22 @@ public class Map
                 //按概率生成🌳
                 if (UnityEngine.Random.Range(0, 100) < 10)
                 {
-                    new Tree(-1).Inject(newSlot);
+                    new Tree().Inject(newSlot);
                 }
 
                 slots[i * size.y + j] = newSlot;
             }
         }
+
+        map.OnLoad?.Invoke(map);
         return map;
+    }
+
+
+    [System.Runtime.Serialization.OnDeserialized]
+    void OnDeserializedMethod(System.Runtime.Serialization.StreamingContext context)
+    {
+        Debug.Log("反序列化完成");
+        OnLoad?.Invoke(this);
     }
 }

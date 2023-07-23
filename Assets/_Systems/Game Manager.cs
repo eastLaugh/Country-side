@@ -11,7 +11,6 @@ using UnityEditor;
 using NaughtyAttributes;
 public class GameManager : MonoBehaviour
 {
-    public static event Action<Map> OnMapLoaded;
     public static GameManager current;
 
     public Grid grid;
@@ -39,7 +38,6 @@ public class GameManager : MonoBehaviour
     {
         Formatting = Formatting.Indented,
         ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-        PreserveReferencesHandling = PreserveReferencesHandling.Objects,
         TypeNameHandling = TypeNameHandling.Auto,
         ContractResolver = new MapPropertyIgnore()
     };
@@ -59,9 +57,15 @@ public class GameManager : MonoBehaviour
         SlotRender.OnAnySlotClicked += slotRender =>
         {
             debugSlotRender = slotRender;
-
         };
+
     }
+    private void OnDisable()
+    {
+
+    }
+
+
     private void Awake()
     {
         DG.Tweening.DOTween.Init();
@@ -71,12 +75,12 @@ public class GameManager : MonoBehaviour
         SaveDirectory = Path.Combine(Application.persistentDataPath, "beta");
     }
     int seed = -1;
+    string fileName = "默认存档.zmq";
     private void OnGUI()
     {
-        // if (GUILayout.Button("-1将自动生成"))
-        // {
-        //     seed = -1;
-        // }
+
+        fileName = GUILayout.TextField(fileName);
+
         if (int.TryParse(GUILayout.TextField(seed.ToString()), out int newSeed))
         {
             seed = newSeed;
@@ -90,19 +94,19 @@ public class GameManager : MonoBehaviour
             if (GUILayout.Button("重新创建"))
             {
                 seed = -1;
-                var map = GenerateMap(size);
-                LoadMap(map);
+                UnLoad();
+                SetMap(Map.Generate(size, seed));
             }
         }
         if (GUILayout.Button("创建"))
         {
-            var map = GenerateMap(size);
-            LoadMap(map);
+            UnLoad();
+            SetMap(Map.Generate(size, seed));
         }
         if (GUILayout.Button("加载"))
         {
-            var map = GenerateFromLocalFile(Path.Combine(SaveDirectory, "GameSave1.zmq"));
-            LoadMap(map);
+            GenerateFromLocalFile(Path.Combine(SaveDirectory, fileName));
+
         }
 
 
@@ -114,18 +118,18 @@ public class GameManager : MonoBehaviour
         {
             if (GUILayout.Button("保存"))
             {
-                SaveCurrentMap(Path.Combine(SaveDirectory, "GameSave1.zmq"));
+                SaveCurrentMap(Path.Combine(SaveDirectory, fileName));
             }
             if (GUILayout.Button("[调试|查看地图信息]"))
             {
-                SaveCurrentMap(Path.Combine(SaveDirectory, "调试.zmq"));
+                SaveCurrentMap(Path.Combine(SaveDirectory, "[调试]"));
             }
         }
 
         if (debugSlotRender != null)
         {
             GUILayout.Label("调试地块：" + debugSlotRender.slot.position);
-            GUILayout.Label(JsonConvert.SerializeObject(debugSlotRender.slot, DebugSerializeSettings), new GUIStyle(GUI.skin.label)
+            GUILayout.Label(/*JsonConvert.SerializeObject(debugSlotRender.slot, DebugSerializeSettings*/ debugSlotRender.slot.GetInfo(), new GUIStyle(GUI.skin.label)
             {
                 fontSize = 30,
                 normal = new GUIStyleState()
@@ -133,7 +137,7 @@ public class GameManager : MonoBehaviour
                     textColor = Color.black
                 }
             });
-            if (GUILayout.Button("刷新地块"))
+            if (GUILayout.Button("重新渲染"))
             {
                 debugSlotRender.Refresh();
             }
@@ -164,13 +168,9 @@ public class GameManager : MonoBehaviour
         grid.transform.DestroyAllChild();
         map = null;
     }
-    Map GenerateMap(Vector2Int size)
-    {
-        UnLoad();
-        return Map.Generate(size, seed);
-    }
 
-    Map GenerateFromLocalFile(string FileName)
+
+    void GenerateFromLocalFile(string FileName)
     {
         if (!File.Exists(FileName))
         {
@@ -181,14 +181,14 @@ public class GameManager : MonoBehaviour
             UnLoad();
             string jsonText = File.ReadAllText(FileName);
             Map map = JsonConvert.DeserializeObject<Map>(jsonText, SerializeSettings);
-            return map;
+            SetMap(map);
         }
     }
 
-    public void LoadMap(Map map)
+
+    private void SetMap(Map map)
     {
         this.map = map;
-        OnMapLoaded?.Invoke(map);
         seed = map.MainRandomSeed;
         grid.transform.position = new Vector3(-map.size.x * grid.cellSize.x / 2f, 0, /*-map.size.y * grid.cellSize.z / 2f*/0);
 

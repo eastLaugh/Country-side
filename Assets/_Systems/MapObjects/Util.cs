@@ -34,3 +34,8 @@ public static class IRejectUtil
         return true;
     }
 }
+
+public interface IInfoProvider
+{
+    public void ProvideInfo(Action<string> provide);
+}

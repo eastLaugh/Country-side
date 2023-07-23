@@ -12,36 +12,18 @@ partial class Slot
 {
     public abstract class MapObject
     {
-
+        protected Map map => slot.map;
         public static readonly Type[] BuiltMapObject = { typeof(House), typeof(Tree) };
         public static readonly Type[] AllTypes = { typeof(House), typeof(Road), typeof(Tree) };//WORKFLOW : 枚举所有类型
 
         [JsonProperty]
         public Slot slot { get; private set; } = null;
 
-        [JsonProperty]
-        int AppearanceSeed;
-
-        
-        protected System.Random random { get; private set; }
 
 
         protected Transform father { get; private set; }
 
-        public MapObject(int AppearanceSeed)
-        {
-            if (AppearanceSeed == -1)
-            {
-                this.AppearanceSeed = UnityEngine.Random.Range(0, int.MaxValue);
-            }
-            else
-            {
-                this.AppearanceSeed = AppearanceSeed;
-            }
-
-            random = new System.Random(this.AppearanceSeed);
-        }
-
+        public static bool CanBeInjected(Slot slot, Type detectedType) => slot.mapObjects.Accessible(detectedType);
 
         public bool Inject(Slot slot, bool force = false)
         {
@@ -49,7 +31,6 @@ partial class Slot
             {
                 this.slot = slot;
                 slot.mapObjects.Add(this);
-                slot.OnSlotUpdate?.Invoke();
 
                 var config = GameManager.current.MapObjectDatabase[GetType()];
 
@@ -58,13 +39,22 @@ partial class Slot
                 father.localPosition = Vector3.zero;
 
                 slot.slotRender.RegisterRender(() => Render(config.Prefab, config.Prefabs, slot.slotRender));
-                slot.OnSlotClicked += OnClick;
+                slot.slotRender.OnSlotClicked += _ => OnClick();
+
+                slot.map.OnLoad += _ => Start();
+
+                slot.OnSlotUpdate?.Invoke();
                 return true;
             }
             else
             {
                 return false;
             }
+        }
+
+        public void Unject()
+        {
+            //TODO
         }
 
         protected virtual void OnClick()
@@ -77,6 +67,13 @@ partial class Slot
             GameObject obj = MonoBehaviour.Instantiate(prefab, father);
             obj.transform.DOScale(Vector3.zero, Settings.建筑时物体缓动持续时间).From().SetEase(Ease.OutBack);
             return new[] { obj };
+        }
+
+        protected abstract void Start();
+
+        public void Update()
+        {
+            slot.OnSlotUpdate?.Invoke();
         }
     }
 }

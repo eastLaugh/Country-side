@@ -28,10 +28,17 @@ public class BuildMode : StateMachineBehaviour
 
     void OnAnySlotClickedInBuildMode(SlotRender slotRender)
     {
-        Type selectiveType = BuildingWindow.SelectedType;
-        Slot.MapObject mapObject = Activator.CreateInstance(selectiveType, -1) as Slot.MapObject;
-        mapObject.Inject(slotRender.slot);
-        slotRender.Refresh();
+        Type selectedType = BuildingWindow.SelectedType;
+        if (Slot.MapObject.CanBeInjected(slotRender.slot, selectedType))
+        {
+            Slot.MapObject mapObject = Activator.CreateInstance(selectedType) as Slot.MapObject;
+            mapObject.Inject(slotRender.slot);
+            slotRender.Refresh();
+        }
+        else
+        {
+            Debug.LogWarning("不能在此处建造");
+        }
 
 
     }

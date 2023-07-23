@@ -18,38 +18,38 @@ public class SlotWindow : MonoBehaviour
 
     private void OnEnable()
     {
-        SlotRender.OnAnySlotClicked += OnSlotSelected;
+        SlotRender.OnAnySlotEnter += OnSlotSelected;
     }
 
     private void OnDisable()
     {
-        SlotRender.OnAnySlotClicked -= OnSlotSelected;
+        SlotRender.OnAnySlotExit -= OnSlotSelected;
     }
 
     void OnSlotSelected(SlotRender slotRender)
     {
-        if (selected != null)
+        if (selectedSlot != null)
         {
-            selected.OnSlotUpdate -= OnSlotUpdate;
+            selectedSlot.OnSlotUpdate -= OnSlotUpdate;
         }
 
-        selected = slotRender.slot;
-        selected.OnSlotUpdate += OnSlotUpdate;
+        selectedSlot = slotRender.slot;
+        selectedSlot.OnSlotUpdate += OnSlotUpdate;
         OnSlotUpdate();
     }
 
-    private Slot selected;
+    private Slot selectedSlot;
 
     void OnSlotUpdate()
     {
-        GetComponent<RectTransform>().DOShakeAnchorPos(0.2f, 10, 100, 90, false, true);
+        //GetComponent<RectTransform>().DOShakeAnchorPos(0.2f, 10, 100, 90, false, true);
         
         // var text = JsonConvert.SerializeObject(selected, GameManager.SerializeSettings);
         // JObject jObject = JObject.FromObject(selected, JsonSerializer.CreateDefault(GameManager.SerializeSettings));
         // jObject.Remove("map");
-        // content.SetText(jObject.ToString());
+        content.SetText(selectedSlot.GetInfo());
 
-        GetComponent<Window>().SetTitle(selected.GetType().Name);
+        GetComponent<Window>().SetTitle(selectedSlot.GetType().Name);
 
 
     }

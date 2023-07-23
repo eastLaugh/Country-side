@@ -3,9 +3,6 @@ using UnityEngine;
 using static Slot;
 public class House : MapObject,IReject<House>
 {
-    public House(int AppearanceSeed) : base(AppearanceSeed)
-    {
-    }
 
     protected override GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
     {
@@ -14,12 +11,15 @@ public class House : MapObject,IReject<House>
 
         return base.Render(prefab, prefabs, slotRender);
     }
+
+    protected override void Start()
+    {
+    }
 }
 
 public class Road : MapObject
 {
-    public Road(int AppearanceSeed) : base(AppearanceSeed)
+    protected override void Start()
     {
     }
-
 }

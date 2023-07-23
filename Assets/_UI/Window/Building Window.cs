@@ -45,7 +45,7 @@ public class BuildingWindow : MonoBehaviour
     static Button lastSelectedButton;
     void OnButtonClick(Type builtType, Button selectedButton)
     {
-        if (MouseAnimator.GetCurrentAnimatorStateInfo(0).IsName("Build Mode"))
+        if (BuildMode.hasEntered)
         {
             lastSelectedButton.GetComponent<Image>().color = Color.white;
             if (builtType == SelectedType)
@@ -56,15 +56,15 @@ public class BuildingWindow : MonoBehaviour
             else
             {
                 //另选
-                BuildMode();
+                EnterBuildMode();
             }
         }
         else
         {
-            BuildMode();
+            EnterBuildMode();
         }
 
-        void BuildMode()
+        void EnterBuildMode()
         {
             selectedButton.GetComponent<Image>().color = Color.green;
             SelectedType = builtType;

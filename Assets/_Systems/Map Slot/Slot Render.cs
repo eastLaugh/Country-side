@@ -11,11 +11,13 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public Slot slot;
 
     public static event Action<SlotRender> OnAnySlotClickedInBuildMode;
+    public event Action<SlotRender> OnSlotClicked;
     public static event Action<SlotRender> OnAnySlotClicked;
     public static event Action<SlotRender> OnAnySlotEnter;
     public static event Action<SlotRender> OnAnySlotExit;
 
     public static event Action<SlotRender, PointerEventData> OnDragSlot;
+    
 
     event Action OnRender;
 
@@ -39,7 +41,9 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         else
         {
             OnAnySlotClicked?.Invoke(this); //全局
-            slot.Click(); //处理MapObject点击事件
+            OnSlotClicked?.Invoke(this);
+            slot.InvokeOnSlotUpdate();
+
         }
 
 #if UNITY_EDITOR
@@ -90,4 +94,6 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         OnDragSlot?.Invoke(this, eventData);
     }
+
+
 }
