@@ -19,7 +19,7 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public static event Action<SlotRender, PointerEventData> OnDragSlot;
     
 
-    event Action OnRender;
+    public event Action OnRender;
 
     public void RegisterRender(Action onRender)
     {
@@ -43,7 +43,6 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             OnAnySlotClicked?.Invoke(this); //全局
             OnSlotClicked?.Invoke(this);
             slot.InvokeOnSlotUpdate();
-
         }
 
 #if UNITY_EDITOR
@@ -55,7 +54,6 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void OnPointerEnter(PointerEventData eventData)
     {
         OnAnySlotEnter?.Invoke(this);
-
         //transform.position = new Vector3(transform.position.x, transform.position.y + 0.3f, transform.position.z);
 
     }
@@ -63,18 +61,7 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void OnPointerExit(PointerEventData eventData)
     {
         OnAnySlotExit?.Invoke(this);
-
         //transform.position = new Vector3(transform.position.x, transform.position.y - 0.3f, transform.position.z);
-    }
-
-    public void UnClick()
-    {
-    }
-
-    private void Awake()
-    {
-
-
     }
 
     //加载动画

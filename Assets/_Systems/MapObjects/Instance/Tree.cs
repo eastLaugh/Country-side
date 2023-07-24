@@ -17,7 +17,8 @@ public class Tree : MapObject /* , IReject<House>, IReject<Road> */ , IInfoProvi
     public void ProvideInfo(Action<string> provide)
     {
         provide("树");
-        if(isChopping){
+        if (isChopping)
+        {
             provide(":正在砍伐");
         }
     }
@@ -72,6 +73,7 @@ public class Tree : MapObject /* , IReject<House>, IReject<Road> */ , IInfoProvi
     [JsonProperty] //树木是否正在砍伐，这需要记录下来
     public bool isChopping { get; private set; }
 
+
     public static event Action<Tree, bool> OnTreeChopped;
     IconPattern iconPattern;
     GameObject ChoppingIcon;
@@ -101,10 +103,17 @@ public class Tree : MapObject /* , IReject<House>, IReject<Road> */ , IInfoProvi
     }
 
     //地图一旦创建好就会立刻执行，且永远只执行一次
-    protected override void Start()
+    protected override void OnInjected()
     {
         RefreshChoppingState();
     }
 
 
+
+    public override bool CanBeUnjected { get; protected set; } = false; //树木不可被玩家移除，因为需要玩家砍伐
+
+    protected override void OnUnjected()
+    {
+        throw new NotImplementedException();
+    }
 }

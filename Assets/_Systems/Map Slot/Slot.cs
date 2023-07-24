@@ -40,8 +40,8 @@ public abstract partial class Slot
             if (obj is IInfoProvider provider)
             {
                 provider.ProvideInfo(str => builder.Append(str));
+                builder.AppendLine();
             }
-            builder.AppendLine();
         }
         return builder.ToString();
     }
@@ -65,6 +65,9 @@ public abstract partial class Slot
             item.Inject(this, true);//反序列化注入
         }
     }
+
+
+    
 
 
 }
