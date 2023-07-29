@@ -22,7 +22,7 @@ public class SlotDatabase : ScriptableObject
     [System.Serializable]
     public struct Element
     {
-        [TypeToString(typeof(Slot))]
+        [TypeToString(typeof(Slots))]
         public string _;
     }
     [System.Serializable]

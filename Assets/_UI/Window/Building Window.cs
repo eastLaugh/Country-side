@@ -16,7 +16,7 @@ public class BuildingWindow : MonoBehaviour
     {
 
         OptionButtons.Clear();
-        foreach (Type mapObjectType in Slot.MapObject.BuiltMapObject)
+        foreach (Type mapObjectType in typeof(MapObjects).GetNestedTypes())
         {
             Button button = NewOption(mapObjectType.Name, button =>
             {

@@ -1,29 +1,43 @@
 using System.Collections;
 using System.Linq;
 using System;
+using System.Collections.Generic;
+using static Slot;
+
+[System.Obsolete("Use MustNotExist instead")]
+public interface IReject<T>
+{
+
+}
+[System.Obsolete("Use MustExist instead")]
+public interface IAccept<T>
+{
+
+}
 //建筑物冲突
-public interface IReject<T> where T : Slot.MapObject
+public interface MustNotExist<T>
 {
 
 }
 //建筑物相容
-public interface IAccept<T> where T : Slot.MapObject
+public interface MustExist<T>
 {
-    //还没实现
+
 }
-public static class IRejectUtil
+
+public static class TypeUtil
 {
 
     public static bool Accessible(this IEnumerable set, Type type)
     {
-        foreach (var mapObject in set)
+        foreach (var element in set)
         {
-            if (typeof(IReject<>).MakeGenericType(type).IsAssignableFrom(mapObject.GetType()))
+            if (typeof(MustNotExist<>).MakeGenericType(type).IsAssignableFrom(element.GetType()))
                 return false;
         }
-        foreach (Type interf in type.GetInterfaces().Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IAccept<>)))
+        foreach (Type interf in type.GetInterfaces().Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(MustExist<>)))
         {
-            foreach (var mapObject in set)
+            foreach (var element in set)
             {
                 if (set.GetType() == interf)
                     goto go_on;

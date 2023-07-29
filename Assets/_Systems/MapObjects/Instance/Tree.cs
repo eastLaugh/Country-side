@@ -4,121 +4,124 @@ using DG.Tweening;
 using Newtonsoft.Json;
 using System;
 using Random = UnityEngine.Random;
-
-public class Tree : MapObject /* , IReject<House>, IReject<Road> */ , IInfoProvider
+partial class MapObjects
 {
-    public Tree()
-    {
-        //你至少保留一个公开的构造函数，以便系统调用
-    }
 
-
-    //实现这个接口（可选），用以显示在Slot Window上
-    public void ProvideInfo(Action<string> provide)
+    public class Tree : MapObject /* , IReject<House>, IReject<Road> */ , IInfoProvider
     {
-        provide("树");
-        if (isChopping)
+        public Tree()
         {
-            provide(":正在砍伐");
+            //你至少保留一个公开的构造函数，以便系统调用
         }
-    }
 
-    #region Model
-    //这是每个棵树要保存的模型信息，因为游戏中每一棵树的模型都不是固定的。但是需要被保存下来，留便下次加载使用
-    [JsonProperty]
-    TreeModel[] TreeModels;
-    struct TreeModel
-    {
-        public Vector3 offset;
-        public int prefabIndex;
-    }
-    #endregion
-    protected override GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
-    {
-        // base.Render(prefab, prefabs, slotRender); 我们不需要默认的渲染方式，故注释
 
-        father.DestroyAllChild();  //Render()这是个可能被系统多次调用的API，所以请确保可以被重复调用的健全性，需要删除“上次”的已渲染物体，避免重复
-
-        if (TreeModels == null)
+        //实现这个接口（可选），用以显示在Slot Window上
+        public void ProvideInfo(Action<string> provide)
         {
-            //说明未存储信息
-            Vector3 halfCellSize = GameManager.current.grid.cellSize / 2f;
-            TreeModels = new TreeModel[Random.Range(1, 5)];
+            provide("树");
+            if (isChopping)
+            {
+                provide(":正在砍伐");
+            }
+        }
+
+        #region Model
+        //这是每个棵树要保存的模型信息，因为游戏中每一棵树的模型都不是固定的。但是需要被保存下来，留便下次加载使用
+        [JsonProperty]
+        TreeModel[] TreeModels;
+        struct TreeModel
+        {
+            public Vector3 offset;
+            public int prefabIndex;
+        }
+        #endregion
+        protected override GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
+        {
+            // base.Render(prefab, prefabs, slotRender); 我们不需要默认的渲染方式，故注释
+
+            father.DestroyAllChild();  //Render()这是个可能被系统多次调用的API，所以请确保可以被重复调用的健全性，需要删除“上次”的已渲染物体，避免重复
+
+            if (TreeModels == null)
+            {
+                //说明未存储信息
+                Vector3 halfCellSize = GameManager.current.grid.cellSize / 2f;
+                TreeModels = new TreeModel[Random.Range(1, 5)];
+                for (int i = 0; i < TreeModels.Length; i++)
+                {
+                    TreeModels[i] = new TreeModel
+                    {
+                        prefabIndex = Random.Range(0, prefabs.Length),
+                        offset = new Vector3(Random.Range(-halfCellSize.x, halfCellSize.x), 0, Random.Range(-halfCellSize.z, halfCellSize.z))
+                    };
+                }
+            }
+
+            //根据已有信息加载模型
+            var trees = new GameObject[TreeModels.Length];
             for (int i = 0; i < TreeModels.Length; i++)
             {
-                TreeModels[i] = new TreeModel
-                {
-                    prefabIndex = Random.Range(0, prefabs.Length),
-                    offset = new Vector3(Random.Range(-halfCellSize.x, halfCellSize.x), 0, Random.Range(-halfCellSize.z, halfCellSize.z))
-                };
+                trees[i] = MonoBehaviour.Instantiate(prefabs[TreeModels[i].prefabIndex], slotRender.transform.position + TreeModels[i].offset, Quaternion.identity, father);
+                trees[i].transform.DOScale(Vector3.zero, Settings.建筑时物体缓动持续时间).From().SetEase(Ease.OutBack);
             }
+
+            //创建 图标的“调色盘”
+            iconPattern = IconPattern.Create(father, Vector3.zero);
+
+            // RefreshChopping(); 这里不能写这个，因为这里是Render（） API 仅限于渲染相关
+
+            return null; //无用
         }
 
-        //根据已有信息加载模型
-        var trees = new GameObject[TreeModels.Length];
-        for (int i = 0; i < TreeModels.Length; i++)
+        [JsonProperty] //树木是否正在砍伐，这需要记录下来
+        public bool isChopping { get; private set; }
+
+
+        public static event Action<Tree, bool> OnTreeChopped;
+        IconPattern iconPattern;
+        GameObject ChoppingIcon;
+        protected override void OnClick()
         {
-            trees[i] = MonoBehaviour.Instantiate(prefabs[TreeModels[i].prefabIndex], slotRender.transform.position + TreeModels[i].offset, Quaternion.identity, father);
-            trees[i].transform.DOScale(Vector3.zero, Settings.建筑时物体缓动持续时间).From().SetEase(Ease.OutBack);
+            base.OnClick();
+            isChopping = !isChopping;
+            RefreshChoppingState();
+
         }
 
-        //创建 图标的“调色盘”
-        iconPattern = IconPattern.Create(father, Vector3.zero);
-
-        // RefreshChopping(); 这里不能写这个，因为这里是Render（） API 仅限于渲染相关
-
-        return null; //无用
-    }
-
-    [JsonProperty] //树木是否正在砍伐，这需要记录下来
-    public bool isChopping { get; private set; }
-
-
-    public static event Action<Tree, bool> OnTreeChopped;
-    IconPattern iconPattern;
-    GameObject ChoppingIcon;
-    protected override void OnClick()
-    {
-        base.OnClick();
-        isChopping = !isChopping;
-        RefreshChoppingState();
-
-    }
-
-    //刷新砍树相关的事件
-    void RefreshChoppingState()
-    {
-        OnTreeChopped?.Invoke(this, isChopping);
-        if (isChopping)
+        //刷新砍树相关的事件
+        void RefreshChoppingState()
         {
-            if (ChoppingIcon == null)
+            OnTreeChopped?.Invoke(this, isChopping);
+            if (isChopping)
             {
-                ChoppingIcon = iconPattern.New("Chopping Icon");//创建图标
+                if (ChoppingIcon == null)
+                {
+                    ChoppingIcon = iconPattern.New("Chopping Icon");//创建图标
+                }
+            }
+            else
+            {
+                MonoBehaviour.Destroy(ChoppingIcon);//删除图标
             }
         }
-        else
+
+        //地图一旦创建好就会立刻执行，且永远只执行一次
+        protected override void Awake()
         {
-            MonoBehaviour.Destroy(ChoppingIcon);//删除图标
+            RefreshChoppingState();
         }
-    }
-
-    //地图一旦创建好就会立刻执行，且永远只执行一次
-    protected override void Awake()
-    {
-        RefreshChoppingState();
-    }
 
 
 
-    public override bool CanBeUnjected { get; protected set; } = false; //树木不可被玩家移除，因为需要玩家砍伐
+        public override bool CanBeUnjected => false; //树木不可被玩家移除，因为需要玩家砍伐
 
-    protected override void OnDisable()
-    {
-        throw new NotImplementedException();
-    }
+        protected override void OnDisable()
+        {
+            throw new NotImplementedException();
+        }
 
-    protected override void OnCreated()
-    {
-        
+        protected override void OnCreated()
+        {
+
+        }
     }
 }

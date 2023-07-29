@@ -7,6 +7,7 @@ using System.Linq;
 
 using static Slot;
 using DG.Tweening;
+using static MapObjects;
 
 partial class Slot
 {
@@ -15,11 +16,6 @@ partial class Slot
     {
 
         protected Map map => slot.map;
-        public static readonly Type[] BuiltMapObject = { typeof(House), typeof(Tree), typeof(DeletingFlag) };
-
-        //1 引用 由 TypeToString 特性 通过反射调用
-        public static readonly Type[] AllTypes = { typeof(House), typeof(Road), typeof(Tree), typeof(DeletingFlag), typeof(Lake) };//WORKFLOW : 枚举所有类型
-
         [JsonProperty]
         public Slot slot { get; private set; } = null;
 
@@ -115,7 +111,7 @@ partial class Slot
             slot.OnSlotUpdate?.Invoke();
         }
 
-        public abstract bool CanBeUnjected { get; protected set; }
+        public abstract bool CanBeUnjected { get; }
         //地图格子被撤销注入格子后
         protected abstract void OnDisable();
 

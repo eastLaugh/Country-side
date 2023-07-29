@@ -53,12 +53,23 @@ public class GameManager : MonoBehaviour
     }
 
     SlotRender debugSlotRender = null;
+    string debugSlotInfo = "此处显示你点击方块的调试信息。";
     private void OnEnable()
     {
-        SlotRender.OnAnySlotClicked += slotRender =>
+        SlotRender.OnAnySlotClicked += OnAnySlotClickedInAllMode;
+        SlotRender.OnAnySlotClickedInBuildMode += OnAnySlotClickedInAllMode;
+
+        void OnAnySlotClickedInAllMode(SlotRender slotRender)
         {
+            if (debugSlotRender != null)
+                debugSlotRender.slot.OnSlotUpdate -= UpdateDebugInfo;
             debugSlotRender = slotRender;
-        };
+            debugSlotRender.slot.OnSlotUpdate += UpdateDebugInfo;
+        }
+        void UpdateDebugInfo()
+        {
+            debugSlotInfo = debugSlotRender.slot.GetInfo(true);
+        }
 
     }
     private void OnDisable()
@@ -127,17 +138,19 @@ public class GameManager : MonoBehaviour
             }
         }
 
+
+        GUILayout.Label(/*JsonConvert.SerializeObject(debugSlotRender.slot, DebugSerializeSettings*/ debugSlotInfo, new GUIStyle(GUI.skin.label)
+        {
+            fontSize = 30,
+            normal = new GUIStyleState()
+            {
+                textColor = Color.black
+            }
+        });
+
         if (debugSlotRender != null)
         {
-            GUILayout.Label("调试地块：" + debugSlotRender.slot.position);
-            GUILayout.Label(/*JsonConvert.SerializeObject(debugSlotRender.slot, DebugSerializeSettings*/ debugSlotRender.slot.GetInfo(), new GUIStyle(GUI.skin.label)
-            {
-                fontSize = 30,
-                normal = new GUIStyleState()
-                {
-                    textColor = Color.black
-                }
-            });
+
             if (GUILayout.Button("重新渲染"))
             {
                 debugSlotRender.Refresh();
@@ -193,7 +206,7 @@ public class GameManager : MonoBehaviour
         seed = map.MainRandomSeed;
         grid.transform.position = new Vector3(-map.size.x * grid.cellSize.x / 2f, 0, /*-map.size.y * grid.cellSize.z / 2f*/0);
         OnMapLoaded?.Invoke(map);
-    }   
+    }
 
 }
 
