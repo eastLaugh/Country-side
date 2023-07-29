@@ -4,6 +4,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;
+using static MapObjects;
 
 public class Map
 {
@@ -77,8 +78,9 @@ public class Map
                 if (noise > 0.2f)
                 {
                     newSlot = new Slots.Plain(map, new Vector2(i, j), new());
-                    if(noise>0.7f){
-                        new Tree().Inject(newSlot);
+                    if (noise > 0.7f)
+                    {
+                        new MapObjects.Tree().Inject(newSlot);
                     }
                 }
                 else

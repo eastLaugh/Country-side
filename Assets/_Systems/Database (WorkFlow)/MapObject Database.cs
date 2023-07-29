@@ -22,7 +22,7 @@ public class MapObjectDatabase : ScriptableObject
     [System.Serializable]
     public struct Element
     {
-        [TypeToString(typeof(Slot.MapObject))]
+        [TypeToString(typeof(MapObjects))]
         public string _;
     }
     [System.Serializable]

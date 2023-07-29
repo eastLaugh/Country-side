@@ -34,7 +34,7 @@ public class MapObjectAttributeDrawer : PropertyDrawer
                     property.stringValue = attr.types[index].Name;
                 }
             }else{
-                EditorGUI.LabelField(position, label, new GUIContent("TypeToString只能用于string类型"));
+                EditorGUI.LabelField(position, label, new GUIContent("只能用于string的字段"));
             }
         }
     }

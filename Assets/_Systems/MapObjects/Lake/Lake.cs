@@ -3,97 +3,99 @@ using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
 using System.Linq;
-public class Lake : Slot.MapObject, IReject<Lake>, IInfoProvider
+partial class MapObjects
 {
-    public override bool CanBeUnjected { get => false; protected set => throw new System.NotImplementedException(); }
-
-    [JsonProperty]
-    LakeEcosystem lakeEcosystem;
-
-    [JsonProperty]
-    HashSet<Vector2> CoastlineDirections;
-    //地图被创建时才会被加载。读取本地存档时不会加载OnCreated();
-    protected override void OnCreated()
+    public class Lake : Slot.MapObject, MustNotExist<Lake>, IInfoProvider
     {
-        if (lakeEcosystem == null)
+        public override bool CanBeUnjected => false; 
+
+        [JsonProperty]
+        LakeEcosystem lakeEcosystem;
+
+        [JsonProperty]
+        HashSet<Vector2> CoastlineDirections;
+        //地图被创建时才会被加载。读取本地存档时不会加载OnCreated();
+        protected override void OnCreated()
         {
-
-            LakeEcosystem lakeEcosystem = new(map);
-
-            DFS(this);
-
-            //用DFS查找湖泊的连通图
-            void DFS(Lake node)
+            if (lakeEcosystem == null)
             {
-                lakeEcosystem.Inject(node);
 
-                HashSet<Vector2> CoastlineDirections = new();
-                List<Lake> targetLakes = new();
+                LakeEcosystem lakeEcosystem = new(map);
 
-                for (int i = 0; i < Slot.AllDirections.Length; i++)
+                DFS(this);
+
+                //用DFS查找湖泊的连通图
+                void DFS(Lake node)
                 {
-                    var dir = Slot.AllDirections[i];
-                    Slot target = map[node.slot.position + dir];
-                    if (target != null)
+                    lakeEcosystem.Inject(node);
+
+                    HashSet<Vector2> CoastlineDirections = new();
+                    List<Lake> targetLakes = new();
+
+                    for (int i = 0; i < Slot.AllDirections.Length; i++)
                     {
-                        Lake targetLake = target.GetMapObject<Lake>();
-                        if (targetLake != null)
+                        var dir = Slot.AllDirections[i];
+                        Slot target = map[node.slot.position + dir];
+                        if (target != null)
                         {
-                            if (targetLake.lakeEcosystem == null)
+                            Lake targetLake = target.GetMapObject<Lake>();
+                            if (targetLake != null)
                             {
-                                targetLakes.Add(targetLake);
+                                if (targetLake.lakeEcosystem == null)
+                                {
+                                    targetLakes.Add(targetLake);
+                                }
+                            }
+                            else
+                            {
+                                CoastlineDirections.Add(dir);
                             }
                         }
                         else
                         {
                             CoastlineDirections.Add(dir);
                         }
+
                     }
-                    else
+                    node.CoastlineDirections = CoastlineDirections;
+
+                    //
+                    foreach (var targetLake in targetLakes)
                     {
-                        CoastlineDirections.Add(dir);
+                        DFS(targetLake);
                     }
-
-                }
-                node.CoastlineDirections = CoastlineDirections;
-
-                //
-                foreach (var targetLake in targetLakes)
-                {
-                    DFS(targetLake);
                 }
             }
+
         }
-
-    }
-    protected override void OnDisable()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    protected override void Awake()
-    {
-
-    }
-
-    public void ProvideInfo(System.Action<string> provide)
-    {
-        provide(lakeEcosystem.name);
-        if (CoastlineDirections.Count > 0)
+        protected override void OnDisable()
         {
-            provide(" 岸线方向：");
-            foreach (var dir in CoastlineDirections)
-            {
-                provide(dir.ToString());
-            }
+            throw new System.NotImplementedException();
         }
 
-    }
+        protected override void Awake()
+        {
 
-    public class LakeEcosystem
-    {
+        }
 
-        static readonly string[] LakeEcosystemNameDataBase = {
+        public void ProvideInfo(System.Action<string> provide)
+        {
+            provide(lakeEcosystem.name);
+            if (CoastlineDirections.Count > 0)
+            {
+                provide(" 岸线方向：");
+                foreach (var dir in CoastlineDirections)
+                {
+                    provide(dir.ToString());
+                }
+            }
+
+        }
+
+        public class LakeEcosystem
+        {
+
+            static readonly string[] LakeEcosystemNameDataBase = {
 "洞庭湖", "太湖", "汾湖", "珠江", "贝加尔湖", "密西西比河",
 "巴尔喀什湖", "维多利亚湖", "死海", "马尔地夫湖", "尼亚萨湖",
 "鄂博湖", "鄱阳湖", "图尔恰湖", "切德湖", "咸海", "阿拉尔湖",
@@ -107,40 +109,41 @@ public class Lake : Slot.MapObject, IReject<Lake>, IInfoProvider
 "奥哈瓦利湖", "雷西亚湖", "巴尔喀什湖", "博多湖", "拉东加湖", "埃比湖"
 // 继续添加更多的湖泊名称...
 };
-        public string name;
-        [JsonProperty]
-        public Map map { get; private set; }
+            public string name;
+            [JsonProperty]
+            public Map map { get; private set; }
 
-        [JsonProperty]
-        public HashSet<Lake> lakes { get; private set; } = new();
+            [JsonProperty]
+            public HashSet<Lake> lakes { get; private set; } = new();
 
-        public List<Vector2> vertices = new();
+            public List<Vector2> vertices = new();
 
-        public void Inject(Lake lake)
-        {
-            if (lake.map == map)
+            public void Inject(Lake lake)
             {
-                lakes.Add(lake);
-                lake.lakeEcosystem = this;
+                if (lake.map == map)
+                {
+                    lakes.Add(lake);
+                    lake.lakeEcosystem = this;
+                }
             }
-        }
 
-        public LakeEcosystem(Map map)
-        {
-            Debug.Log("LakeEcosystem有参构造函数");
-            this.map = map;
-            map.lakeEcosystems.Add(this);
-            name = LakeEcosystemNameDataBase[Random.Range(0, LakeEcosystemNameDataBase.Length)];
-        }
+            public LakeEcosystem(Map map)
+            {
+                Debug.Log("LakeEcosystem有参构造函数");
+                this.map = map;
+                map.lakeEcosystems.Add(this);
+                name = LakeEcosystemNameDataBase[Random.Range(0, LakeEcosystemNameDataBase.Length)];
+            }
 
-        [JsonConstructor]
-        public LakeEcosystem()
-        {
-            Debug.Log("LakeEcosystem无参构造函数");
+            [JsonConstructor]
+            public LakeEcosystem()
+            {
+                Debug.Log("LakeEcosystem无参构造函数");
+            }
+
+
         }
 
 
     }
-
-
 }

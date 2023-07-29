@@ -8,7 +8,6 @@ using System.Linq;
 //[JsonConverter(typeof(SlotConvertor))]
 public abstract partial class Slot
 {
-    public static Type[] AllTypes = { typeof(Slots.Plain), typeof(Slots.Water) };//WORKFLOW : 枚举所有类型
 
     [JsonProperty]
     public Map map { get; private set; }
@@ -30,7 +29,7 @@ public abstract partial class Slot
         OnSlotUpdate?.Invoke();
     }
 
-    internal string GetInfo()
+    internal string GetInfo(bool debugDetailed = false)
     {
         System.Text.StringBuilder builder = new();
         //从三个地方找信息，slot，slotRender，MapObjects, map
@@ -39,8 +38,21 @@ public abstract partial class Slot
         {
             if (obj is IInfoProvider provider)
             {
-                provider.ProvideInfo(str => builder.Append(str));
+                bool appended = false;
+                provider.ProvideInfo(str =>
+                {
+                    builder.Append(str);
+                    appended = true;
+                });
+                if (!appended)
+                {
+                    builder.Append(obj.ToString() + " :未提供信息");
+                }
                 builder.AppendLine();
+            }
+            else if (debugDetailed)
+            {
+                builder.AppendLine("[隐藏] "+obj.ToString());
             }
         }
         return builder.ToString();
