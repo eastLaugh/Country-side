@@ -12,13 +12,17 @@ public class House : MapObject, IReject<House>
         return base.Render(prefab, prefabs, slotRender);
     }
 
-    protected override void OnInjected()
+    protected override void Awake()
     {
     }
 
-    protected override void OnUnjected()
+    protected override void OnDisable()
     {
         
+    }
+
+    protected override void OnCreated()
+    {
     }
 
     public override bool CanBeUnjected { get; protected set; }=true;
@@ -28,11 +32,16 @@ public class Road : MapObject
 {
     public override bool CanBeUnjected { get; protected set; }=true;
 
-    protected override void OnInjected()
+    protected override void Awake()
     {
     }
 
-    protected override void OnUnjected()
+    protected override void OnDisable()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    protected override void OnCreated()
     {
         throw new System.NotImplementedException();
     }

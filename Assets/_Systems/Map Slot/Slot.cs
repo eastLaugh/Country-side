@@ -8,7 +8,7 @@ using System.Linq;
 //[JsonConverter(typeof(SlotConvertor))]
 public abstract partial class Slot
 {
-    public static Type[] AllTypes = { typeof(Plain) };//WORKFLOW : 枚举所有类型
+    public static Type[] AllTypes = { typeof(Slots.Plain), typeof(Slots.Water) };//WORKFLOW : 枚举所有类型
 
     [JsonProperty]
     public Map map { get; private set; }
@@ -67,7 +67,14 @@ public abstract partial class Slot
     }
 
 
-    
+    //上下左右
+    public static readonly Vector2[] 上下左右 = new Vector2[] { new Vector2(0, 1), new Vector2(0, -1), new Vector2(-1, 0), new Vector2(1, 0) };
+    public static readonly Vector2[] AllDirections = { new Vector2(0, 1), new Vector2(-1, 1), new Vector2(-1, 0), new Vector2(-1, -1), new Vector2(0, -1), new Vector2(1, -1), new Vector2(1, 0), new Vector2(1, 1) };
 
+
+    public T GetMapObject<T>() where T : MapObject
+    {
+        return mapObjects.SingleOrDefault(mapObject => mapObject is T) as T;
+    }
 
 }

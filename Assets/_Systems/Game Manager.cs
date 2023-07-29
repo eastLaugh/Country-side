@@ -11,6 +11,7 @@ using UnityEditor;
 using NaughtyAttributes;
 public class GameManager : MonoBehaviour
 {
+    public static event Action<Map> OnMapLoaded;
     public static GameManager current;
 
     public Grid grid;
@@ -91,7 +92,7 @@ public class GameManager : MonoBehaviour
         }
         if (seed != -1)
         {
-            if (GUILayout.Button("重新创建"))
+            if (GUILayout.Button("新地图"))
             {
                 seed = -1;
                 UnLoad();
@@ -122,7 +123,7 @@ public class GameManager : MonoBehaviour
             }
             if (GUILayout.Button("[调试|查看地图信息]"))
             {
-                SaveCurrentMap(Path.Combine(SaveDirectory, "[调试]"));
+                SaveCurrentMap(Path.Combine(SaveDirectory, "临时非存档.zmq"));
             }
         }
 
@@ -191,8 +192,8 @@ public class GameManager : MonoBehaviour
         this.map = map;
         seed = map.MainRandomSeed;
         grid.transform.position = new Vector3(-map.size.x * grid.cellSize.x / 2f, 0, /*-map.size.y * grid.cellSize.z / 2f*/0);
-
-    }
+        OnMapLoaded?.Invoke(map);
+    }   
 
 }
 

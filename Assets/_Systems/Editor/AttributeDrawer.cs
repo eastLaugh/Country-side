@@ -21,7 +21,7 @@ public class MapObjectAttributeDrawer : PropertyDrawer
     {
         if (attribute is TypeToString attr)
         {
-            if (property.type != "string")
+            if (property.type == "string")
             {
                 GUIContent[] TypeNames = attr.types.Select(type => new GUIContent(type.Name)).ToArray();
                 string stringValue = property.stringValue;

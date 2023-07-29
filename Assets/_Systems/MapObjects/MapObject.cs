@@ -10,11 +10,15 @@ using DG.Tweening;
 
 partial class Slot
 {
+
     public abstract class MapObject
     {
+
         protected Map map => slot.map;
         public static readonly Type[] BuiltMapObject = { typeof(House), typeof(Tree), typeof(DeletingFlag) };
-        public static readonly Type[] AllTypes = { typeof(House), typeof(Road), typeof(Tree), typeof(DeletingFlag) };//WORKFLOW : 枚举所有类型
+
+        //1 引用 由 TypeToString 特性 通过反射调用
+        public static readonly Type[] AllTypes = { typeof(House), typeof(Road), typeof(Tree), typeof(DeletingFlag), typeof(Lake) };//WORKFLOW : 枚举所有类型
 
         [JsonProperty]
         public Slot slot { get; private set; } = null;
@@ -52,8 +56,8 @@ partial class Slot
                 slot.slotRender.OnRender += RenderInvoke;
                 slot.slotRender.OnSlotClicked += _ => OnClick();
 
-                // slot.map.OnLoad += _ => Start();
-                OnInjected();
+                slot.map.OnCreated += _ => OnCreated();
+                Awake();
 
                 slot.OnSlotUpdate?.Invoke();
                 return true;
@@ -74,10 +78,12 @@ partial class Slot
                 slot.mapObjects.Remove(this);
                 slot.slotRender.OnRender -= RenderInvoke;
                 slot.slotRender.OnSlotClicked -= _ => OnClick();
+                slot.map.OnCreated -= _ => OnCreated();
+
                 MonoBehaviour.Destroy(father.gameObject);
                 slot.OnSlotUpdate?.Invoke();
-                
-                OnUnjected();
+
+                OnDisable();
                 this.slot = null;
             }
         }
@@ -101,7 +107,8 @@ partial class Slot
             }
         }
 
-        protected abstract void OnInjected();
+        //无论是创建还是加载，均会执行此。执行时机：地图格子全部创建完成之前
+        protected abstract void Awake();
 
         public void Update()
         {
@@ -109,7 +116,12 @@ partial class Slot
         }
 
         public abstract bool CanBeUnjected { get; protected set; }
-        protected abstract void OnUnjected();
+        //地图格子被撤销注入格子后
+        protected abstract void OnDisable();
+
+        //地图被创建时会执行此。【加载时不会执行！】。执行时机：地图格子均已创建完成后
+        protected abstract void OnCreated();
+
     }
 }
 
