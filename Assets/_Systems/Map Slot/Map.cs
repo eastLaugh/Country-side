@@ -13,7 +13,7 @@ public class Map
     [JsonProperty]
     public List<Lake.LakeEcosystem> lakeEcosystems { get; protected set; } = new();
     [JsonProperty]
-    public EconomyWrapper economy { get; private set; }
+    public GameDataWrapper<EconomyVector> economyWrapper { get; private set; }
     [JsonProperty(Order = 9)]
     private Slot[] Slots;
     [JsonProperty(Order = 99)]
@@ -21,13 +21,13 @@ public class Map
     [JsonProperty(Order = 999)]
     public Vector2Int size { get; private set; }
 
-    public Map(Vector2Int size, Slot[] Slots, int RandomSeed, EconomyWrapper economyWrapper)
+    public Map(Vector2Int size, Slot[] Slots, int RandomSeed, GameDataWrapper<EconomyVector> economyWrapper)
     {
         Debug.Log("Map公共有参构造函数");
         this.size = size;
         this.Slots = Slots;
         this.MainRandomSeed = RandomSeed;
-        this.economy = economyWrapper;
+        this.economyWrapper = economyWrapper;
     }
 
     [JsonConstructor]
@@ -61,8 +61,10 @@ public class Map
 
 
         //创建地图
+        GameDataWrapper<EconomyVector> economyWrapper = new GameDataWrapper<EconomyVector>(new() { new SolidMiddleware<EconomyVector>(new EconomyVector(Random.Range(100f, 1000f), Random.Range(10000f, 1000000f), Random.Range(0f, 1f))) });
+
         var map = new Map(size, slots, seed,
-            new EconomyWrapper(new EconomyVector(Random.Range(100f, 1000f), Random.Range(10000f, 1000000f), Random.Range(0f, 1f)), new() { new UniversalMiddleware<EconomyVector>() }));
+            economyWrapper);
 
         float PerlinOffsetX = Random.Range(0f, 1f);
         float PerlinOffsetY = Random.Range(0f, 1f);

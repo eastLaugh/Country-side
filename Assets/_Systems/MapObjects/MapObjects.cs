@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using UnityEngine;
 using static Slot;
 
@@ -14,8 +15,15 @@ public static partial class MapObjects
             return base.Render(prefab, prefabs, slotRender);
         }
 
+        [JsonProperty]
+        Middleware<EconomyVector> consumption;
         protected override void Awake()
         {
+            if (consumption == null)
+            {
+                consumption = new SolidMiddleware<EconomyVector>(new EconomyVector(0, -200f, 0));
+                map.economyWrapper.AddMiddleware(consumption);
+            }
         }
 
         protected override void OnDisable()

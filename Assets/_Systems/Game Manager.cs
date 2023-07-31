@@ -58,23 +58,29 @@ public class GameManager : MonoBehaviour
     {
         SlotRender.OnAnySlotClicked += OnAnySlotClickedInAllMode;
         SlotRender.OnAnySlotClickedInBuildMode += OnAnySlotClickedInAllMode;
+        GameManager.OnMapLoaded += LoadMap;
 
-        void OnAnySlotClickedInAllMode(SlotRender slotRender)
-        {
-            if (debugSlotRender != null)
-                debugSlotRender.slot.OnSlotUpdate -= UpdateDebugInfo;
-            debugSlotRender = slotRender;
-            debugSlotRender.slot.OnSlotUpdate += UpdateDebugInfo;
-        }
+    }
+
+
+    private void OnDisable()
+    {
+        SlotRender.OnAnySlotClicked -= OnAnySlotClickedInAllMode;
+        SlotRender.OnAnySlotClickedInBuildMode -= OnAnySlotClickedInAllMode;
+        GameManager.OnMapLoaded -= LoadMap;
+
+
+    }
+    void OnAnySlotClickedInAllMode(SlotRender slotRender)
+    {
+        if (debugSlotRender != null)
+            debugSlotRender.slot.OnSlotUpdate -= UpdateDebugInfo;
+        debugSlotRender = slotRender;
+        debugSlotRender.slot.OnSlotUpdate += UpdateDebugInfo;
         void UpdateDebugInfo()
         {
             debugSlotInfo = debugSlotRender.slot.GetInfo(true);
         }
-
-    }
-    private void OnDisable()
-    {
-
     }
 
 
@@ -86,7 +92,7 @@ public class GameManager : MonoBehaviour
         current = this;
         SaveDirectory = Path.Combine(Application.persistentDataPath, "beta");
     }
-    int seed = -1;
+    int seed = -1;  // -1 : 由程序随机生成种子
     string fileName = "默认存档.zmq";
     private void OnGUI()
     {
@@ -107,13 +113,16 @@ public class GameManager : MonoBehaviour
             {
                 seed = -1;
                 UnLoad();
-                SetMap(Map.Generate(size, seed));
+                var map = Map.Generate(size, seed);
+                OnMapLoaded?.Invoke(map);
             }
         }
         if (GUILayout.Button("创建"))
         {
             UnLoad();
-            SetMap(Map.Generate(size, seed));
+            var map = Map.Generate(size, seed);
+            OnMapLoaded?.Invoke(map);
+
         }
         if (GUILayout.Button("加载"))
         {
@@ -157,6 +166,19 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        if (map != null)
+        {
+            //显示一些经济参数
+            GUILayout.BeginArea(new Rect(Screen.width - 200, 0, 200, Screen.height), GUI.skin.box);
+            {
+                GUILayout.Label("经济参数");
+                GUILayout.Label(JsonConvert.SerializeObject(currentEconomyVector, Formatting.Indented));
+
+            }
+            GUILayout.EndArea();
+        }
+
+
     }
     public Map map { get; private set; }
     void SaveCurrentMap(string fileName)
@@ -179,6 +201,8 @@ public class GameManager : MonoBehaviour
 
     void UnLoad()
     {
+        if (map != null)
+            map.economyWrapper.OnDataUpdated -= OnEconomyDataUpdated;
         grid.transform.DestroyAllChild();
         map = null;
     }
@@ -195,19 +219,27 @@ public class GameManager : MonoBehaviour
             UnLoad();
             string jsonText = File.ReadAllText(FileName);
             Map map = JsonConvert.DeserializeObject<Map>(jsonText, SerializeSettings);
-            SetMap(map);
+            OnMapLoaded?.Invoke(map);
         }
     }
 
 
-    private void SetMap(Map map)
+    private void LoadMap(Map map)
     {
         this.map = map;
         seed = map.MainRandomSeed;
-        grid.transform.position = new Vector3(-map.size.x * grid.cellSize.x / 2f, 0, /*-map.size.y * grid.cellSize.z / 2f*/0);
-        OnMapLoaded?.Invoke(map);
+        grid.transform.position = new Vector3(-map.size.x * grid.cellSize.x / 2f, 0, /*-map.size.y * grid.cellSize.z / 2f*/0); //对齐到左下角
+
+        map.economyWrapper.OnDataUpdated += OnEconomyDataUpdated;
+        OnEconomyDataUpdated(map.economyWrapper.GetValue());
+
     }
 
+    EconomyVector currentEconomyVector;
+    private void OnEconomyDataUpdated(EconomyVector _new)
+    {
+        currentEconomyVector = _new;
+    }
 }
 
 

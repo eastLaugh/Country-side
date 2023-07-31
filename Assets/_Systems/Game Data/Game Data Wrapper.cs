@@ -1,9 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine;
-
-public struct EconomyVector
+public interface IDataVector<T> where T : IDataVector<T>
+{
+    T Add(T other);
+}
+public struct EconomyVector : IDataVector<EconomyVector>
 {
 
     public float 人口 { get; private set; }
@@ -49,43 +53,85 @@ public struct EconomyVector
             left.集约程度 - right.集约程度
         );
     }
-
-
-}
-
-public class EconomyWrapper : GameDataWrapper<EconomyVector>
-{
-    public EconomyWrapper( EconomyVector current, List<Middleware<EconomyVector>> middlewares) : base(current, middlewares)
+    public EconomyVector Add(EconomyVector other)
     {
-        Debug.Log("EconomyWrapper有参构造函数");
+        return this + other;
     }
 }
 
-public class GameDataWrapper<T>
+
+public class GameDataWrapper<T> : IMiddleware<T> where T : IDataVector<T>
 {
     [JsonProperty]
-    protected T current;
+    T current;
     [JsonProperty]
-    protected readonly List<Middleware<T>> middlewares;
+    protected readonly List<IMiddleware<T>> Middlewares = new();
 
-    public GameDataWrapper(T current, List<Middleware<T>> middlewares)
+    [JsonConstructor]
+    public GameDataWrapper(List<IMiddleware<T>> middlewares)
     {
         Debug.Log("GameDataWrapper有参构造函数");
 
-        this.current = current;
-        this.middlewares = middlewares;
+        foreach (var middleware in middlewares)
+        {
+            AddMiddleware(middleware);
+        }
+
     }
-}
 
-public abstract class Middleware<T>
-{
-    public abstract T Process(T standard);
-}
-
-public class UniversalMiddleware<T> : Middleware<T>
-{
-    public override T Process(T standard)
+    public void AddMiddleware(IMiddleware<T> middleware)
     {
-        return default(T);
+        Middlewares.Add(middleware);
+
+        T origin = middleware.GetValue();
+        T final = middleware.Process(origin);
+        current = current.Add(final);
+
+        OnDataUpdated?.Invoke(current);
+
     }
+
+    public T Process(T data)
+    {
+        return data;   //不做任何处理
+    }
+
+    public T GetValue()
+    {
+        return current;
+    }
+
+    public event Action<T> OnDataUpdated;
+}
+
+public abstract class Middleware<T> : IMiddleware<T>
+{
+    public abstract T GetValue();
+    public abstract T Process(T data);
+}
+
+
+//该中间件表示一个定值
+public class SolidMiddleware<T> : Middleware<T>
+{
+    public readonly T solidValue;
+    public SolidMiddleware(T solidValue)
+    {
+        this.solidValue = solidValue;
+    }
+    public override T GetValue()
+    {
+        return solidValue;  //返回定值
+    }
+
+    public override T Process(T data)
+    {
+        return data;   //不做任何处理
+    }
+}
+
+public interface IMiddleware<T>
+{
+    T Process(T data);
+    T GetValue();
 }
