@@ -5,6 +5,7 @@ using Random = UnityEngine.Random;
 using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;
 using static MapObjects;
+using System.Linq;
 
 public class Map
 {
@@ -66,34 +67,11 @@ public class Map
         var map = new Map(size, slots, seed,
             economyWrapper);
 
-        float PerlinOffsetX = Random.Range(0f, 1f);
-        float PerlinOffsetY = Random.Range(0f, 1f);
-
-        //遍历格子
-        for (int i = 0; i < size.x; i++)
+        //去中心化
+        foreach (MapGenerator generator in InitAllGenerators())
         {
-            for (int j = 0; j < size.y; j++)
-            {
-                float noise = Mathf.PerlinNoise(PerlinOffsetX + i * 0.1f, PerlinOffsetY + j * 0.1f);
-                Slot newSlot;
-
-                if (noise > 0.2f)
-                {
-                    newSlot = new Slots.Plain(map, new Vector2(i, j), new());
-                    if (noise > 0.7f)
-                    {
-                        new MapObjects.Tree().Inject(newSlot);
-                    }
-                }
-                else
-                {
-                    newSlot = new Slots.Water(map, new Vector2(i, j), new());
-                }
-                slots[i * size.y + j] = newSlot;
-            }
+            generator.Generate(map, size, slots);
         }
-
-
 
         map.OnCreated?.Invoke(map);
         return map;
@@ -105,5 +83,14 @@ public class Map
     {
         Debug.Log("反序列化完成");
         //OnLoad?.Invoke(this);
+    }
+
+    static IEnumerable<MapGenerator> InitAllGenerators()
+    {
+        IOrderedEnumerable<Type> types = System.Reflection.Assembly.GetExecutingAssembly().GetTypes().Where(type => type.IsSubclassOf(typeof(MapGenerator)) && type.IsDefined(typeof(RegisterAsMapLayer), false)).OrderBy(type => ((RegisterAsMapLayer)type.GetCustomAttributes(typeof(RegisterAsMapLayer), false)[0]).Order);
+        foreach (Type type in types)
+        {
+            yield return (MapGenerator)Activator.CreateInstance(type);
+        }
     }
 }
