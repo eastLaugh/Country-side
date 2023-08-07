@@ -1022,6 +1022,7 @@ GameObject:
   - component: {fileID: 705507995}
   - component: {fileID: 705507994}
   - component: {fileID: 705507996}
+  - component: {fileID: 705507997}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -1098,13 +1099,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_LocalRotation: {x: 0.6037647, y: 0, z: 0, w: 0.79716265}
+  m_LocalRotation: {x: 0.6037647, y: -0, z: -0, w: 0.79716265}
   m_LocalPosition: {x: 3.22, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1911449695}
-  m_RootOrder: -1
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 74.28, y: 0, z: 0}
 --- !u!114 &705507996
 MonoBehaviour:
@@ -1129,6 +1130,19 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!114 &705507997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705507993}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56fa59a6c45f369469eca7ed67fda21e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dayDuration: 12
 --- !u!1 &743175209
 GameObject:
   m_ObjectHideFlags: 0
@@ -3294,7 +3308,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 705507995}
   - {fileID: 1423144533}
   m_Father: {fileID: 0}
   m_RootOrder: 11
@@ -3796,8 +3809,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3539244381861504357, guid: 2341291eb0bcad044a95b18b5439c7bc,
         type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 347.46
+      objectReference: {fileID: 0}
+    - target: {fileID: 3539244381861504357, guid: 2341291eb0bcad044a95b18b5439c7bc,
+        type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 67.16064
+      value: 157.12001
       objectReference: {fileID: 0}
     - target: {fileID: 3862730955804731141, guid: 2341291eb0bcad044a95b18b5439c7bc,
         type: 3}

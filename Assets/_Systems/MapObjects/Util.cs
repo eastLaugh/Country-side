@@ -39,7 +39,7 @@ public static class TypeUtil
         {
             foreach (var element in set)
             {
-                if (set.GetType() == interf)
+                if (element.GetType() == interf.GetGenericArguments().First())
                     goto go_on;
             }
             return false;

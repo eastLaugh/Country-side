@@ -15,6 +15,27 @@ MonoBehaviour:
   Dict:
     _serializedList:
     - Key:
+        _: TextileMill
+      Value:
+        Prefab: {fileID: 919132149155446097, guid: 6ac1d576ddec5e74d9b46549324afd64,
+          type: 3}
+        Prefabs: []
+        "\u5907\u6CE8": 
+    - Key:
+        _: Mulberry
+      Value:
+        Prefab: {fileID: 7283486670144764620, guid: 2b706258fd8dcb945901495109bdcb86,
+          type: 3}
+        Prefabs: []
+        "\u5907\u6CE8": 
+    - Key:
+        _: Road
+      Value:
+        Prefab: {fileID: 3275510535045769556, guid: 1e5c0348ceb1dcd46add68e0e7e69432,
+          type: 3}
+        Prefabs: []
+        "\u5907\u6CE8": 
+    - Key:
         _: House
       Value:
         Prefab: {fileID: 919132149155446097, guid: e389191a0adf3094e97a6da0295330a2,

@@ -17,7 +17,6 @@ public class InputForCamera : MonoBehaviour
     {
         Overlook, Focus
     };
-    private FSM<CameraState> fsm = new FSM<CameraState>();
     public PlayerInput playerInput;
     public CinemachineVirtualCamera virtualCamera;
     public float DragRatio = 0.01f;
@@ -81,7 +80,6 @@ public class InputForCamera : MonoBehaviour
 
         seq.Join(virtualCamera.transform.DORotate(new Vector3(PicthAngle, virtualCamera.transform.rotation.eulerAngles.y, virtualCamera.transform.rotation.eulerAngles.z), time));
 
-        seq.SetEase(Ease.Linear);
         seq.Play();
         //virtualCamera.transform.rotation = Quaternion.Euler(PicthAngle, virtualCamera.transform.rotation.eulerAngles.y, virtualCamera.transform.rotation.eulerAngles.z);
 
