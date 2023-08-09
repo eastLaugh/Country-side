@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System;
 using System.Runtime.Serialization;
+using Cinemachine;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -12,6 +13,7 @@ using NaughtyAttributes;
 public class GameManager : MonoBehaviour
 {
     public static event Action<Map> OnMapLoaded;
+    public static event Action<Map> AfterMapLoaded;
     public static GameManager current;
 
     public Grid grid;
@@ -58,7 +60,7 @@ public class GameManager : MonoBehaviour
     {
         SlotRender.OnAnySlotClicked += OnAnySlotClickedInAllMode;
         SlotRender.OnAnySlotClickedInBuildMode += OnAnySlotClickedInAllMode;
-        GameManager.OnMapLoaded += LoadMap;
+
 
     }
 
@@ -67,7 +69,6 @@ public class GameManager : MonoBehaviour
     {
         SlotRender.OnAnySlotClicked -= OnAnySlotClickedInAllMode;
         SlotRender.OnAnySlotClickedInBuildMode -= OnAnySlotClickedInAllMode;
-        GameManager.OnMapLoaded -= LoadMap;
 
 
     }
@@ -114,14 +115,14 @@ public class GameManager : MonoBehaviour
                 seed = -1;
                 UnLoad();
                 var map = Map.Generate(size, seed);
-                OnMapLoaded?.Invoke(map);
+                LoadMap(map);
             }
         }
         if (GUILayout.Button("创建"))
         {
             UnLoad();
             var map = Map.Generate(size, seed);
-            OnMapLoaded?.Invoke(map);
+            LoadMap(map);
 
         }
         if (GUILayout.Button("加载"))
@@ -219,19 +220,25 @@ public class GameManager : MonoBehaviour
             UnLoad();
             string jsonText = File.ReadAllText(FileName);
             Map map = JsonConvert.DeserializeObject<Map>(jsonText, SerializeSettings);
-            OnMapLoaded?.Invoke(map);
+            LoadMap(map);
         }
     }
 
-
+    public CinemachineVirtualCamera CinemachineVirtualCamera;
     private void LoadMap(Map map)
     {
+        OnMapLoaded?.Invoke(map);
+
         this.map = map;
         seed = map.MainRandomSeed;
-        grid.transform.position = new Vector3(-map.size.x * grid.cellSize.x / 2f, 0, /*-map.size.y * grid.cellSize.z / 2f*/0); //对齐到左下角
+        
+        //grid.transform.position = new Vector3(-map.size.x * grid.cellSize.x / 2f, 0, /*-map.size.y * grid.cellSize.z / 2f*/0); //对齐到左下角
+        CinemachineVirtualCamera.transform.position = new Vector3(map.size.x * grid.cellSize.x / 2f, CinemachineVirtualCamera.transform.position.y, map.size.y * grid.cellSize.z / 2f);
 
         map.economyWrapper.OnDataUpdated += OnEconomyDataUpdated;
         OnEconomyDataUpdated(map.economyWrapper.GetValue());
+
+        AfterMapLoaded?.Invoke(map);
 
     }
 

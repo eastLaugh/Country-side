@@ -73,7 +73,7 @@ partial class MapObjects
             throw new System.NotImplementedException();
         }
 
-        protected override void Awake()
+        protected override void OnEnable()
         {
 
         }

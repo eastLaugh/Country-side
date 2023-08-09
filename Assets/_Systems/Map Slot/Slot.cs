@@ -16,7 +16,7 @@ public abstract partial class Slot
     [JsonProperty]
     public Vector2 position { get; private set; }
 
-
+    public Vector3 worldPosition { get; private set; }
 
     [JsonIgnore]
     public SlotRender slotRender { get; private set; }
@@ -52,7 +52,7 @@ public abstract partial class Slot
             }
             else if (debugDetailed)
             {
-                builder.AppendLine("[隐藏] "+obj.ToString());
+                builder.AppendLine("[隐藏] " + obj.ToString());
             }
         }
         return builder.ToString();
@@ -68,7 +68,8 @@ public abstract partial class Slot
 
         var offset = new Vector3(0.5f, 0, 0.5f);
         var prefab = GameManager.current.SlotDatabase[GetType()].Prefab;
-        gameObject = MonoBehaviour.Instantiate(prefab, GameManager.current.grid.CellToWorld(new Vector3Int(((int)position.x), 0, ((int)position.y))) + offset, Quaternion.identity, GameManager.current.grid.transform);
+        worldPosition = GameManager.current.grid.CellToWorld(new Vector3Int(((int)position.x), 0, ((int)position.y))) + offset;
+        gameObject = MonoBehaviour.Instantiate(prefab, worldPosition, Quaternion.identity, GameManager.current.grid.transform);
         slotRender = gameObject.GetComponent<SlotRender>();
         slotRender.slot = this;
 

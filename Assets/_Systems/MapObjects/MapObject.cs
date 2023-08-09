@@ -22,6 +22,7 @@ partial class Slot
 
 
         protected Transform father { get; private set; }
+        protected GameObject gameObject => father.gameObject;
 
         public static bool CanBeInjected(Slot slot, Type detectedType) => slot.mapObjects.Accessible(detectedType);
 
@@ -53,7 +54,17 @@ partial class Slot
                 slot.slotRender.OnSlotClicked += _ => OnClick();
 
                 slot.map.OnCreated += _ => OnCreated();
+
+
                 Awake();
+                if (GameManager.current.map == null)
+                {
+                    GameManager.OnMapLoaded += _ => OnEnable();
+                }
+                else
+                {
+                    OnEnable();
+                }
 
                 slot.OnSlotUpdate?.Invoke();
                 return true;
@@ -103,19 +114,25 @@ partial class Slot
             }
         }
 
-        //无论是创建还是加载，均会执行此。执行时机：地图格子全部创建完成之前
-        protected abstract void Awake();
 
-        public void Update()
+        /// <summary>
+        /// 无论是创建还是加载，均会执行此。执行时机：读档时，在地图格子全部创建完成之后；读档后，在玩家操作后立即执行
+        /// </summary>
+        protected abstract void OnEnable();
+
+
+        protected virtual void Awake()
         {
-            slot.OnSlotUpdate?.Invoke();
+
         }
 
         public abstract bool CanBeUnjected { get; }
         //地图格子被撤销注入格子后
         protected abstract void OnDisable();
 
-        //地图被创建时会执行此。【加载时不会执行！】。执行时机：地图格子均已创建完成后
+        /// <summary>
+        /// 地图被创建时会执行此。【加载时不会执行！】。执行时机：地图格子均已创建完成后
+        /// </summary>
         protected abstract void OnCreated();
 
     }

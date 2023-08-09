@@ -17,7 +17,7 @@ public static partial class MapObjects
 
         [JsonProperty]
         Middleware<EconomyVector> consumption;
-        protected override void Awake()
+        protected override void OnEnable()
         {
             if (consumption == null)
             {
@@ -38,24 +38,6 @@ public static partial class MapObjects
         public override bool CanBeUnjected => true;
     }
 
-    public class Road : MapObject
-    {
-        public override bool CanBeUnjected => true;
-
-        protected override void Awake()
-        {
-        }
-
-        protected override void OnDisable()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        protected override void OnCreated()
-        {
-            throw new System.NotImplementedException();
-        }
-    }
 
     //桑叶
     public class Mulberry : Resource<Mulberry>
@@ -66,7 +48,7 @@ public static partial class MapObjects
     //纺织厂
     public class TextileMill : ResourceBuilding<Mulberry>
     {
-        protected override void Awake()
+        protected override void OnEnable()
         {
             
         }
@@ -87,7 +69,7 @@ public class Resource<T> : MapObject, MustNotExist<T> where T : Resource<T>
 {
     public override bool CanBeUnjected => true;
 
-    protected override void Awake()
+    protected override void OnEnable()
     {
     }
 

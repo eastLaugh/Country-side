@@ -105,7 +105,7 @@ partial class MapObjects
         }
 
         //地图一旦创建好就会立刻执行，且永远只执行一次
-        protected override void Awake()
+        protected override void OnEnable()
         {
             RefreshChoppingState();
         }

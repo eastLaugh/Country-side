@@ -11,7 +11,7 @@ partial class MapObjects
     {
         public override bool CanBeUnjected => true;
 
-        protected override void Awake()
+        protected override void OnEnable()
         {
             this.Unject();
         }
