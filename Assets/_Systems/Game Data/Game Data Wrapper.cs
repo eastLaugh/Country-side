@@ -22,9 +22,9 @@ public struct EconomyVector : IDataVector<EconomyVector>
     public float 总收入 { get; private set; }
     public float 人均可支配收入 => 总收入 / 人口;
 
-    public float 集约程度 { get; private set; }
+    public float 集约程度 { get; private set; }  //这个东西没用，只是放在这里充数的
 
-    public float 扶贫资金 => 总收入 * 集约程度;
+    public float 扶贫资金 => 总收入 * 1f;
 
     public int 城镇等级 => 人口 switch
     {

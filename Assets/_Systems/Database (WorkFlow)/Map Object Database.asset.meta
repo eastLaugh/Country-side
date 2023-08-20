@@ -1,5 +1,7 @@
 fileFormatVersion: 2
 guid: 0d385132609b11f49adb8bb78a727fb1
+labels:
+- WorkFlow
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 11400000

@@ -116,22 +116,26 @@ partial class Slot
 
 
         /// <summary>
-        /// 无论是创建还是加载，均会执行此。执行时机：读档时，在地图格子全部创建完成之后；读档后，在玩家操作后立即执行
+        /// 执行时机：在地图格子全部创建完成之后
         /// </summary>
         protected abstract void OnEnable();
 
-
+        /// <summary>
+        /// 执行时机：一旦被实例化，立即执行
+        /// </summary>
         protected virtual void Awake()
         {
 
         }
 
         public abstract bool CanBeUnjected { get; }
-        //地图格子被撤销注入格子后
+        /// <summary>
+        /// 
+        /// </summary>
         protected abstract void OnDisable();
 
         /// <summary>
-        /// 地图被创建时会执行此。【加载时不会执行！】。执行时机：地图格子均已创建完成后
+        /// 执行时机：类似于OnEnable。不过，仅会在首次创建存档后执行，不会在读取存档时执行
         /// </summary>
         protected abstract void OnCreated();
 

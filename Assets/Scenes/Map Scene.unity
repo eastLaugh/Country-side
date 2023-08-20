@@ -2167,6 +2167,7 @@ MonoBehaviour:
   SaveDirectory: C:/Users/east_/AppData/LocalLow/DefaultCompany/Country side\beta
   MapObjectDatabase: {fileID: 11400000, guid: 0d385132609b11f49adb8bb78a727fb1, type: 2}
   SlotDatabase: {fileID: 11400000, guid: 822f6fa36caedb343a74e53b60444bd1, type: 2}
+  CinemachineVirtualCamera: {fileID: 1591195965}
 --- !u!114 &1001546401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3291,7 +3292,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1994781812}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3311,6 +3312,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0158195e15f7fd542982ed289289f842, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SlotParent: {fileID: 1423144533}
 --- !u!224 &2002327749 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3539244381861504357, guid: 2341291eb0bcad044a95b18b5439c7bc,
@@ -3814,7 +3816,7 @@ PrefabInstance:
     - target: {fileID: 3539244381861504357, guid: 2341291eb0bcad044a95b18b5439c7bc,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 157.14726
+      value: 157.11998
       objectReference: {fileID: 0}
     - target: {fileID: 3862730955804731141, guid: 2341291eb0bcad044a95b18b5439c7bc,
         type: 3}
