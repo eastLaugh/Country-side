@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Ink.Runtime;
 using Newtonsoft.Json;
 using UnityEngine;
 public interface IDataVector<T> where T : IDataVector<T>
@@ -37,7 +38,6 @@ public class GameDataWrapper<T> : IMiddleware<T> where T : IDataVector<T>
         current = current.Add(final);
 
         OnDataUpdated?.Invoke(current);
-
     }
 
     public T Process(T data)

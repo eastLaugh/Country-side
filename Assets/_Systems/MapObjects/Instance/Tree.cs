@@ -9,10 +9,7 @@ partial class MapObjects
 
     public class Tree : MapObject /* , IReject<House>, IReject<Road> */ , IInfoProvider
     {
-        public Tree()
-        {
-            //你至少保留一个公开的构造函数，以便系统调用
-        }
+        
 
 
         //实现这个接口（可选），用以显示在Slot Window上

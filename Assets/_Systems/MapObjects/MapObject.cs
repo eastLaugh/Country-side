@@ -41,7 +41,7 @@ partial class Slot
                 }
                 catch (KeyNotFoundException)
                 {
-                    Debug.Log($"未找到{GetType().Name}的配置信息，已忽略渲染");
+                    Debug.Log($"请遵从WorkFlow，在MapObject Database中为{GetType().Name}配置信息。由于未找到配置信息，已忽略Prefab");
                     config = default;
                 }
 
@@ -49,8 +49,8 @@ partial class Slot
                 father.SetParent(slot.slotRender.transform);
                 father.localPosition = Vector3.zero;
 
-                RenderInvoke = () => Render(config.Prefab, config.Prefabs, slot.slotRender);
-                slot.slotRender.OnRender += RenderInvoke;
+                OnlyRenderInvoke = () => Render(config.Prefab, config.Prefabs, slot.slotRender);
+                slot.slotRender.OnRender += OnlyRenderInvoke;
                 slot.slotRender.OnSlotClicked += _ => OnClick();
 
                 slot.map.OnCreated += _ => OnCreated();
@@ -59,14 +59,18 @@ partial class Slot
                 Awake();
                 if (GameManager.current.map == null)
                 {
+                    //地图尚未完成加载，(说明)此Inject为系统读档操作
                     GameManager.OnMapLoaded += _ => OnEnable();
                 }
                 else
                 {
+                    //地图已完成加载，(说明)此Inject为玩家操作
+                    OnCreated();
                     OnEnable();
                 }
 
-                slot.OnSlotUpdate?.Invoke();
+                slot.OnSlotUpdate?.Invoke(); /*仅供表现层*/
+                slot.slotRender.Refresh();
                 return true;
             }
             else
@@ -75,7 +79,7 @@ partial class Slot
             }
         }
 
-        Action RenderInvoke;
+        Action OnlyRenderInvoke;
 
         public void Unject()
         {
@@ -83,7 +87,7 @@ partial class Slot
             {
 
                 slot.mapObjects.Remove(this);
-                slot.slotRender.OnRender -= RenderInvoke;
+                slot.slotRender.OnRender -= OnlyRenderInvoke;
                 slot.slotRender.OnSlotClicked -= _ => OnClick();
                 slot.map.OnCreated -= _ => OnCreated();
 
@@ -135,11 +139,28 @@ partial class Slot
         protected abstract void OnDisable();
 
         /// <summary>
-        /// 执行时机：类似于OnEnable。不过，仅会在首次创建存档后执行，不会在读取存档时执行
+        /// 执行时机：类似于OnEnable。不过，仅在首次被创建时才会执行。永远只执行一次，不会在读取存档时执行
         /// </summary>
         protected abstract void OnCreated();
 
+        public class Virtual : MapObject
+        {
+            public override bool CanBeUnjected => true;
+
+            protected override void OnCreated()
+            {
+            }
+
+            protected override void OnDisable()
+            {
+            }
+
+            protected override void OnEnable()
+            {
+            }
+        }
     }
+
 }
 
 

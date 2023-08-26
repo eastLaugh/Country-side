@@ -15,12 +15,6 @@ MonoBehaviour:
   Dict:
     _serializedList:
     - Key:
-        _: XXX
-      Value:
-        Prefab: {fileID: 3275510535045769556, guid: 592cb1eccb49c544ba1aa2cb95a6af41,
-          type: 3}
-        "\u5907\u6CE8": 
-    - Key:
         _: Plain
       Value:
         Prefab: {fileID: 3275510535045769556, guid: 592cb1eccb49c544ba1aa2cb95a6af41,
