@@ -19,5 +19,5 @@ public static class Slots
 
     }
 
-
 }
+

@@ -87,6 +87,7 @@ partial class MapObjects
 
         }
 
+        
         //刷新砍树相关的事件
         void RefreshChoppingState()
         {

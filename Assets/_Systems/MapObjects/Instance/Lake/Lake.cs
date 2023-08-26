@@ -17,6 +17,8 @@ partial class MapObjects
         //地图被创建时才会被加载。读取本地存档时不会加载OnCreated();
         protected override void OnCreated()
         {
+
+            
             if (lakeEcosystem == null)
             {
 

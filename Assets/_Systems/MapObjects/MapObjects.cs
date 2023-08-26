@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json;
 using UnityEngine;
 using static Slot;
@@ -28,7 +29,6 @@ public static partial class MapObjects
 
         protected override void OnDisable()
         {
-
         }
 
         protected override void OnCreated()
@@ -61,6 +61,32 @@ public static partial class MapObjects
         protected override void OnDisable()
         {
             throw new System.NotImplementedException();
+        }
+    }
+
+
+    public class 市中心 : MapObject , MustNotExist<Tree> ,IInfoProvider
+    {
+        public override bool CanBeUnjected => true;
+
+        public void ProvideInfo(Action<string> provide)
+        {
+            provide("市中心");
+        }
+
+        protected override void OnCreated()
+        {
+
+        }
+
+        protected override void OnDisable()
+        {
+
+        }
+
+        protected override void OnEnable()
+        {
+
         }
     }
 }
