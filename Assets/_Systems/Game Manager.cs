@@ -6,6 +6,8 @@ using System.IO;
 using System;
 using System.Runtime.Serialization;
 using Cinemachine;
+using UnityEngine.UI;
+using UnityEngine.InputSystem.XR.Haptics;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -14,10 +16,26 @@ public class GameManager : MonoBehaviour
 {
     public static event Action<Map> OnMapLoaded;
     public static event Action<Map> AfterMapLoaded;
+    public static event Action OnGameUpdate;
+    public static event Action OnGameExit;
     public static GameManager current;
+    public static int saveIndex = 0;
 
     public Grid grid;
 
+    [SerializeField]
+    public string CurrentSate; 
+    [SerializeField] GameObject Overlay;
+    [SerializeField] UIManager uiManager;
+
+    private GlobalData globalData;
+    private TimeSystem timeSystem;
+    private illuBookSystem illuBookSystem;
+    public enum GameState
+    {
+        Unload,NewGame,Loading,Playing
+    }
+    FSM<GameState> fsm = new FSM<GameState>();
 
     public Vector2Int size;
     [Header("存储")]
@@ -28,6 +46,7 @@ public class GameManager : MonoBehaviour
     [NaughtyAttributes.Foldout("数据库")]
     public MapObjectDatabase MapObjectDatabase;
     public SlotDatabase SlotDatabase;
+    public illuBookData_SO illuBookData;
 
     public static readonly JsonSerializerSettings SerializeSettings = new JsonSerializerSettings
     {
@@ -48,11 +67,33 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         UnLoad();
+        FSMInit();
+        var map = Map.Generate(size, seed);
+        LoadMap(map);
         //InfoWindow.Create("这是一个窗口，点击右下角关闭");
 
         // var map = GenerateMap(size);
         // LoadMap(map);
     }
+    void FSMInit()
+    {
+        fsm.State(GameState.Loading)
+        .OnEnter(() =>
+        {
+            Overlay.SetActive(true);
+        }).OnExit(() =>
+        {
+            Overlay.SetActive(false);
+        });
+        fsm.State(GameState.Playing)
+        .OnUpdate(() =>
+        {
+            OnGameUpdate?.Invoke();
+        });
+        fsm.State(GameState.Unload);
+        fsm.ChangeState(GameState.Unload);
+    }
+
 
     SlotRender debugSlotRender = null;
     string debugSlotInfo = "此处显示你点击方块的调试信息。";
@@ -60,8 +101,6 @@ public class GameManager : MonoBehaviour
     {
         SlotRender.OnAnySlotClicked += OnAnySlotClickedInAllMode;
         SlotRender.OnAnySlotClickedInBuildMode += OnAnySlotClickedInAllMode;
-
-
     }
 
 
@@ -83,24 +122,78 @@ public class GameManager : MonoBehaviour
             debugSlotInfo = debugSlotRender.slot.GetInfo(true);
         }
     }
-
+    private void Update()
+    {
+        fsm.update();
+    }
 
     private void Awake()
     {
         DG.Tweening.DOTween.Init();
         DG.Tweening.DOTween.SetTweensCapacity(size.x * size.y, 50);
-
         current = this;
         SaveDirectory = Path.Combine(Application.persistentDataPath, "beta");
+        LoadGlobalData();
+        TimeInit();
+        IlluBookInit();
+        UIInit();
+       
     }
+    private void LoadGlobalData()
+    {
+        if (File.Exists(Path.Combine(SaveDirectory, globalFileName)))
+        {
+            string jsonText = File.ReadAllText(Path.Combine(SaveDirectory, globalFileName));
+            globalData = JsonConvert.DeserializeObject<GlobalData>(jsonText, SerializeSettings);
+            Debug.Log(Path.Combine(SaveDirectory, globalFileName));
+        }
+        else
+        {
+            globalData = new GlobalData();
+            SaveGlobalData(globalData);
+        }
+    }
+    private void SaveGlobalData(GlobalData globalData)
+    {
+        string GlobalData = JsonConvert.SerializeObject(globalData, SerializeSettings);
+        Directory.CreateDirectory(SaveDirectory);
+        if (File.Exists(Path.Combine(SaveDirectory, globalFileName)))
+            File.Delete(Path.Combine(SaveDirectory, globalFileName));
+        File.WriteAllText(Path.Combine(SaveDirectory, globalFileName), GlobalData);
+    }
+    #region SystemInit
+
+    private void TimeInit()
+    {
+        timeSystem = new TimeSystem();
+    }
+    private void IlluBookInit()
+    {
+        //Debug.Log(globalData.unlockIlluBookName);
+        illuBookSystem = new illuBookSystem(globalData);
+
+    }
+    private void UIInit()
+    {
+        uiManager.Initialize(timeSystem,illuBookSystem);
+    }
+    
+    #endregion
+
     int seed = -1;  // -1 : 由程序随机生成种子
-    string fileName = "默认存档.zmq";
+    string globalFileName = "GlobalSave.dat";
+    string autoFileName = "AutoSave.dat";
+    string fileName = "Save0.dat";
     private void OnGUI()
     {
+        GUI.skin.textField.fontSize = 25;
+        GUI.skin.button.fontSize = 25;
+        GUILayoutOption[] layout1 = new GUILayoutOption[] { GUILayout.Width(400), GUILayout.Height(50) };
+        GUILayoutOption[] layout2 = new GUILayoutOption[] { GUILayout.Width(150), GUILayout.Height(50) };
+        CurrentSate = fsm.CurrentState.ToString();
+        fileName = GUILayout.TextField(fileName, layout1);
 
-        fileName = GUILayout.TextField(fileName);
-
-        if (int.TryParse(GUILayout.TextField(seed.ToString()), out int newSeed))
+        if (int.TryParse(GUILayout.TextField(seed.ToString(),layout1), out int newSeed))
         {
             seed = newSeed;
         }
@@ -110,27 +203,35 @@ public class GameManager : MonoBehaviour
         }
         if (seed != -1)
         {
-            if (GUILayout.Button("新地图"))
+            if (GUILayout.Button("新地图", layout2))
             {
+                fsm.ChangeState(GameState.Loading);
                 seed = -1;
                 UnLoad();
                 var map = Map.Generate(size, seed);
                 LoadMap(map);
+                fsm.ChangeState(GameState.Playing);
             }
         }
-        if (GUILayout.Button("创建"))
+        //if (GUILayout.Button("创建", layout2))
+        //{
+        //    UnLoad();
+        //    var map = Map.Generate(size, seed);
+        //    LoadMap(map);
+        //
+        //}
+        if (GUILayout.Button("自动加载", layout2))
         {
-            UnLoad();
-            var map = Map.Generate(size, seed);
-            LoadMap(map);
-
+            fsm.ChangeState(GameState.Loading);
+            GenerateFromLocalFile(Path.Combine(SaveDirectory, autoFileName));
+            fsm.ChangeState(GameState.Playing);
         }
-        if (GUILayout.Button("加载"))
+        if (GUILayout.Button("加载", layout2))
         {
+            fsm.ChangeState(GameState.Loading);
             GenerateFromLocalFile(Path.Combine(SaveDirectory, fileName));
-
+            fsm.ChangeState(GameState.Playing);
         }
-
 
         if (map == null)
         {
@@ -138,11 +239,26 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            if (GUILayout.Button("保存"))
+            if (GUILayout.Button("保存", layout2))
             {
-                SaveCurrentMap(Path.Combine(SaveDirectory, fileName));
+                bool saved = false;                
+                while(!saved)
+                {
+                    string fileName = "Save" + saveIndex + ".dat";
+                    if (File.Exists(Path.Combine(SaveDirectory, fileName)))
+                    {
+                        saveIndex = saveIndex + 1;
+                    }
+                    else
+                    {
+                        SaveCurrentMap(Path.Combine(SaveDirectory, fileName));
+                        SaveGlobalData(globalData);
+                        saved = true;
+                    }
+                }
+                
             }
-            if (GUILayout.Button("[调试|查看地图信息]"))
+            if (GUILayout.Button("[调试|查看地图信息]", layout1))
             {
                 SaveCurrentMap(Path.Combine(SaveDirectory, "临时非存档.zmq"));
             }
@@ -181,8 +297,14 @@ public class GameManager : MonoBehaviour
 
 
     }
+    void AutoSave()
+    {
+        if (File.Exists(Path.Combine(SaveDirectory, autoFileName)))
+            File.Delete(Path.Combine(SaveDirectory, autoFileName));
+        SaveCurrentMap(Path.Combine(SaveDirectory, autoFileName));
+    }
     public Map map { get; private set; }
-    void SaveCurrentMap(string fileName)
+    void SaveCurrentMap(string filePath)
     {
         if (map == null)
         {
@@ -194,9 +316,9 @@ public class GameManager : MonoBehaviour
 
         //本地化
         Directory.CreateDirectory(SaveDirectory);
-        File.WriteAllText(fileName, gameData);
+        File.WriteAllText(filePath, gameData);
 #if UNITY_EDITOR
-        UnityEditor.EditorUtility.OpenWithDefaultApp(fileName);
+        UnityEditor.EditorUtility.OpenWithDefaultApp(filePath);
 #endif
     }
 
