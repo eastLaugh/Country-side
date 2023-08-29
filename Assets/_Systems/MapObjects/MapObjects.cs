@@ -55,7 +55,6 @@ public static partial class MapObjects
 
         protected override void OnCreated()
         {
-            throw new System.NotImplementedException();
         }
 
         protected override void OnDisable()
@@ -90,8 +89,8 @@ public static partial class MapObjects
         }
     }
 
-    #region 污染
-    public class Pollution : MapObject.Virtual, IInfoProvider
+    #region 污染源相关 测试Ripple系统
+    public class Pollution : MapObject.Virtual, IInfoProvider  //MapObject.Virtual是一个虚拟的MapObject，不会被渲染，且尽量简单
     {
         public void ProvideInfo(Action<string> provide)
         {
@@ -99,7 +98,7 @@ public static partial class MapObjects
         }
     }
 
-    public class 污染源 : RippleEffectBuilding<Pollution>
+    public class 污染源 : RippleEffectBuilding<Pollution>  //RippleEffectBuilding是一个泛型类，需要指定泛型参数，这个泛型参数代表Ripple的对象
     {
         public override bool CanBeUnjected => true;
 
@@ -114,6 +113,23 @@ public static partial class MapObjects
     }
 
     #endregion
+
+    public class house1 : MapObject
+    {
+        public override bool CanBeUnjected => true;
+
+        protected override void OnCreated()
+        {
+        }
+
+        protected override void OnDisable()
+        {
+        }
+
+        protected override void OnEnable()
+        {
+        }
+    }
 }
 
 public class Resource<T> : MapObject, MustNotExist<T> where T : Resource<T>

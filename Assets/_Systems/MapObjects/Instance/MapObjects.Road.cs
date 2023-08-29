@@ -41,7 +41,6 @@ public static partial class MapObjects
         }
         protected override void OnCreated()
         {
-            throw new System.NotImplementedException();
         }
 
         public void ProvideInfo(Action<string> provide)

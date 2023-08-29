@@ -15,6 +15,13 @@ MonoBehaviour:
   Dict:
     _serializedList:
     - Key:
+        _: house1
+      Value:
+        Prefab: {fileID: 6732823966942956696, guid: 39bb8353882f4534d9b477405149c48d,
+          type: 3}
+        Prefabs: []
+        "\u5907\u6CE8": 
+    - Key:
         _: Pollution
       Value:
         Prefab: {fileID: 4028269822862111206, guid: d724a54e695999f468572d768921fbd0,
