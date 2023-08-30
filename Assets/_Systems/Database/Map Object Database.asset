@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 961841d0b5d633144a60787c48db72ad, type: 3}
+  m_Name: Map Object Database
+  m_EditorClassIdentifier: 
+  Dict:
+    _serializedList:
+    - Key:
+        _: house1
+      Value:
+        Prefab: {fileID: 6732823966942956696, guid: 39bb8353882f4534d9b477405149c48d,
+          type: 3}
+        Prefabs: []
+        "\u5907\u6CE8": 
+    - Key:
+        _: Pollution
+      Value:
+        Prefab: {fileID: 4028269822862111206, guid: d724a54e695999f468572d768921fbd0,
+          type: 3}
+        Prefabs: []
+        "\u5907\u6CE8": 
+    - Key:
+        _: "\u5E02\u4E2D\u5FC3"
+      Value:
+        Prefab: {fileID: 919132149155446097, guid: 22bef38faeb0a384e9697a6975d3c964,
+          type: 3}
+        Prefabs: []
+        "\u5907\u6CE8": 
+    - Key:
+        _: TextileMill
+      Value:
+        Prefab: {fileID: 919132149155446097, guid: 6ac1d576ddec5e74d9b46549324afd64,
+          type: 3}
+        Prefabs: []
+        "\u5907\u6CE8": 
+    - Key:
+        _: Mulberry
+      Value:
+        Prefab: {fileID: 7283486670144764620, guid: 2b706258fd8dcb945901495109bdcb86,
+          type: 3}
+        Prefabs: []
+        "\u5907\u6CE8": 
+    - Key:
+        _: Road
+      Value:
+        Prefab: {fileID: 3275510535045769556, guid: 1e5c0348ceb1dcd46add68e0e7e69432,
+          type: 3}
+        Prefabs: []
+        "\u5907\u6CE8": 
+    - Key:
+        _: House
+      Value:
+        Prefab: {fileID: 919132149155446097, guid: e389191a0adf3094e97a6da0295330a2,
+          type: 3}
+        Prefabs: []
+        "\u5907\u6CE8": 
+    - Key:
+        _: Tree
+      Value:
+        Prefab: {fileID: 919132149155446097, guid: 003a7f6256ac5f6489151533beef0788,
+          type: 3}
+        Prefabs:
+        - {fileID: 919132149155446097, guid: 003a7f6256ac5f6489151533beef0788, type: 3}
+        - {fileID: 919132149155446097, guid: 33deef01251064942bdfb4b84e68c980, type: 3}
+        "\u5907\u6CE8": 
