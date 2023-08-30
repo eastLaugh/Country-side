@@ -1,0 +1,43 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement name="Container" style="flex-grow: 1; flex-direction: row; background-color: rgba(0, 0, 0, 0);">
+        <ui:VisualElement name="BackGround" style="width: 304px; height: 100%; margin-top: 5px;">
+            <ui:VisualElement name="Header" style="flex-direction: row; justify-content: space-between; align-items: stretch;">
+                <ui:Label text="ItemList" display-tooltip-when-elided="true" style="font-size: 20px; margin-left: 5px;" />
+                <ui:Button text="+" display-tooltip-when-elided="true" name="AddButton" style="overflow: hidden; margin-right: 5px; margin-left: 115px;" />
+                <ui:Button text="-" display-tooltip-when-elided="true" name="DeleteButton" style="overflow: hidden;" />
+            </ui:VisualElement>
+            <ui:ListView focusable="false" reorderable="true" name="BuildingList" show-foldout-header="false" show-add-remove-footer="false" show-border="true" horizontal-scrolling="false" fixed-item-height="45" style="flex-grow: 1; width: 300px;" />
+        </ui:VisualElement>
+        <ui:ScrollView name="BuildingDetails" style="width: 70%; margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 0; height: 100%; flex-grow: 1;">
+            <ui:VisualElement name="Header" style="flex-direction: row; justify-content: space-between; align-items: stretch;">
+                <ui:Label text="Details Information" display-tooltip-when-elided="true" style="font-size: 20px; margin-left: 3px;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Content" style="flex-grow: 1; height: 694px; width: 799px;">
+                <ui:VisualElement name="Row1" style="flex-grow: 0; margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px; height: 229px; width: 774px; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);">
+                    <ui:Label text="General" display-tooltip-when-elided="true" name="Header" style="border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); height: auto; width: auto; padding-left: 10px; padding-top: 3px; padding-bottom: 3px; margin-left: 1px; margin-right: 1px; margin-top: 1px; margin-bottom: 1px; -unity-background-image-tint-color: rgb(14, 14, 14); background-color: rgba(0, 0, 0, 0.38); font-size: 18px; -unity-text-align: middle-left;" />
+                    <ui:VisualElement name="Container" style="align-items: center; flex-direction: row; width: 774px; height: 200px; flex-grow: 0; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); justify-content: flex-start;">
+                        <ui:VisualElement name="IconView" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 160px; height: 150px; margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px; padding-left: 0; padding-top: 0; padding-bottom: 0; padding-right: 0;" />
+                        <ui:VisualElement name="General" style="flex-grow: 1; height: 170px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); width: 680px;">
+                            <uie:IntegerField label="ID" value="0" name="BuildingID" style="padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; height: 30px; align-items: center; font-size: 17px; -unity-text-align: middle-left;" />
+                            <ui:TextField picking-mode="Ignore" label="名称" name="BuildingName" multiline="true" style="padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; flex-grow: 0; height: 30px; width: auto; align-items: center; font-size: 17px; -unity-text-align: middle-left;" />
+                            <uie:ObjectField label="Icon" type="UnityEngine.Sprite, UnityEngine.CoreModule" allow-scene-objects="true" focusable="true" name="BuildingIcon" style="height: 30px; width: auto; flex-direction: row; font-size: 17px; margin-left: 4px; -unity-text-align: middle-left; padding-left: 3px;" />
+                            <uie:IntegerField label="Price" value="0" name="BuildingPrice" is-delayed="false" style="padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; height: 30px; align-items: center; font-size: 17px; flex-direction: row; -unity-text-align: middle-left;" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="Row2" style="margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px; height: 164px; width: 764px;">
+                    <ui:Label text="工程描述" display-tooltip-when-elided="true" name="Header" style="border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); height: 29px; width: 768px; padding-left: 10px; padding-top: 3px; padding-bottom: 3px; margin-left: 1px; margin-right: 1px; margin-top: 1px; margin-bottom: 1px; font-size: 18px; -unity-text-align: middle-left;" />
+                    <ui:TextField picking-mode="Ignore" value="filler text" multiline="true" name="BuildingDescription" is-delayed="true" style="flex-grow: 1; height: 76px; width: 761px; font-size: 16px;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Row3" style="margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px; height: 118px; width: 764px;">
+                    <ui:Label text="功能" display-tooltip-when-elided="true" name="Header" style="border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); height: 29px; width: 768px; padding-left: 10px; padding-top: 3px; padding-bottom: 3px; margin-left: 1px; margin-right: 1px; margin-top: 1px; margin-bottom: 1px; font-size: 18px; -unity-text-align: middle-left;" />
+                    <ui:TextField picking-mode="Ignore" value="filler text" multiline="true" name="BuildingFunction" is-delayed="true" style="flex-grow: 1; height: 76px; width: 761px; font-size: 16px;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Row4" style="margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px; height: 111px; width: 764px;">
+                    <ui:Label text="条件" display-tooltip-when-elided="true" name="Header" enable-rich-text="true" style="border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); height: 29px; width: 768px; padding-left: 10px; padding-top: 3px; padding-bottom: 3px; margin-left: 1px; margin-right: 1px; margin-top: 1px; margin-bottom: 1px; font-size: 18px; -unity-text-align: middle-left;" />
+                    <ui:TextField picking-mode="Ignore" value="filler text" multiline="true" name="BuildingRequire" is-delayed="true" style="flex-grow: 1; height: 88px; width: 761px; font-size: 16px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:ScrollView>
+    </ui:VisualElement>
+</ui:UXML>

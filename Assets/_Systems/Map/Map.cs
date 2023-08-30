@@ -21,6 +21,8 @@ public class Map
     public readonly int MainRandomSeed;
     [JsonProperty(Order = 999)]
     public Vector2Int size { get; private set; }
+    [JsonProperty]
+    public DateTime dateTime;
 
     public Map(Vector2Int size, Slot[] Slots, int RandomSeed, GameDataWrapper<EconomyVector> economyWrapper)
     {
@@ -64,8 +66,7 @@ public class Map
         //创建地图
         GameDataWrapper<EconomyVector> economyWrapper = new GameDataWrapper<EconomyVector>(new() { new SolidMiddleware<EconomyVector>(new EconomyVector(Random.Range(100f, 1000f), Random.Range(10000f, 1000000f), Random.Range(0f, 1f))) });
 
-        var map = new Map(size, slots, seed,
-            economyWrapper);
+        var map = new Map(size, slots, seed, economyWrapper);
 
         //去中心化
         foreach (MapGenerator generator in InitAllGenerators())

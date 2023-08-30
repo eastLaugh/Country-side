@@ -129,7 +129,8 @@ partial class Slot
         /// </summary>
         protected virtual void Awake()
         {
-
+            EventHandler.CallilluBookUnlocked(GetType().Name);
+            //Debug.Log(GetType().Name);
         }
 
         public abstract bool CanBeUnjected { get; }
