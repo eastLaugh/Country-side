@@ -389,7 +389,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5190914387181682043
 RectTransform:
   m_ObjectHideFlags: 0
@@ -743,7 +743,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EventDataFiles:
-  - {fileID: 0}
+  - {fileID: 4900000, guid: 9f418a3877ddca44592229f498f2a252, type: 3}
   mainContent: {fileID: 6964303043062494321}
   EventUI: {fileID: 3979649810552578228}
   optIndex: 0

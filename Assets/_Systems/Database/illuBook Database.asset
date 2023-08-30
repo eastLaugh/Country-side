@@ -21,7 +21,7 @@ MonoBehaviour:
     requirement: "\u6CA1\u4EC0\u4E48\u6761\u4EF6"
     buildingType: 0
     price: 0
-    unclock: 1
+    unclock: 0
   - ID: 0
     name: Mulberry
     icon: {fileID: 21300000, guid: b74361a4268eaf74db7d8091ff82e723, type: 3}
