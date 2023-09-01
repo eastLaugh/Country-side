@@ -20,8 +20,13 @@ public class GlobalData
 {
     [JsonProperty]
     public List<string> unlockIlluBookName = new List<string>();
+
+    //记录存档列表
+    [JsonProperty]
+    public HashSet<string> GameSaveFiles = new();
+
     public GlobalData()
     {
-     //unlockIlluBookName.Add(string.Empty);
+        //unlockIlluBookName.Add(string.Empty);
     }
 }
