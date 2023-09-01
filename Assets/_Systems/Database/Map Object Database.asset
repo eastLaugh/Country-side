@@ -17,7 +17,7 @@ MonoBehaviour:
     - Key:
         _: house1
       Value:
-        Prefab: {fileID: 6732823966942956696, guid: 39bb8353882f4534d9b477405149c48d,
+        Prefab: {fileID: 1812805813641912064, guid: 3b8d6b75408d1c04a80526a866c7d4e7,
           type: 3}
         Prefabs: []
         "\u5907\u6CE8": 
