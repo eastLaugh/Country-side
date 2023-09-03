@@ -8,7 +8,7 @@ using UnityEngine.UI;
 //实现在游戏中打开和关闭背包的UI界面、更新背包的UI界面、选中背包中的物品等功能
 public class illuBookUI : MonoBehaviour
 {
-    
+    [SerializeField] illuBookSystem illuBookSystem;
     public BuildingDetailUI BuildingDetailUI;
     public BarUI BarPrefab;               //存放背包格子的UI预制体
     public Transform RuleItemRoot;          //存放背包格子的父物体
@@ -18,7 +18,6 @@ public class illuBookUI : MonoBehaviour
     //public Button btnOpen;
     public Button btnClose;
 
-    private illuBookSystem illuBookSystem;
     private TimeSystem timeSystem;
     private List<BuildingDetails> BuildingList => GameManager.current.illuBookData.illuBookList;
     public void Initialize(illuBookSystem illuBookSystem,TimeSystem timeSystem)

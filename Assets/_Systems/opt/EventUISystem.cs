@@ -14,7 +14,7 @@ public class EventUISystem : MonoBehaviour
     public List<TextAsset> EventDataFiles;
     public TextMeshProUGUI mainContent;
     public GameObject EventUI;
-
+    [SerializeField] TimeController timeController; 
     public int optIndex;
     public string[] optRows;
     public GameObject optButtonTemplate;
@@ -23,16 +23,28 @@ public class EventUISystem : MonoBehaviour
     /// TODO
     /// </summary>
     Dictionary<string,Sprite> imageDic = new Dictionary<string,Sprite>();
-    TimeSystem timeSystem;
-    public void Initialize(TimeSystem timeSystem)
+    private void Start()
     {
-        this.timeSystem = timeSystem;
+        enabled = false;
+    }
+    private void OnEnable()
+    {
+        GameManager.OnMapLoaded += OnMapLoaded;
+        GameManager.OnMapUnloaded += OnMapUnloaded; 
+    }
+    public void OnMapLoaded(Map _)
+    {
+        enabled = true;
         InitOptEvents();
         EventHandler.DayPass += RandomEvent;
     }
+    public void OnMapUnloaded()
+    {
+        enabled = false;
+    }
     private void RandomEvent()
     {
-        int random = UnityEngine.Random.Range(0, 5);
+        int random = UnityEngine.Random.Range(0, 100);
         if(random == 1)
         {
             GenerateEvent();
@@ -42,7 +54,7 @@ public class EventUISystem : MonoBehaviour
     {
         ReadText(EventDataFiles[UnityEngine.Random.Range(0, EventDataFiles.Count)]);
         EventUI.SetActive(true);
-        timeSystem.Pause();
+        timeController.Pause();
     }
     public void ReadText(TextAsset textAsset)
     {
@@ -98,7 +110,7 @@ public class EventUISystem : MonoBehaviour
                         Destroy(optRoot.GetChild(i).gameObject);
                     }
                     EventUI.SetActive(false);
-                    timeSystem.Continue();
+                    timeController.Continue();
                 });
                 endBtn.SetActive(true);
                 if (cell[4] != null)

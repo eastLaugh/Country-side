@@ -131,11 +131,6 @@ public class illuBookEditer : EditorWindow
     private void GetBuildingDetails()
     {
         BuildingDetailsSection.MarkDirtyRepaint();
-        BuildingDetailsSection.Q<IntegerField>("BuildingID").value = activeBuilding.ID;
-        BuildingDetailsSection.Q<IntegerField>("BuildingID").RegisterValueChangedCallback(evt =>
-        {
-            activeBuilding.ID = evt.newValue;
-        });
         BuildingDetailsSection.Q<TextField>("BuildingName").value = activeBuilding.name;
         BuildingDetailsSection.Q<TextField>("BuildingName").RegisterValueChangedCallback(evt =>
         {
