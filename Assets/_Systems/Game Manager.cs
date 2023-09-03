@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
 
     public CinemachineVirtualCamera CinemachineVirtualCamera;
     public RoadRenderer roadRenderer;
-    private GlobalData globalData;
+    public static GlobalData globalData { get; private set; }
     private TimeSystem timeSystem;
     private illuBookSystem illuBookSystem;
 
@@ -36,14 +36,12 @@ public class GameManager : MonoBehaviour
         Unload, NewGame, Loading, Playing
     }
 
-    [Obsolete]
-    FSM<GameState> fsm = new FSM<GameState>();
 
     public Vector2Int size;
     [Header("存储")]
 
     [NaughtyAttributes.ReadOnly]
-    public string SaveDirectory;
+    public static string SaveDirectory;
 
     [Header("数据库")]
     public MapObjectDatabase MapObjectDatabase;
@@ -71,25 +69,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        FSMInit();
-    }
-    void FSMInit()
-    {
-        fsm.State(GameState.Loading)
-        .OnEnter(() =>
-        {
-            Overlay.SetActive(true);
-        }).OnExit(() =>
-        {
-            Overlay.SetActive(false);
-        });
-        fsm.State(GameState.Playing)
-        .OnUpdate(() =>
-        {
-            OnGameUpdate?.Invoke();
-        });
-        fsm.State(GameState.Unload);
-        fsm.ChangeState(GameState.Unload);
+
     }
 
     #region 调试 debug
@@ -131,7 +111,7 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
-        fsm.update();
+        
     }
 
     private void Awake()
@@ -143,10 +123,6 @@ public class GameManager : MonoBehaviour
         DG.Tweening.DOTween.SetTweensCapacity(size.x * size.y, 50);
 
         LoadGlobalData();
-        TimeInit();
-        IlluBookInit();
-        UIInit();
-
     }
     private void LoadGlobalData()
     {
@@ -161,32 +137,13 @@ public class GameManager : MonoBehaviour
             SaveGlobalData();
         }
     }
-    private void SaveGlobalData()
+    public static void SaveGlobalData()
     {
         Directory.CreateDirectory(SaveDirectory);
         // if (File.Exists(Path.Combine(SaveDirectory, globalFileName)))
         //     File.Delete(Path.Combine(SaveDirectory, globalFileName));
         File.WriteAllText(Path.Combine(SaveDirectory, globalFileName), JsonConvert.SerializeObject(globalData, SerializeSettings));
     }
-    #region SystemInit
-
-    [Obsolete]
-    private void TimeInit()
-    {
-        timeSystem = new TimeSystem();
-    }
-    private void IlluBookInit()
-    {
-        //Debug.Log(globalData.unlockIlluBookName);
-        illuBookSystem = new illuBookSystem(globalData);
-
-    }
-    private void UIInit()
-    {
-        uiManager.Initialize(timeSystem, illuBookSystem);
-    }
-
-    #endregion
 
     int seed = -1;  // -1 : 由程序随机生成种子
     const string globalFileName = "GlobalSave.dat";
@@ -202,7 +159,6 @@ public class GameManager : MonoBehaviour
         GUI.skin.button.fontSize = 25;
         GUI.skin.label.fontSize = 25;
 
-        CurrentSate = fsm.CurrentState.ToString();
 
         GUILayout.BeginHorizontal();
         fileName = GUILayout.TextField(fileName, textFieldLayout);
@@ -343,13 +299,6 @@ public class GameManager : MonoBehaviour
 
 
     }
-    [Obsolete]
-    void AutoSave()
-    {
-        // if (File.Exists(Path.Combine(SaveDirectory, autoFileName)))
-        //     File.Delete(Path.Combine(SaveDirectory, autoFileName));
-        // SaveCurrentMap(Path.Combine(SaveDirectory, autoFileName));
-    }
     public Map map { get; private set; }
     void SaveCurrentMap(string filePath, bool temp = false)
     {
@@ -376,13 +325,15 @@ public class GameManager : MonoBehaviour
             SaveGlobalData();
         }
     }
-
+    public static event Action OnMapUnloaded;
     void UnLoad()
     {
         if (map != null)
             map.economyWrapper.OnDataUpdated -= OnEconomyDataUpdated;
         grid.transform.DestroyAllChild();
         map = null;
+        OnMapUnloaded?.Invoke();
+
     }
 
 

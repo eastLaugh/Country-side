@@ -6,25 +6,25 @@ using UnityEngine;
 
 public class TimeBar : MonoBehaviour
 {
-    private TimeSystem timeSystem;
+    public TimeController timeController;
     [SerializeField] TextMeshProUGUI displayDate;
 
-    public void Initialize(TimeSystem timeSystem)
+    public void Initialize(TimeController timeController)
     {
-        this.timeSystem = timeSystem;
+        this.timeController = timeController;
     }
 
     public void Play()
     {
-        timeSystem.Play();
+        timeController.Play();
     }
     public void Stop()
     {
-        timeSystem.Stop();
+        timeController.Stop();
     }
     public void FastForward()
     {
-        timeSystem.FastForward();
+        timeController.FastForward();
     }
 
     void Update()
