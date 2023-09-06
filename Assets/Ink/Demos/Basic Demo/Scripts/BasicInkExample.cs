@@ -1,5 +1,6 @@
 ﻿using System;
 using Ink.Runtime;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -65,33 +66,35 @@ public class BasicInkExample : MonoBehaviour {
 
 	// Creates a textbox showing the the line of text
 	void CreateContentView (string text) {
-		Text storyText = Instantiate (textPrefab) as Text;
+        TextMeshProUGUI storyText = Instantiate (textPrefab).GetComponent<TextMeshProUGUI>();
 		storyText.text = text;
-		storyText.transform.SetParent (canvas.transform, false);
+		storyText.transform.SetParent (panel.transform, false);
+		storyText.gameObject.SetActive (true);
 	}
 
 	// Creates a button showing the choice text
 	Button CreateChoiceView (string text) {
 		// Creates the button from a prefab
-		Button choice = Instantiate (buttonPrefab) as Button;
-		choice.transform.SetParent (canvas.transform, false);
-		
-		// Gets the text from the button prefab
-		Text choiceText = choice.GetComponentInChildren<Text> ();
+		Button choice = Instantiate (buttonPrefab).GetComponent<Button>();
+		choice.transform.SetParent (panel.transform, false);
+
+        // Gets the text from the button prefab
+        TextMeshProUGUI choiceText = choice.GetComponentInChildren<TextMeshProUGUI> ();
 		choiceText.text = text;
 
 		// Make the button expand to fit the text
 		HorizontalLayoutGroup layoutGroup = choice.GetComponent <HorizontalLayoutGroup> ();
 		layoutGroup.childForceExpandHeight = false;
 
+		choice.gameObject.SetActive(true);
 		return choice;
 	}
 
 	// Destroys all the children of this gameobject (all the UI)
 	void RemoveChildren () {
-		int childCount = canvas.transform.childCount;
+		int childCount = panel.transform.childCount;
 		for (int i = childCount - 1; i >= 0; --i) {
-			Destroy (canvas.transform.GetChild (i).gameObject);
+			Destroy (panel.transform.GetChild (i).gameObject);
 		}
 	}
 
@@ -100,11 +103,11 @@ public class BasicInkExample : MonoBehaviour {
 	public Story story;
 
 	[SerializeField]
-	private Canvas canvas = null;
+	private GameObject panel = null;
 
 	// UI Prefabs
 	[SerializeField]
-	private Text textPrefab = null;
+	private GameObject textPrefab = null;
 	[SerializeField]
-	private Button buttonPrefab = null;
+	private GameObject buttonPrefab = null;
 }
