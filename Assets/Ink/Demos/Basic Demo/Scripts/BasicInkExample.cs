@@ -77,7 +77,7 @@ public class BasicInkExample : MonoBehaviour {
 		// Creates the button from a prefab
 		Button choice = Instantiate (buttonPrefab).GetComponent<Button>();
 		choice.transform.SetParent (panel.transform, false);
-
+		  
         // Gets the text from the button prefab
         TextMeshProUGUI choiceText = choice.GetComponentInChildren<TextMeshProUGUI> ();
 		choiceText.text = text;
