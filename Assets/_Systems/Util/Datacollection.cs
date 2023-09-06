@@ -6,6 +6,7 @@ using UnityEngine;
 public class BuildingDetails
 {
     public string name;
+    public string chineseName;
     public Sprite icon;
     public string description;
     public string function;

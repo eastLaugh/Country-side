@@ -9,7 +9,6 @@ public static partial class MapObjects
 {
     public class House : MapObject, MustNotExist<House>
     {
-
         protected override GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
         {
             IconPattern iconPattern = IconPattern.Create(father, Vector3.zero);
@@ -37,8 +36,27 @@ public static partial class MapObjects
 
         public override bool CanBeUnjected => true;
     }
+    /// <summary>
+    /// 土坯房
+    /// </summary>
+    public class AdobeHouse: House
+    {
 
+    }
+    /// <summary>
+    /// 砖瓦房
+    /// </summary>
+    public class TileHouse:House
+    {
+        
+    }
+    /// <summary>
+    /// 水泥房
+    /// </summary>
+    public class CementHouse:House
+    {
 
+    }
     //桑叶
     public class Mulberry : Resource<Mulberry>
     {

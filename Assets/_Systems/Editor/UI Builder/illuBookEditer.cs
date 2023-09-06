@@ -137,6 +137,12 @@ public class illuBookEditer : EditorWindow
             activeBuilding.name = evt.newValue;
             BuildingListView.Rebuild();
         });
+        BuildingDetailsSection.Q<TextField>("BuildingChineseName").value = activeBuilding.chineseName;
+        BuildingDetailsSection.Q<TextField>("BuildingChineseName").RegisterValueChangedCallback(evt =>
+        {
+            activeBuilding.chineseName = evt.newValue;
+            BuildingListView.Rebuild();
+        });
         iconPreview.style.backgroundImage = activeBuilding.icon == null ? defaultIcon.texture : activeBuilding.icon.texture;
         BuildingDetailsSection.Q<ObjectField>("BuildingIcon").value = activeBuilding.icon;
         BuildingDetailsSection.Q<ObjectField>("BuildingIcon").RegisterValueChangedCallback(evt =>

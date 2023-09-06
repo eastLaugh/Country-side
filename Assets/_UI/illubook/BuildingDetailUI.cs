@@ -18,7 +18,7 @@ public class BuildingDetailUI : MonoBehaviour
     //传入物品的Building，判断并显示该物品的名称、描述、图标
     public void Display(BuildingDetails Building)
     {
-        nameText.text = Building.name;
+        nameText.text = Building.chineseName;
         descriptionText.text = Building.description;
         functionText.text = Building.function;
         requirementText.text = Building.requirement;

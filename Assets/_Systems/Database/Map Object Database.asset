@@ -15,7 +15,7 @@ MonoBehaviour:
   Dict:
     _serializedList:
     - Key:
-        _: house1
+        _: TileHouse
       Value:
         Prefab: {fileID: 1812805813641912064, guid: 3b8d6b75408d1c04a80526a866c7d4e7,
           type: 3}
@@ -57,7 +57,7 @@ MonoBehaviour:
         Prefabs: []
         "\u5907\u6CE8": 
     - Key:
-        _: House
+        _: AdobeHouse
       Value:
         Prefab: {fileID: 919132149155446097, guid: e389191a0adf3094e97a6da0295330a2,
           type: 3}

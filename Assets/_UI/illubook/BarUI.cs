@@ -40,7 +40,7 @@ public class BarUI : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, I
     public void UpdateBuildingBar(BuildingDetails Building)     //更新并获取物品的名称和数量
     {
         BuildingDetails = Building;
-        BuildingName.text = BuildingDetails.name;
+        BuildingName.text = BuildingDetails.chineseName;
         image.sprite = BuildingDetails.icon;
         if(BuildingDetails.unclock)
         {

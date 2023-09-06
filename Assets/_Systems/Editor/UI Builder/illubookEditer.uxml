@@ -22,6 +22,7 @@
                             <ui:TextField picking-mode="Ignore" label="名称" name="BuildingName" multiline="true" style="padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; flex-grow: 0; height: 30px; width: auto; align-items: center; font-size: 17px; -unity-text-align: middle-left;" />
                             <uie:ObjectField label="Icon" type="UnityEngine.Sprite, UnityEngine.CoreModule" allow-scene-objects="true" focusable="true" name="BuildingIcon" style="height: 30px; width: auto; flex-direction: row; font-size: 17px; margin-left: 4px; -unity-text-align: middle-left; padding-left: 3px;" />
                             <uie:IntegerField label="Price" value="0" name="BuildingPrice" is-delayed="false" style="padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; height: 30px; align-items: center; font-size: 17px; flex-direction: row; -unity-text-align: middle-left;" />
+                            <ui:TextField picking-mode="Ignore" label="中文名称" name="BuildingChineseName" multiline="true" style="padding-left: 3px; padding-right: 3px; padding-top: 3px; padding-bottom: 3px; flex-grow: 0; height: 30px; width: auto; align-items: center; font-size: 17px; -unity-text-align: middle-left;" />
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
