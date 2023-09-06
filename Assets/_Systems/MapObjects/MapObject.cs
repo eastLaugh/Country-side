@@ -14,8 +14,8 @@ partial class Slot
 
     public abstract class MapObject
     {
-
-        protected Map map => slot.map;
+        public static event Action<MapObject,bool> OnInjected;
+        public Map map => slot.map;
         [JsonProperty]
         public Slot slot { get; private set; } = null;
 
@@ -71,6 +71,7 @@ partial class Slot
 
                 slot.OnSlotUpdate?.Invoke(); /*仅供表现层*/
                 slot.slotRender.Refresh();
+                OnInjected?.Invoke(this,force);
                 return true;
             }
             else

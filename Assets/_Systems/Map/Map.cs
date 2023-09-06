@@ -24,6 +24,19 @@ public class Map
     [JsonProperty]
     public DateTime dateTime;
 
+    #region 虚拟Slot VSlot 
+    //虚拟Slot用以存放某些特别的MapObject或功能性MapObject
+    [JsonProperty]
+    public readonly VirtualSlot VSlot;
+
+    public class VirtualSlot : Slot
+    {
+        public VirtualSlot(Map map, Vector2 position, HashSet<MapObject> mapObjects) : base(map, position, mapObjects)
+        {
+        }
+    }
+
+    #endregion
     public Map(Vector2Int size, Slot[] Slots, int RandomSeed, GameDataWrapper<EconomyVector> economyWrapper)
     {
         Debug.Log("Map公共有参构造函数");
@@ -31,6 +44,7 @@ public class Map
         this.Slots = Slots;
         this.MainRandomSeed = RandomSeed;
         this.economyWrapper = economyWrapper;
+        VSlot = new(this, new Vector2(-1, -1), new());
     }
 
     [JsonConstructor]
