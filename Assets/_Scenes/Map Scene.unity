@@ -347,7 +347,7 @@ PrefabInstance:
     - target: {fileID: 3539244381861504357, guid: 2341291eb0bcad044a95b18b5439c7bc,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 334.99954
+      value: 335
       objectReference: {fileID: 0}
     - target: {fileID: 3862730955804731141, guid: 2341291eb0bcad044a95b18b5439c7bc,
         type: 3}
@@ -2852,6 +2852,7 @@ GameObject:
   - component: {fileID: 1001546396}
   - component: {fileID: 1001546400}
   - component: {fileID: 1001546401}
+  - component: {fileID: 1001546402}
   m_Layer: 0
   m_Name: '#System'
   m_TagString: Untagged
@@ -2907,6 +2908,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 366bf67835e87a648b9062ecfa33ffb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1001546402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1001546395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f06aa2769c886e14b8a4b02b7d96e219, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1015416549
@@ -5560,7 +5573,7 @@ PrefabInstance:
     - target: {fileID: 3539244381861504357, guid: 2341291eb0bcad044a95b18b5439c7bc,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 334.06024
+      value: 334.06
       objectReference: {fileID: 0}
     - target: {fileID: 3862730955804731141, guid: 2341291eb0bcad044a95b18b5439c7bc,
         type: 3}
