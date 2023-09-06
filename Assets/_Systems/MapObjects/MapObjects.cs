@@ -18,7 +18,8 @@ public static partial class MapObjects
         }
 
         [JsonProperty]
-        Middleware<EconomyVector> consumption;
+        Middleware<EconomyVector> ConsumptionAndSalary;
+
 
         protected override void OnEnable()
         {
@@ -30,8 +31,8 @@ public static partial class MapObjects
 
         protected override void OnCreated()
         {
-            consumption = new SolidMiddleware<EconomyVector>(new EconomyVector(0, -200f, 0));
-            map.economyWrapper.AddMiddleware(consumption);
+            ConsumptionAndSalary = new SolidMiddleware<EconomyVector>(new EconomyVector(0, -200f, 0, 日均收入: 30f),this);
+            map.economyWrapper.AddMiddleware(ConsumptionAndSalary);
         }
 
         public override bool CanBeUnjected => true;
@@ -39,21 +40,21 @@ public static partial class MapObjects
     /// <summary>
     /// 土坯房
     /// </summary>
-    public class AdobeHouse: House
+    public class AdobeHouse : House
     {
 
     }
     /// <summary>
     /// 砖瓦房
     /// </summary>
-    public class TileHouse:House
+    public class TileHouse : House
     {
-        
+
     }
     /// <summary>
     /// 水泥房
     /// </summary>
-    public class CementHouse:House
+    public class CementHouse : House
     {
 
     }

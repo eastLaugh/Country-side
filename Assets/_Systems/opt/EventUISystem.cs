@@ -9,12 +9,12 @@ public class EventUISystem : MonoBehaviour
 {
     Dictionary<string, Action<int>> OptEvents = new Dictionary<string, Action<int>>();
     /// <summary>
-    /// csv¸ñÊ½
+    /// csvï¿½ï¿½Ê½
     /// </summary>
     public List<TextAsset> EventDataFiles;
     public TextMeshProUGUI mainContent;
     public GameObject EventUI;
-    [SerializeField] TimeController timeController; 
+    [SerializeField] TimeController timeController;
     public int optIndex;
     public string[] optRows;
     public GameObject optButtonTemplate;
@@ -22,7 +22,7 @@ public class EventUISystem : MonoBehaviour
     /// <summary>
     /// TODO
     /// </summary>
-    Dictionary<string,Sprite> imageDic = new Dictionary<string,Sprite>();
+    Dictionary<string, Sprite> imageDic = new Dictionary<string, Sprite>();
     private void Start()
     {
         enabled = false;
@@ -30,7 +30,7 @@ public class EventUISystem : MonoBehaviour
     private void OnEnable()
     {
         GameManager.OnMapLoaded += OnMapLoaded;
-        GameManager.OnMapUnloaded += OnMapUnloaded; 
+        GameManager.OnMapUnloaded += OnMapUnloaded;
     }
     public void OnMapLoaded(Map _)
     {
@@ -45,7 +45,7 @@ public class EventUISystem : MonoBehaviour
     private void RandomEvent()
     {
         int random = UnityEngine.Random.Range(0, 100);
-        if(random == 1)
+        if (random == 1)
         {
             GenerateEvent();
         }
@@ -69,14 +69,14 @@ public class EventUISystem : MonoBehaviour
             string[] cell = optRows[i].Split(',');
             if (!int.TryParse(cell[1], out int index)) continue;
             if (index != optIndex) continue;
-            if (cell[0] == "#" )
+            if (cell[0] == "#")
             {
                 //Display
                 mainContent.text = cell[2];
                 //
                 optIndex = int.Parse(cell[3]);//TODO
                 var continueBtn = Instantiate(optButtonTemplate, optRoot);
-                continueBtn.GetComponentInChildren<TMP_Text>().text = "¼ÌÐø";
+                continueBtn.GetComponentInChildren<TMP_Text>().text = "ï¿½ï¿½ï¿½ï¿½";
                 continueBtn.GetComponent<Button>().onClick.AddListener(() =>
                 {
                     for (int i = 0; i < optRoot.childCount; i++)
@@ -86,23 +86,23 @@ public class EventUISystem : MonoBehaviour
                     ShowContent();
                 });
                 continueBtn.SetActive(true);
-                if (cell[4] != null) 
+                if (cell[4] != null)
                 {
                     CheckEffect(cell[4]);
-                }          
+                }
                 break;
             }
             else if (cell[0] == "&")
             {
                 mainContent.text = cell[2];
-                GenerateOpt(i+1);
+                GenerateOpt(i + 1);
                 break;
             }
             else if (cell[0] == "End")
             {
                 mainContent.text = cell[2];
                 var endBtn = Instantiate(optButtonTemplate, optRoot);
-                endBtn.GetComponentInChildren<TMP_Text>().text = "½áÊø";
+                endBtn.GetComponentInChildren<TMP_Text>().text = "ï¿½ï¿½ï¿½ï¿½";
                 endBtn.GetComponent<Button>().onClick.AddListener(() =>
                 {
                     for (int i = 0; i < optRoot.childCount; i++)
@@ -124,11 +124,11 @@ public class EventUISystem : MonoBehaviour
         }
 
     }
-    public void GenerateSimpleBtn(string content,bool isEnd)
+    public void GenerateSimpleBtn(string content, bool isEnd)
     {
-        
+
     }
-     void GenerateOpt(int index)
+    void GenerateOpt(int index)
     {
         string[] cells = optRows[index].Split(',');
         if (cells[0] == "&")
@@ -147,13 +147,13 @@ public class EventUISystem : MonoBehaviour
     {
         OptEvents.Add("AddMoney", (value) =>
         {
-            GameManager.current.map.economyWrapper.AddMiddleware(new SolidMiddleware<EconomyVector>(new EconomyVector(0, value, 0)));
+            GameManager.current.map.economyWrapper.AddMiddleware(new SolidMiddleware<EconomyVector>(new EconomyVector(0, value, 0), null));
         });
         OptEvents.Add("AddPopulation", (value) =>
         {
-            GameManager.current.map.economyWrapper.AddMiddleware(new SolidMiddleware<EconomyVector>(new EconomyVector(value, 0, 0)));
+            GameManager.current.map.economyWrapper.AddMiddleware(new SolidMiddleware<EconomyVector>(new EconomyVector(value, 0, 0), null));
         });
-        
+
     }
     void CheckEffect(string effectText)
     {
@@ -163,13 +163,13 @@ public class EventUISystem : MonoBehaviour
             string[] paraments = cell.Split(' ');
             if (paraments.Length == 2)
             {
-                if (OptEvents.ContainsKey(paraments[0])) 
+                if (OptEvents.ContainsKey(paraments[0]))
                 {
                     OptEvents[paraments[0]].Invoke(int.Parse(paraments[1]));
                 }
                 else
                 {
-                    Debug.LogError("Ã»ÓÐÃû×Ö½Ð" + paraments[0] +"µÄÐ§¹û");
+                    Debug.LogError("Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Ö½ï¿½" + paraments[0] + "ï¿½ï¿½Ð§ï¿½ï¿½");
                 }
             }
         }
@@ -177,13 +177,13 @@ public class EventUISystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
     public void OnOptionClick(int index)
     {
         optIndex = index;
-        
-        for(int i = 0; i < optRoot.childCount; i++)
+
+        for (int i = 0; i < optRoot.childCount; i++)
         {
             Destroy(optRoot.GetChild(i).gameObject);
         }

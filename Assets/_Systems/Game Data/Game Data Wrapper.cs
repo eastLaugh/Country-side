@@ -15,7 +15,7 @@ public class GameDataWrapper<T> : IMiddleware<T> where T : IDataVector<T>
     [JsonProperty]
     T current;
     [JsonProperty]
-    protected readonly List<IMiddleware<T>> Middlewares = new();
+    public List<IMiddleware<T>> Middlewares {get;protected set;}= new();
 
     [JsonConstructor]
     public GameDataWrapper(List<IMiddleware<T>> middlewares)
@@ -50,6 +50,11 @@ public class GameDataWrapper<T> : IMiddleware<T> where T : IDataVector<T>
         return current;
     }
 
+    public object GetHost()
+    {
+        return null;
+    }
+
     public event Action<T> OnDataUpdated;
 }
 
@@ -57,6 +62,18 @@ public abstract class Middleware<T> : IMiddleware<T>
 {
     public abstract T GetValue();
     public abstract T Process(T data);
+
+    public object GetHost()
+    {
+        return Host;
+    }
+
+    public readonly object Host;
+
+    protected Middleware(object host)
+    {
+        this.Host = host;
+    }
 }
 
 
@@ -64,7 +81,7 @@ public abstract class Middleware<T> : IMiddleware<T>
 public class SolidMiddleware<T> : Middleware<T>
 {
     public readonly T solidValue;
-    public SolidMiddleware(T solidValue)
+    public SolidMiddleware(T solidValue,object host):base(host)
     {
         this.solidValue = solidValue;
     }
@@ -83,4 +100,5 @@ public interface IMiddleware<T>
 {
     T Process(T data);
     T GetValue();
+    object GetHost();
 }
