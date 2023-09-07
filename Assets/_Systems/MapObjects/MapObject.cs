@@ -14,7 +14,8 @@ partial class Slot
 
     public abstract class MapObject
     {
-        public static event Action<MapObject,bool> OnInjected;
+        public static event Action<MapObject, bool> OnInjected;
+        public static event Action<MapObject> OnUnjected;
         public Map map => slot.map;
         [JsonProperty]
         public Slot slot { get; private set; } = null;
@@ -28,7 +29,7 @@ partial class Slot
 
         public bool Inject(Slot slot, bool force = false)
         {
-            if ((!slot.mapObjects.Contains(this) && slot.mapObjects.Accessible(GetType())) || force /*强制为true:仅在序列化等硬操作时起用*/)
+            if ((!slot.mapObjects.Contains(this) && slot.mapObjects.Accessible(GetType())) || force /*强制为true:读档时强制注入*/)
             {
                 this.slot = slot;
                 slot.mapObjects.Add(this);
@@ -71,7 +72,7 @@ partial class Slot
 
                 slot.OnSlotUpdate?.Invoke(); /*仅供表现层*/
                 slot.slotRender.Refresh();
-                OnInjected?.Invoke(this,force);
+                OnInjected?.Invoke(this, force);
                 return true;
             }
             else
@@ -92,11 +93,13 @@ partial class Slot
                 slot.slotRender.OnSlotClicked -= _ => OnClick();
                 slot.map.OnCreated -= _ => OnCreated();
 
-                MonoBehaviour.Destroy(father.gameObject);
+                UnityEngine.Object.Destroy(father.gameObject);
                 slot.OnSlotUpdate?.Invoke();
 
                 OnDisable();
                 this.slot = null;
+
+                OnUnjected?.Invoke(this);
             }
         }
 
