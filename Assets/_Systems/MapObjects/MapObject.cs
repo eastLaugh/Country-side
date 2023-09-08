@@ -16,6 +16,7 @@ partial class Slot
     {
         public static event Action<MapObject, bool> OnInjected;
         public static event Action<MapObject> OnUnjected;
+        [JsonIgnore]
         public Map map => slot.map;
         [JsonProperty]
         public Slot slot { get; private set; } = null;
