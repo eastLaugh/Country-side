@@ -10,6 +10,7 @@ using UnityEditor;
 public class GameManager : MonoBehaviour
 {
     public static event Action<Map> OnMapLoaded;
+    [Obsolete]
     public static event Action<Map> AfterMapLoaded;
     public static event Action OnGameUpdate;
     public static event Action OnGameExit;
@@ -354,7 +355,6 @@ public class GameManager : MonoBehaviour
 
     private void LoadMap(Map map)
     {
-        OnMapLoaded?.Invoke(map);
 
         this.map = map;
         seed = map.MainRandomSeed;
@@ -365,6 +365,7 @@ public class GameManager : MonoBehaviour
         map.economyWrapper.OnDataUpdated += OnEconomyDataUpdated;
         OnEconomyDataUpdated(map.economyWrapper.GetValue());
 
+        OnMapLoaded?.Invoke(map);
         AfterMapLoaded?.Invoke(map);
 
     }
