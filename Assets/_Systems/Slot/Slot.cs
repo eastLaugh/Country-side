@@ -90,4 +90,8 @@ public abstract partial class Slot
         return mapObjects.SingleOrDefault(mapObject => mapObject is T) as T;
     }
 
+    public MapObject GetMapObject(Type type){
+        return mapObjects.SingleOrDefault(mapObject => mapObject.GetType() == type);
+    }
+
 }

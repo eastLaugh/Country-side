@@ -8,6 +8,7 @@ using System.Linq;
 using static Slot;
 using DG.Tweening;
 using static MapObjects;
+using Unity.VisualScripting;
 
 partial class Slot
 {
@@ -68,6 +69,7 @@ partial class Slot
                 {
                     //地图已完成加载，(说明)此Inject为玩家操作
                     OnCreated();
+                    OnCreatedInside();
                     OnEnable();
                 }
 
@@ -81,6 +83,71 @@ partial class Slot
                 return false;
             }
         }
+
+        #region  集群
+
+        [JsonIgnore]
+        protected virtual bool Clustered { get; } = false;
+
+        [JsonProperty]
+        public Cluster cluster { get; private set; }
+        private void OnCreatedInside()
+        {
+            if (Clustered)
+            {
+                if (cluster == null)
+                {
+                    Cluster foundCluster = null;
+                    Action<Cluster> ApplyTo = null;
+                    HashSet<MapObject> visited = new();
+                    DFS(this);
+                    void DFS(MapObject node)
+                    {
+                        visited.Add(node);
+
+                        ApplyTo += newCluster =>
+                        {
+                            if (newCluster != node.cluster)
+                            {
+                                node.cluster = newCluster;
+                                newCluster.Push(node);
+                            }
+                        };
+
+                        if (node.cluster != null)
+                        {
+                            foundCluster = node.cluster;
+                        }
+
+                        foreach (var dir in Slot.上下左右)
+                        {
+                            Slot nextSlot = map[node.slot.position + dir];
+                            if (nextSlot != null)
+                            {
+                                MapObject nextNode = nextSlot.GetMapObject(GetType());
+                                if (nextNode != null && !visited.Contains(nextNode))
+                                {
+                                    DFS(nextNode);
+                                }
+                            }
+                        }
+
+                        //visited.Remove(node);
+
+                    }
+                    if (foundCluster == null)
+                    {
+                        ApplyTo?.Invoke(new Cluster(GetType()));
+                    }
+                    else
+                    {
+                        ApplyTo?.Invoke(foundCluster);
+                    }
+                }
+            }
+        }
+
+        #endregion
 
         Action OnlyRenderInvoke;
 

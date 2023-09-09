@@ -20,7 +20,6 @@ public class GameDataWrapper<T> : IMiddleware<T> where T : IDataVector<T>
     [JsonConstructor]
     public GameDataWrapper(List<IMiddleware<T>> middlewares)
     {
-        Debug.Log("GameDataWrapper有参构造函数");
 
         foreach (var middleware in middlewares)
         {

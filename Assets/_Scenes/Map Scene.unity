@@ -347,7 +347,7 @@ PrefabInstance:
     - target: {fileID: 3539244381861504357, guid: 2341291eb0bcad044a95b18b5439c7bc,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 335
+      value: 335.00003
       objectReference: {fileID: 0}
     - target: {fileID: 3862730955804731141, guid: 2341291eb0bcad044a95b18b5439c7bc,
         type: 3}
@@ -849,10 +849,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 12.573277
-      outSlope: 12.573277
+      time: 0.044281006
+      value: 9.026978
+      inSlope: 10.266936
+      outSlope: 10.266936
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
@@ -1543,6 +1543,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 897218109}
     m_Modifications:
+    - target: {fileID: 2890640961144008920, guid: b1aeb1f4f6633344badd9b3e039bf07a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2890640961144008920, guid: b1aeb1f4f6633344badd9b3e039bf07a,
         type: 3}
       propertyPath: timeController
@@ -4620,7 +4625,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 680949592}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 880ef2b9f7a06bf4482c2cb228f9d781, type: 3}
   m_Name: 
@@ -5180,7 +5185,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2040679766}
-  - component: {fileID: 2040679765}
   - component: {fileID: 2040679767}
   m_Layer: 0
   m_Name: //Tour Guide
@@ -5189,19 +5193,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2040679765
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2040679764}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0040ee4dc970c8d4da0ff057bd912aa5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  InkAsset: {fileID: 4900000, guid: 6cf48bb6d89824cc69e35b43f9a1aca6, type: 3}
 --- !u!4 &2040679766
 Transform:
   m_ObjectHideFlags: 0
@@ -5910,7 +5901,7 @@ PrefabInstance:
     - target: {fileID: 3539244381861504357, guid: 2341291eb0bcad044a95b18b5439c7bc,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 334.06
+      value: 334.06027
       objectReference: {fileID: 0}
     - target: {fileID: 3862730955804731141, guid: 2341291eb0bcad044a95b18b5439c7bc,
         type: 3}

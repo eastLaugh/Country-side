@@ -131,7 +131,6 @@ partial class MapObjects
 
             public LakeEcosystem(Map map)
             {
-                Debug.Log("LakeEcosystem有参构造函数");
                 this.map = map;
                 map.lakeEcosystems.Add(this);
                 name = LakeEcosystemNameDataBase[Random.Range(0, LakeEcosystemNameDataBase.Length)];
@@ -140,7 +139,6 @@ partial class MapObjects
             [JsonConstructor]
             public LakeEcosystem()
             {
-                Debug.Log("LakeEcosystem无参构造函数");
             }
 
 

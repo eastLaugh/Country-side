@@ -10,7 +10,7 @@ using UnityEditor;
 public class GameManager : MonoBehaviour
 {
     public static event Action<Map> OnMapLoaded;
-    [Obsolete]
+    [Obsolete("生命周期:  ....  → OnMapLoaded → AfterMapLoaded → End")]
     public static event Action<Map> AfterMapLoaded;
     public static event Action OnGameUpdate;
     public static event Action OnGameExit;
@@ -121,7 +121,7 @@ public class GameManager : MonoBehaviour
         SaveDirectory = Path.Combine(Application.persistentDataPath, "beta");
 
         DG.Tweening.DOTween.Init();
-        DG.Tweening.DOTween.SetTweensCapacity(size.x * size.y, 50);
+        DG.Tweening.DOTween.SetTweensCapacity(size.x * size.y * 10, 50);
 
         LoadGlobalData();
     }
@@ -284,6 +284,11 @@ public class GameManager : MonoBehaviour
             {
                 debugSlotRender.Refresh();
             }
+        }
+
+        if(GUILayout.Button("卸载", buttonLayout))
+        {
+            UnLoad();
         }
 
         if (map != null)

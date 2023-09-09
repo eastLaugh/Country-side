@@ -27,7 +27,6 @@ public class Map
 
     public Map(Vector2Int size, Slot[] Slots, int RandomSeed, GameDataWrapper<EconomyVector> economyWrapper)
     {
-        Debug.Log("Map公共有参构造函数");
         this.size = size;
         this.Slots = Slots;
         this.MainRandomSeed = RandomSeed;
@@ -37,7 +36,6 @@ public class Map
     [JsonConstructor]
     public Map()
     {
-        Debug.Log("Map公共无参构造函数");
     }
     public Slot this[Vector2 pos] => this[(int)pos.x, (int)pos.y];
     public Slot this[int x, int y]
@@ -84,8 +82,7 @@ public class Map
     [System.Runtime.Serialization.OnDeserialized]
     void OnDeserializedMethod(System.Runtime.Serialization.StreamingContext context)
     {
-        Debug.Log("反序列化完成");
-        //OnLoad?.Invoke(this);
+        //反序列化完成回调
     }
 
     static IEnumerable<MapGenerator> InitAllGenerators()

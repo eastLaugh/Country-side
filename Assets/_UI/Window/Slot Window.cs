@@ -1,11 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Newtonsoft.Json;
 using TMPro;
-using System;
-using Newtonsoft.Json.Linq;
-using DG.Tweening;
 
 public class SlotWindow : MonoBehaviour
 {

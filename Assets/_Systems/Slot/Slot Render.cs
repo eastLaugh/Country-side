@@ -21,10 +21,7 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public event Action OnRender;
 
-    public void RegisterRender(Action onRender)
-    {
-        OnRender += onRender;
-    }
+
 
     public void Refresh()
     {
@@ -74,7 +71,7 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         var pos = slot.position;
         var index = (int)(pos.x * slot.map.size.y + pos.y);
         var proportion = 2 * Mathf.Min(index, totalNum - index) / (float)totalNum;
-        transform.DOLocalMoveY(Settings.相机初始高度, (-proportion * proportion + 1f) * 2f).From().SetEase(Ease.OutBack).SetDelay(LongestTime * (1f - proportion));
+        //transform.DOLocalMoveY(Settings.相机初始高度, (-proportion * proportion + 1f) * 2f).From().SetEase(Ease.OutBack).SetDelay(LongestTime * (1f - proportion));
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -82,5 +79,10 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         OnDragSlot?.Invoke(this, eventData);
     }
 
-
+    Tween lastTween;
+    internal void Shake()
+    {
+        lastTween?.Complete();
+        lastTween = transform.DOShakePosition(0.5f, 0.1f, 10, 90, false, false);
+    }
 }

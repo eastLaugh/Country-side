@@ -8,7 +8,6 @@ public struct EconomyVector : IDataVector<EconomyVector>
 
     public EconomyVector(float 人口, float 总收入, float 集约程度, float 日均收入=0f)
     {
-        Debug.Log("EconomyVector有参构造函数");
         this.人口 = 人口;
         this.总收入 = 总收入;
         this.集约程度 = 集约程度;

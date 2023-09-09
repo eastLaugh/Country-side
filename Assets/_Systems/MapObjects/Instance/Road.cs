@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 using static Slot;
 
 public static partial class MapObjects
@@ -13,6 +10,7 @@ public static partial class MapObjects
 
         public override bool CanBeUnjected => true;
 
+        protected override bool Clustered => true;
 
         protected override void Awake()
         {
@@ -50,7 +48,18 @@ public static partial class MapObjects
 
         protected override void OnClick()
         {
-
+            foreach (var mapObject in cluster.mapObjects)
+            {
+                if (mapObject is Road road)
+                {
+                    road.slot.slotRender.Shake();
+                    
+                }
+                else
+                {
+                    InfoWindow.Create("Cluster模块 出错了");
+                }
+            }
         }
 
         protected override GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
@@ -58,5 +67,7 @@ public static partial class MapObjects
             //覆盖默认的渲染方式
             return null;
         }
+
+
     }
 }
