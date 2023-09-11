@@ -26,7 +26,8 @@ public class SalaryWindow : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         GameManager.OnMapUnloaded += OnMapUnloaded;
     }
 
-    private void OnDisable() {
+    private void OnDisable()
+    {
         GameManager.OnMapLoaded -= OnMapLoaded;
         GameManager.OnMapUnloaded -= OnMapUnloaded;
     }
@@ -63,12 +64,12 @@ public class SalaryWindow : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
         if (entered && economyWrapper != null)
         {
-            foreach (var IMiddleware in economyWrapper.Middlewares)
+            foreach (var middleware in economyWrapper.Middlewares)
             {
-                if (IMiddleware.GetHost() is Slot.MapObject mapObject)
+                if (middleware.Host != null && middleware.Host is Slot.MapObject mapObject)
                 {
                     Vector3 screenPoint = Camera.main.WorldToScreenPoint(mapObject.slot.gameObject.transform.position);
-                    GUI.Label(new Rect(screenPoint.x, Screen.height - screenPoint.y, 100, 100), $"+{IMiddleware.GetValue().日均收入}");
+                    GUI.Label(new Rect(screenPoint.x, Screen.height - screenPoint.y, 100, 100), $"+{middleware.SolidValue.日均收入}");
                 }
             }
         }

@@ -147,11 +147,11 @@ public class EventUISystem : MonoBehaviour
     {
         OptEvents.Add("AddMoney", (value) =>
         {
-            GameManager.current.map.economyWrapper.AddMiddleware(new SolidMiddleware<EconomyVector>(new EconomyVector(0, value, 0), null));
+            //GameManager.current.map.economyWrapper.AddMiddleware(new SolidMiddleware<EconomyVector>(new EconomyVector(0, value, 0), null));
         });
         OptEvents.Add("AddPopulation", (value) =>
         {
-            GameManager.current.map.economyWrapper.AddMiddleware(new SolidMiddleware<EconomyVector>(new EconomyVector(value, 0, 0), null));
+            //GameManager.current.map.economyWrapper.AddMiddleware(new SolidMiddleware<EconomyVector>(new EconomyVector(value, 0, 0), null));
         });
 
     }

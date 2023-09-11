@@ -64,7 +64,9 @@ public class Map
 
         //创建地图
         Map map = null;
-        GameDataWrapper<EconomyVector> economyWrapper = new GameDataWrapper<EconomyVector>(new() { new SolidMiddleware<EconomyVector>(new EconomyVector(Random.Range(100f, 1000f), Random.Range(10000f, 1000000f), Random.Range(0f, 1f), 0f), map) });
+        GameDataWrapper<EconomyVector> economyWrapper = new();
+
+        new SolidMiddleware<EconomyVector>(new EconomyVector(Random.Range(100f, 1000f), Random.Range(10000f, 1000000f), Random.Range(0f, 1f), 0f), map, economyWrapper);
 
         map = new Map(size, slots, seed, economyWrapper);
 

@@ -7,41 +7,39 @@ using UnityEngine;
 public interface IDataVector<T> where T : IDataVector<T>
 {
     T Add(T other);
+    T Minus(T other);
 }
 
 
-public class GameDataWrapper<T> : IMiddleware<T> where T : IDataVector<T>
+public class GameDataWrapper<T> where T : IDataVector<T>
 {
     [JsonProperty]
     T current;
     [JsonProperty]
-    public List<IMiddleware<T>> Middlewares {get;protected set;}= new();
+    public HashSet<SolidMiddleware<T>> Middlewares { get; protected set; } = new();
 
     [JsonConstructor]
-    public GameDataWrapper(List<IMiddleware<T>> middlewares)
+    public GameDataWrapper()
     {
-
-        foreach (var middleware in middlewares)
-        {
-            AddMiddleware(middleware);
-        }
 
     }
 
-    public void AddMiddleware(IMiddleware<T> middleware)
+    public void AddMiddleware(SolidMiddleware<T> middleware)
     {
         Middlewares.Add(middleware);
 
-        T origin = middleware.GetValue();
-        T final = middleware.Process(origin);
-        current = current.Add(final);
+        current = current.Add(middleware.SolidValue);
 
         OnDataUpdated?.Invoke(current);
     }
 
-    public T Process(T data)
+    public void RemoveMiddleware(SolidMiddleware<T> middleware)
     {
-        return data;   //不做任何处理
+        Middlewares.Remove(middleware);
+
+        current = current.Minus(middleware.SolidValue);
+
+        OnDataUpdated?.Invoke(current);
     }
 
     public T GetValue()
@@ -49,55 +47,38 @@ public class GameDataWrapper<T> : IMiddleware<T> where T : IDataVector<T>
         return current;
     }
 
-    public object GetHost()
-    {
-        return null;
-    }
 
     public event Action<T> OnDataUpdated;
 }
 
-public abstract class Middleware<T> : IMiddleware<T>
-{
-    public abstract T GetValue();
-    public abstract T Process(T data);
-
-    public object GetHost()
-    {
-        return Host;
-    }
-
-    public readonly object Host;
-
-    protected Middleware(object host)
-    {
-        this.Host = host;
-    }
-}
-
 
 //该中间件表示一个定值
-public class SolidMiddleware<T> : Middleware<T>
+public class SolidMiddleware<T> where T : IDataVector<T>
 {
-    public readonly T solidValue;
-    public SolidMiddleware(T solidValue,object host):base(host)
+    public readonly GameDataWrapper<T> Wrapper;
+
+    public readonly T SolidValue;
+    public readonly object Host;
+    public SolidMiddleware(T solidValue, object host, GameDataWrapper<T> wrapper)
     {
-        this.solidValue = solidValue;
-    }
-    public override T GetValue()
-    {
-        return solidValue;  //返回定值
+        this.SolidValue = solidValue;
+        this.Host = host;
+        this.Wrapper = wrapper;
+
+        wrapper.AddMiddleware(this);
     }
 
-    public override T Process(T data)
+    SolidMiddleware<T> UpdateValue(T solidValue)
     {
-        return data;   //不做任何处理
+        Wrapper.RemoveMiddleware(this);
+        var newMiddleware = new SolidMiddleware<T>(solidValue, Host, Wrapper);
+        Wrapper.AddMiddleware(newMiddleware);
+        return newMiddleware;
     }
-}
 
-public interface IMiddleware<T>
-{
-    T Process(T data);
-    T GetValue();
-    object GetHost();
+    void Discard()
+    {
+        Wrapper.RemoveMiddleware(this);
+    }
+
 }

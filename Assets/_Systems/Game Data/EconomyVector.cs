@@ -59,4 +59,9 @@ public struct EconomyVector : IDataVector<EconomyVector>
     {
         return this + other;
     }
+
+    public EconomyVector Minus(EconomyVector other)
+    {
+        return this - other;
+    }
 }
