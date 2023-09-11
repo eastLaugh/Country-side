@@ -17,6 +17,7 @@ public class illuBookSystem : MonoBehaviour
     private bool isOpen = false;
     [SerializeField] private TimeController timeController;
     public Button btnClose;
+    public Button btnOpen;
     private List<BuildingDetails> illuBookList => GameManager.current.illuBookData.illuBookList;
     GlobalData globalData=>GameManager.globalData;
     public BuildingDetails GetBuildingDetails(string name)       
@@ -31,8 +32,8 @@ public class illuBookSystem : MonoBehaviour
     private void Awake()
     {
         //if (globalData == null) { return; }
-        Debug.Log(globalData.unlockIlluBookName);
-        for (int i = 0;i<illuBookList.Count;i++)
+        Debug.Log("Awake");
+        for (int i = 0; i < illuBookList.Count; i++)
         {
             if (globalData.unlockIlluBookName.Contains(illuBookList[i].name))
                 illuBookList[i].unclock = true;
@@ -48,6 +49,10 @@ public class illuBookSystem : MonoBehaviour
             Bar.UpdateBuildingBar(illuBookList[i]);
             Bar.gameObject.SetActive(true);
         }
+        btnOpen.onClick.AddListener(() =>
+        {
+            OpenilluBookUI();
+        });
         //EventHandler.illuBookUnlocked += Unlock;
     }
 
@@ -123,7 +128,6 @@ public class illuBookSystem : MonoBehaviour
         isOpen = true;
     }
 
-    //背包关闭的监测
     void CloseilluBookUI()
     {
         illuBookPanel.SetActive(false);

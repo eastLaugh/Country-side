@@ -23,6 +23,13 @@ MonoBehaviour:
         Size: {x: 2, y: 1}
         "\u5907\u6CE8": 
     - Key:
+        _: CementHouse
+      Value:
+        Prefab: {fileID: 919132149155446097, guid: 3906826ba1c8cfd458f1a6abbae5fa85,
+          type: 3}
+        Prefabs: []
+        "\u5907\u6CE8": 
+    - Key:
         _: Pollution
       Value:
         Prefab: {fileID: 4028269822862111206, guid: d724a54e695999f468572d768921fbd0,
