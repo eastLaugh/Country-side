@@ -23,16 +23,19 @@ partial class Slot
         public Slot slot { get; private set; } = null;
 
 
+        [JsonProperty]
+        public int Direction { get; protected set; }
 
         protected Transform father { get; private set; }
         protected GameObject gameObject => father.gameObject;
 
         public static bool CanBeInjected(Slot slot, Type detectedType) => slot.mapObjects.Accessible(detectedType);
 
-        public bool Inject(Slot slot, bool force = false)
+        public bool Inject(Slot slot, bool force = false, int direction = 0)
         {
             if ((!slot.mapObjects.Contains(this) && slot.mapObjects.Accessible(GetType())) || force /*强制为true:读档时强制注入*/)
             {
+                this.Direction = direction;
                 this.slot = slot;
                 slot.mapObjects.Add(this);
 
@@ -80,6 +83,7 @@ partial class Slot
             }
             else
             {
+                Debug.LogError("注入失败！");
                 return false;
             }
         }
@@ -171,7 +175,7 @@ partial class Slot
             }
         }
 
-        protected virtual void OnClick()
+        public virtual void OnClick()
         {
 
         }
@@ -182,6 +186,12 @@ partial class Slot
             {
                 GameObject obj = MonoBehaviour.Instantiate(prefab, father);
                 obj.transform.DOScale(Vector3.zero, Settings.建筑时物体缓动持续时间).From().SetEase(Ease.OutBack);
+
+                for (int i = 0; i < (Direction + 2) % 4; i++)
+                {
+                    obj.transform.rotation *= Quaternion.Euler(0, 90, 0);
+                }
+
                 return new[] { obj };
             }
             else

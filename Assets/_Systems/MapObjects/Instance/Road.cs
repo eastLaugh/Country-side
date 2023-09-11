@@ -46,7 +46,7 @@ public static partial class MapObjects
             provide("道路 ");
         }
 
-        protected override void OnClick()
+        public override void OnClick()
         {
             foreach (var mapObject in cluster.mapObjects)
             {

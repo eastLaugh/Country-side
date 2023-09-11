@@ -7,35 +7,7 @@ using static Slot;
 
 public static partial class MapObjects
 {
-    public class MCountable : MapObject
-    {
-        public override bool CanBeUnjected => throw new NotImplementedException();
-
-        protected override void OnCreated()
-        {
-
-        }
-
-        protected override void OnDisable()
-        {
-            map.BuildingsNum[GetType().Name] -= 1;
-            Debug.Log(GetType().Name + "-1");
-        }
-
-        protected override void OnEnable()
-        {
-            if (map.BuildingsNum.ContainsKey(GetType().Name))
-            {
-                Debug.Log(GetType().Name + "+1");
-                map.BuildingsNum[GetType().Name] += 1;
-            }
-            else
-            {
-                map.BuildingsNum.Add(GetType().Name, 1);
-            }
-        }
-    }
-    public class House : MCountable, MustNotExist<House>
+    public class House : MapObject, MustNotExist<House>
     {
         protected override GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
         {
@@ -51,12 +23,10 @@ public static partial class MapObjects
 
         protected override void OnEnable()
         {
-            base.OnEnable();
         }
 
         protected override void OnDisable()
         {
-            base.OnDisable();
         }
 
         protected override void OnCreated()
@@ -67,9 +37,6 @@ public static partial class MapObjects
 
         public override bool CanBeUnjected => true;
     }
-
-
-    #region 住宅楼
     /// <summary>
     /// 土坯房
     /// </summary>
@@ -80,19 +47,41 @@ public static partial class MapObjects
     /// <summary>
     /// 砖瓦房
     /// </summary>
-    public class TileHouse : House, MustExist<AdobeHouse>
+    public class TileHouse : House, MustNotExist<TileHouse>
     {
 
     }
     /// <summary>
     /// 水泥房
     /// </summary>
-    public class CementHouse : House, MustExist<TileHouse>
+    public class CementHouse : House
     {
 
     }
-    #endregion
-    #region 特殊建筑
+    //桑叶
+    public class Mulberry : Resource<Mulberry>
+    {
+
+    }
+
+    //纺织厂
+    public class TextileMill : ResourceBuilding<Mulberry>
+    {
+        protected override void OnEnable()
+        {
+
+        }
+
+        protected override void OnCreated()
+        {
+        }
+
+        protected override void OnDisable()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
 
     public class 市中心 : MapObject, MustNotExist<Tree>, IInfoProvider
     {
@@ -118,7 +107,7 @@ public static partial class MapObjects
 
         }
     }
-    #endregion
+
     #region 污染源相关 测试Ripple系统
     public class Pollution : MapObject.Virtual, IInfoProvider  //MapObject.Virtual是一个虚拟的MapObject，不会被渲染，且尽量简单
     {
@@ -144,67 +133,84 @@ public static partial class MapObjects
 
     #endregion
 
-    public class Resource<T> : MapObject, MustNotExist<T> where T : Resource<T>
+    public class house1 : MapObject
     {
         public override bool CanBeUnjected => true;
 
-        protected override void OnEnable()
+        protected override void OnCreated()
         {
         }
 
         protected override void OnDisable()
         {
-            throw new System.NotImplementedException();
         }
 
-        protected override void OnCreated()
+        protected override void OnEnable()
         {
         }
     }
+}
 
+public class Resource<T> : MapObject, MustNotExist<T> where T : Resource<T>
+{
+    public override bool CanBeUnjected => true;
 
-    public abstract class ResourceBuilding<R> : MapObject, MustExist<R> where R : Resource<R>
+    protected override void OnEnable()
     {
-        public override bool CanBeUnjected => true;
-
     }
 
-    public abstract class RippleEffectBuilding<Eff> : MapObject where Eff : MapObject.Virtual, new()
+    protected override void OnDisable()
     {
-        protected abstract int RippleRadius { get; }
+        throw new System.NotImplementedException();
+    }
+
+    protected override void OnCreated()
+    {
+    }
+}
 
 
-        [JsonProperty]
-        protected readonly List<Eff> Effects = new();
-        protected override void OnCreated()
+public abstract class ResourceBuilding<R> : MapObject, MustExist<R> where R : Resource<R>
+{
+    public override bool CanBeUnjected => true;
+
+}
+
+public abstract class RippleEffectBuilding<Eff> : MapObject where Eff : MapObject.Virtual, new()
+{
+    protected abstract int RippleRadius { get; }
+
+
+    [JsonProperty]
+    protected readonly List<Eff> Effects = new();
+    protected override void OnCreated()
+    {
+        for (int i = -RippleRadius; i <= RippleRadius; i++)
         {
-            for (int i = -RippleRadius; i <= RippleRadius; i++)
+            for (int j = -RippleRadius; j <= RippleRadius; j++)
             {
-                for (int j = -RippleRadius; j <= RippleRadius; j++)
+                if (i * i + j * j <= RippleRadius * RippleRadius)
                 {
-                    if (i * i + j * j <= RippleRadius * RippleRadius)
+                    Slot s = map[slot.position + new Vector2(i, j)];
+                    if (s != null)
                     {
-                        Slot s = map[slot.position + new Vector2(i, j)];
-                        if (s != null)
+                        var eff = new Eff();
+                        if (eff.Inject(s))
                         {
-                            var eff = new Eff();
-                            if (eff.Inject(s))
-                            {
-                                Effects.Add(eff);
-                            }
+                            Effects.Add(eff);
                         }
                     }
                 }
             }
         }
-
-        protected override void OnDisable()
-        {
-            foreach (var eff in Effects)
-            {
-                eff.Unject();
-            }
-        }
-
     }
+
+    protected override void OnDisable()
+    {
+        foreach (var eff in Effects)
+        {
+            eff.Unject();
+        }
+    }
+
 }
