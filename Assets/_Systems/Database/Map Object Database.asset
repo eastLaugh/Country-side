@@ -20,7 +20,7 @@ MonoBehaviour:
         Prefab: {fileID: 1812805813641912064, guid: 3b8d6b75408d1c04a80526a866c7d4e7,
           type: 3}
         Prefabs: []
-        Size: {x: 1, y: 2}
+        Size: {x: 2, y: 1}
         "\u5907\u6CE8": 
     - Key:
         _: Pollution

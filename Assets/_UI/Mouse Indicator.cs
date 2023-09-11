@@ -4,6 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.EventSystems;
 using System;
+using System.Data;
 
 public class MouseIndicator : MonoBehaviour
 {
@@ -41,24 +42,61 @@ public class MouseIndicator : MonoBehaviour
 
     private void OnBuildModeExit()
     {
-        SlotRender.OnAnySlotEnter -= DetectAccessibleForMapObject;
-        SlotRender.OnAnySlotEnter -= AutoChangeSize;
-        SlotRender.OnAnySlotClicked -= DetectAccessibleForMapObject;
+        SlotRender.OnAnySlotEnter -= Refresh;
+        SlotRender.OnAnySlotClicked -= Refresh;
         SetColor(defaultColor);
     }
 
     private void OnBuildModeEnter()
     {
-        SlotRender.OnAnySlotEnter += DetectAccessibleForMapObject;
-        SlotRender.OnAnySlotEnter += AutoChangeSize;
-        SlotRender.OnAnySlotClicked += DetectAccessibleForMapObject;
+        SlotRender.OnAnySlotEnter += Refresh;
+        SlotRender.OnAnySlotClicked += Refresh;
     }
 
-    private void AutoChangeSize(SlotRender render)
+
+    public void Refresh(SlotRender render)
     {
-        if (BuildingWindow.TryGetSelectedTypeConfig(out MapObjectDatabase.Config config))
+        // if (BuildingWindow.TryGetSelectedTypeConfig(out Type type, out MapObjectDatabase.Config config))
+        // {
+        //     //MainIndicator.transform.localScale = new Vector3(config.Size.x * 0.1f, 1, config.Size.y * 0.1f);
+        //     if (render.slot.mapObjects.Accessible(type))
+        //     {
+        //         SetColor(Color.green);
+        //     }
+        //     else
+        //     {
+        //         SetColor(Color.red);
+        //     }
+
+        //     BuildingWindow.Foreach(render.slot.position, config.Size, (x, y) =>
+        //     {
+        //         render.slot.map[x, y].slotRender.Shake();
+        //     });
+
+        // }
+
+        if (BuildingWindow.TryGetSelectedTypeConfig(out Type selectedType, out MapObjectDatabase.Config config))
         {
-            MainIndicator.transform.localScale = new Vector3(config.Size.x * 0.1f, 1, config.Size.y * 0.1f);
+
+            Vector2 delta = config.Size;
+
+            bool canBuild = true;
+            BuildingWindow.Foreach(render.slot.position, config.Size, (x, y) =>
+            {
+                if (!Slot.MapObject.CanBeInjected(render.slot.map[x, y], selectedType))
+                {
+                    canBuild = false;
+                }
+            });
+
+            if (canBuild)
+            {
+                SetColor(Color.green);
+            }
+            else
+            {
+                SetColor(Color.red);
+            }
         }
     }
 
@@ -73,17 +111,6 @@ public class MouseIndicator : MonoBehaviour
     {
     }
 
-    void DetectAccessibleForMapObject(SlotRender slotRender)
-    {
-        if (slotRender.slot.mapObjects.Accessible(BuildingWindow.SelectedType))
-        {
-            SetColor(Color.green);
-        }
-        else
-        {
-            SetColor(Color.red);
-        }
-    }
 
     void SetColor(Color color)
     {

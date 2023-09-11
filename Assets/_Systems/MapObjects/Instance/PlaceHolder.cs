@@ -11,9 +11,14 @@ partial class MapObjects
     public class PlaceHolder : MapObject, IInfoProvider
     {
         [JsonProperty]
-        MapObject mapObject;
+        public readonly MapObject mapObject;
 
-        public override bool CanBeUnjected => throw new System.NotImplementedException();
+        public PlaceHolder(MapObject mapObject)
+        {
+            this.mapObject = mapObject;
+        }
+
+        public override bool CanBeUnjected => true;
 
         public void ProvideInfo(Action<string> provide)
         {
@@ -26,15 +31,19 @@ partial class MapObjects
 
         protected override void OnDisable()
         {
+            if (!mapObject.CanBeUnjected)
+            {
+                Inject(mapObject.slot);
+            }
         }
 
         protected override void OnEnable()
         {
         }
 
-        protected override void OnClick()
+        public override void OnClick()
         {
-            
+            mapObject.OnClick();
         }
 
     }

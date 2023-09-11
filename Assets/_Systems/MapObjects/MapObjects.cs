@@ -47,9 +47,9 @@ public static partial class MapObjects
     /// <summary>
     /// 砖瓦房
     /// </summary>
-    public class TileHouse : House
+    public class TileHouse : House, MustNotExist<TileHouse>
     {
-        
+
     }
     /// <summary>
     /// 水泥房

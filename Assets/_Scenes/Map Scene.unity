@@ -347,7 +347,7 @@ PrefabInstance:
     - target: {fileID: 3539244381861504357, guid: 2341291eb0bcad044a95b18b5439c7bc,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 334.9999
+      value: 334.99997
       objectReference: {fileID: 0}
     - target: {fileID: 3862730955804731141, guid: 2341291eb0bcad044a95b18b5439c7bc,
         type: 3}
@@ -3856,7 +3856,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1321977774}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.24, y: 0, z: 0.99}
   m_LocalScale: {x: 0.1, y: 1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5091,6 +5091,7 @@ MonoBehaviour:
   Content: {fileID: 1329341183}
   ButtonPattern: {fileID: 1085797605}
   MouseAnimator: {fileID: 743175210}
+  mouseIndicator: {fileID: 1015416550}
 --- !u!224 &2101702153 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8193371582206761275, guid: a6c166ae46ce3b549948b34c1b341117,
@@ -5746,7 +5747,7 @@ PrefabInstance:
     - target: {fileID: 3539244381861504357, guid: 2341291eb0bcad044a95b18b5439c7bc,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 334.06006
+      value: 334.06067
       objectReference: {fileID: 0}
     - target: {fileID: 3862730955804731141, guid: 2341291eb0bcad044a95b18b5439c7bc,
         type: 3}

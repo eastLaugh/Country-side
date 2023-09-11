@@ -18,22 +18,52 @@ public class BuildMode : StateMachineBehaviour
         OnBuildModeEnter?.Invoke();
     }
 
-    void OnAnySlotClickedInBuildMode(SlotRender slotRender)
+    void OnAnySlotClickedInBuildMode(SlotRender render)
     {
-        Type selectedType = BuildingWindow.SelectedType;
-        if (Slot.MapObject.CanBeInjected(slotRender.slot, selectedType))
+        if (BuildingWindow.TryGetSelectedTypeConfig(out Type selectedType, out MapObjectDatabase.Config config))
         {
-            Slot.MapObject mapObject = Activator.CreateInstance(selectedType) as Slot.MapObject;
-            mapObject.Inject(slotRender.slot);
-            slotRender.Refresh();
-        }
-        else
-        {
-            Debug.LogWarning("不能在此处建造");
-        }
+
+            Vector2 delta = config.Size;
+
+            bool canBuild = true;
+            Action<Slot.MapObject> ApplyTo = null;
+            BuildingWindow.Foreach(render.slot.position, config.Size, (x, y) =>
+            {
+                if (Slot.MapObject.CanBeInjected(render.slot.map[x, y], selectedType))
+                {
+                    if (x != render.slot.position.x || y != render.slot.position.y)
+                    {
+                        ApplyTo += host =>
+                        {
+                            new MapObjects.PlaceHolder(host).Inject(render.slot.map[x, y]);
+                        };
+                    }
+                }
+                else
+                {
+                    canBuild = false;
+                }
+            });
+
+            if (canBuild)
+            {
+                Slot.MapObject mapObject = Activator.CreateInstance(selectedType) as Slot.MapObject;
+                mapObject.Inject(render.slot, direction: BuildingWindow.selectedDirection);
+                //render.Refresh();
+                ApplyTo?.Invoke(mapObject);
+
+            }
+            else
+            {
+                Debug.LogWarning("占位符不能在此处创建");
+            }
 
 
+            // }
+
+        }
     }
+
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

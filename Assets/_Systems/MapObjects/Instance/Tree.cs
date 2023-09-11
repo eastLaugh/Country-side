@@ -95,7 +95,7 @@ partial class MapObjects
         public static event Action<Tree, bool> OnTreeChopped;
         IconPattern iconPattern;
         GameObject ChoppingIcon;
-        protected override void OnClick()
+        public override void OnClick()
         {
             base.OnClick();
             isChopping = !isChopping;

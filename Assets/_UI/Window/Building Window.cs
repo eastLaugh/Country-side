@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -41,7 +40,7 @@ public class BuildingWindow : MonoBehaviour
     }
 
     public Animator MouseAnimator;
-    public static Type SelectedType { get; private set; }
+    static Type SelectedType { get; set; }
     static Button lastSelectedButton;
     void OnButtonClick(Type builtType, Button selectedButton)
     {
@@ -73,25 +72,75 @@ public class BuildingWindow : MonoBehaviour
         }
     }
 
-    public static bool TryGetSelectedTypeConfig(out MapObjectDatabase.Config config)
+    public static int selectedDirection { get; private set; } = 2;
+
+    public MouseIndicator mouseIndicator;
+
+    private void Update()
+    {
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            selectedDirection = (selectedDirection + 1) % 4;
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            selectedDirection = (selectedDirection - 1) % 4;
+        }
+    }
+    private void OnGUI()
+    {
+        GUI.Label(new Rect(0, 0, 100, 100), selectedDirection.ToString());
+    }
+
+    public static void Foreach(Vector2 center, Vector2 size, Action<int, int> action)
+    {
+        Vector2 delta = size;
+        //向右旋转的次数(按E的次数)
+        for (int i = 0; i < selectedDirection; i++)
+        {
+            delta = delta.x * Vector2.down + delta.y * Vector2.right;
+            //↓→
+            //R = | 0  1 |
+            //    | -1 0 |
+        }
+
+        for (int x = (int)center.x; x != center.x + delta.x; x += (int)Mathf.Sign(delta.x))
+        {
+            for (int y = (int)center.y; y != center.y + delta.y; y += (int)Mathf.Sign(delta.y))
+            {
+                action?.Invoke(x, y);
+            }
+        }
+    }
+
+
+    // Recommend
+    public static bool TryGetSelectedTypeConfig(out Type type, out MapObjectDatabase.Config config)
     {
         if (SelectedType == null || BuildMode.hasEntered == false)
         {
             config = default;
+            type = null;
             return false;
         }
 
         try
         {
             config = GameManager.current.MapObjectDatabase[SelectedType];
+            type = SelectedType;
             return true;
         }
         catch (System.Exception)
         {
             config = default;
+            type = null;
             return false;
         }
 
 
     }
+
 }
