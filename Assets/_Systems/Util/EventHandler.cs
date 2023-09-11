@@ -20,4 +20,9 @@ public class EventHandler
     {
         DayPass?.Invoke();
     }
+    public static event Action SavefileDeleted;
+    public static void CallSavefileDeleted()
+    {
+        SavefileDeleted?.Invoke();
+    }
 }

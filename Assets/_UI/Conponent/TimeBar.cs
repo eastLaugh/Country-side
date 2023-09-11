@@ -29,7 +29,6 @@ public class TimeBar : MonoBehaviour
 
     void Update()
     {
-        if(GameManager.current.CurrentSate == GameManager.GameState.Playing.ToString())
-            displayDate.text = GameManager.current.map.dateTime.Date.ToString("yyyy/MM/dd");
+      
     }
 }

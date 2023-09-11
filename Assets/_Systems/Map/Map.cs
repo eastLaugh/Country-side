@@ -23,6 +23,12 @@ public class Map
     public Vector2Int size { get; private set; }
     [JsonProperty]
     public DateTime dateTime;
+    [JsonProperty]
+    public List<string> FinishedAssignments = new List<string>();
+    [JsonProperty]
+    public List<string> UnlockedAssignments = new List<string>();
+    //[JsonProperty]
+    public Dictionary<string, int> BuildingsNum = new Dictionary<string, int>();
 
 
     public Map(Vector2Int size, Slot[] Slots, int RandomSeed, GameDataWrapper<EconomyVector> economyWrapper)
@@ -48,7 +54,7 @@ public class Map
                 return null;
         }
     }
-
+    
 
     public static Map Generate(Vector2Int size, int seed = -1)
     {
@@ -91,6 +97,20 @@ public class Map
         foreach (Type type in types)
         {
             yield return (MapGenerator)Activator.CreateInstance(type);
+        }
+    }
+
+
+    public int GetBuildingNum(string name)
+    {
+        if (BuildingsNum.ContainsKey(name))
+        {
+            return BuildingsNum[name];
+        }          
+        else
+        {
+            BuildingsNum.Add(name, 0);  
+            return 0;
         }
     }
 }

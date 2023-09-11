@@ -20,7 +20,10 @@ public class TimeController : MonoBehaviour
     {
         enabled = false;
     }
-
+    void Start()
+    {
+        enabled = false;
+    }
     Map map;
     private void OnMapLoaded(Map map)
     {
@@ -34,10 +37,7 @@ public class TimeController : MonoBehaviour
     {
 
     }
-    void Start()
-    {
-        enabled = false;
-    }
+    
 
     void Update()
     {

@@ -10,18 +10,14 @@ public class BuildingDetailUI : MonoBehaviour
 {
     //定义物品的属性：名称、描述、图标
     public TextMeshProUGUI nameText;
-    public TextMeshProUGUI descriptionText;
-    public TextMeshProUGUI functionText;
-    public TextMeshProUGUI requirementText;
+    public TextMeshProUGUI MainText;
     public Image icon;
 
     //传入物品的Building，判断并显示该物品的名称、描述、图标
     public void Display(BuildingDetails Building)
     {
         nameText.text = Building.chineseName;
-        descriptionText.text = Building.description;
-        functionText.text = Building.function;
-        requirementText.text = Building.requirement;
+        MainText.text = "工程原理：" + Building.description + "\n\n" + "建造条件:" + Building.requirement + "\n\n" + "建筑功能：" + Building.function;
         icon.sprite = Building.icon;
         
         //物品图标不存在时，隐藏该图标
@@ -33,9 +29,7 @@ public class BuildingDetailUI : MonoBehaviour
     public void Clear()
     {
         nameText.text = null;
-        descriptionText.text = null;
-        functionText.text = null;
-        requirementText.text = null;
+        MainText.text = null;
         icon.sprite = null;
         icon.gameObject.SetActive(false);
     }

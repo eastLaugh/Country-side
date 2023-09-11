@@ -31,11 +31,6 @@ public class GameManager : MonoBehaviour
     private illuBookSystem illuBookSystem;
 
 
-    [Obsolete]
-    public enum GameState
-    {
-        Unload, NewGame, Loading, Playing
-    }
 
 
     public Vector2Int size;
@@ -235,6 +230,7 @@ public class GameManager : MonoBehaviour
                     if (GUILayout.Button("x", GUILayout.Width(40f)))
                     {
                         globalData.GameSaveFiles.Remove(filePath);
+                        //EventHandler.CallSavefileDeleted();
                         SaveGlobalData();
                         //以防万一暂时不真的删除源文件
                         break;
@@ -302,11 +298,9 @@ public class GameManager : MonoBehaviour
             }
             GUILayout.EndArea();
         }
-
-
     }
     public Map map { get; private set; }
-    void SaveCurrentMap(string filePath, bool temp = false)
+    public void SaveCurrentMap(string filePath, bool temp = false)
     {
         if (map == null)
         {
@@ -343,7 +337,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    void LoadFromLocalFile(string FileName)
+    public void LoadFromLocalFile(string FileName)
     {
         if (!File.Exists(FileName))
         {
@@ -352,7 +346,9 @@ public class GameManager : MonoBehaviour
         else
         {
             UnLoad();
+            Debug.Log(FileName);
             string jsonText = File.ReadAllText(FileName);
+            Debug.Log(jsonText);
             Map map = JsonConvert.DeserializeObject<Map>(jsonText, SerializeSettings);
             LoadMap(map);
         }
@@ -372,7 +368,20 @@ public class GameManager : MonoBehaviour
 
         OnMapLoaded?.Invoke(map);
         AfterMapLoaded?.Invoke(map);
+    }
+    public void NewGame(string fileName)
+    {
+        UnLoad();
+        var File = Resources.Load<TextAsset>("Template");
+        Map map = JsonConvert.DeserializeObject<Map>(File.text, SerializeSettings);
+        LoadMap(map);
+        SaveCurrentMap(Path.Combine(SaveDirectory , fileName + ".dat"));
 
+    }
+    public void AutoSave()
+    {
+        UnLoad();
+        SaveCurrentMap(Path.Combine(SaveDirectory, fileName + ".dat"));
     }
 
 }

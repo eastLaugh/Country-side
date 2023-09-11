@@ -195,6 +195,8 @@ partial class Slot
         /// 执行时机：在地图格子全部创建完成之后
         /// </summary>
         protected abstract void OnEnable();
+        
+           
 
         /// <summary>
         /// 执行时机：一旦被实例化，立即执行
@@ -210,6 +212,7 @@ partial class Slot
         /// 
         /// </summary>
         protected abstract void OnDisable();
+        
 
         /// <summary>
         /// 执行时机：类似于OnEnable。不过，仅在首次被创建时才会执行。永远只执行一次，不会在读取存档时执行
