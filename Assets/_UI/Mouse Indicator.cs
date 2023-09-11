@@ -42,6 +42,7 @@ public class MouseIndicator : MonoBehaviour
     private void OnBuildModeExit()
     {
         SlotRender.OnAnySlotEnter -= DetectAccessibleForMapObject;
+        SlotRender.OnAnySlotEnter -= AutoChangeSize;
         SlotRender.OnAnySlotClicked -= DetectAccessibleForMapObject;
         SetColor(defaultColor);
     }
@@ -49,7 +50,16 @@ public class MouseIndicator : MonoBehaviour
     private void OnBuildModeEnter()
     {
         SlotRender.OnAnySlotEnter += DetectAccessibleForMapObject;
+        SlotRender.OnAnySlotEnter += AutoChangeSize;
         SlotRender.OnAnySlotClicked += DetectAccessibleForMapObject;
+    }
+
+    private void AutoChangeSize(SlotRender render)
+    {
+        if (BuildingWindow.TryGetSelectedTypeConfig(out MapObjectDatabase.Config config))
+        {
+            MainIndicator.transform.localScale = new Vector3(config.Size.x * 0.1f, 1, config.Size.y * 0.1f);
+        }
     }
 
     private void OnAnySlotEnter(SlotRender slotRender)

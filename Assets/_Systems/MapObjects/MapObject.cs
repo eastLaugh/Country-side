@@ -23,6 +23,8 @@ partial class Slot
         public Slot slot { get; private set; } = null;
 
 
+        [JsonProperty]
+        public Vector2Int Direction { get; protected set; }
 
         protected Transform father { get; private set; }
         protected GameObject gameObject => father.gameObject;

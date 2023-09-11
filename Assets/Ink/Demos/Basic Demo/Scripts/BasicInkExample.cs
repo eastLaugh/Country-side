@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class BasicInkExample : MonoBehaviour {
     public static event Action<Story> OnCreateStory;
 	
-    void Awake () {
+    void Start () {
 		// Remove the default message
 		RemoveChildren();
 		StartStory();

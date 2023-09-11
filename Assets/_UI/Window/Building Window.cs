@@ -72,4 +72,26 @@ public class BuildingWindow : MonoBehaviour
             MouseAnimator.Play("Build Mode");
         }
     }
+
+    public static bool TryGetSelectedTypeConfig(out MapObjectDatabase.Config config)
+    {
+        if (SelectedType == null || BuildMode.hasEntered == false)
+        {
+            config = default;
+            return false;
+        }
+
+        try
+        {
+            config = GameManager.current.MapObjectDatabase[SelectedType];
+            return true;
+        }
+        catch (System.Exception)
+        {
+            config = default;
+            return false;
+        }
+
+
+    }
 }

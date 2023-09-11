@@ -13,16 +13,8 @@ public class BuildMode : StateMachineBehaviour
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        // 
-        // InfoWindow infoWindow = InfoWindow.Create("你已进入建造模式\n点击右下角×以退出");
-        // infoWindow.GetComponent<Window>().OnClose.AddListener(() =>
-        // {
-        //     animator.SetTrigger("BuildEnd");
-        // });
-
         hasEntered = true;
         SlotRender.OnAnySlotClickedInBuildMode += OnAnySlotClickedInBuildMode;
-
         OnBuildModeEnter?.Invoke();
     }
 
@@ -54,7 +46,6 @@ public class BuildMode : StateMachineBehaviour
     {
         hasEntered = false;
         SlotRender.OnAnySlotClickedInBuildMode -= OnAnySlotClickedInBuildMode;
-
         OnBuildModeExit?.Invoke();
     }
 

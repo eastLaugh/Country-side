@@ -31,7 +31,7 @@ public static partial class MapObjects
 
         protected override void OnCreated()
         {
-            ConsumptionAndSalary = new SolidMiddleware<EconomyVector>(new EconomyVector(0, -200f, 0, 日均收入: 30f),this);
+            ConsumptionAndSalary = new SolidMiddleware<EconomyVector>(new EconomyVector(0, -200f, 0, 日均收入: 30f), this);
             map.economyWrapper.AddMiddleware(ConsumptionAndSalary);
         }
 
@@ -49,7 +49,7 @@ public static partial class MapObjects
     /// </summary>
     public class TileHouse : House
     {
-
+        
     }
     /// <summary>
     /// 水泥房

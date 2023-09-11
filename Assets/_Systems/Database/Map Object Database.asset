@@ -20,6 +20,7 @@ MonoBehaviour:
         Prefab: {fileID: 1812805813641912064, guid: 3b8d6b75408d1c04a80526a866c7d4e7,
           type: 3}
         Prefabs: []
+        Size: {x: 1, y: 2}
         "\u5907\u6CE8": 
     - Key:
         _: Pollution
@@ -27,6 +28,7 @@ MonoBehaviour:
         Prefab: {fileID: 4028269822862111206, guid: d724a54e695999f468572d768921fbd0,
           type: 3}
         Prefabs: []
+        Size: {x: 1, y: 1}
         "\u5907\u6CE8": 
     - Key:
         _: "\u5E02\u4E2D\u5FC3"
@@ -34,6 +36,7 @@ MonoBehaviour:
         Prefab: {fileID: 919132149155446097, guid: 22bef38faeb0a384e9697a6975d3c964,
           type: 3}
         Prefabs: []
+        Size: {x: 1, y: 1}
         "\u5907\u6CE8": 
     - Key:
         _: TextileMill
@@ -41,6 +44,7 @@ MonoBehaviour:
         Prefab: {fileID: 919132149155446097, guid: 6ac1d576ddec5e74d9b46549324afd64,
           type: 3}
         Prefabs: []
+        Size: {x: 1, y: 1}
         "\u5907\u6CE8": 
     - Key:
         _: Mulberry
@@ -48,6 +52,7 @@ MonoBehaviour:
         Prefab: {fileID: 7283486670144764620, guid: 2b706258fd8dcb945901495109bdcb86,
           type: 3}
         Prefabs: []
+        Size: {x: 1, y: 1}
         "\u5907\u6CE8": 
     - Key:
         _: Road
@@ -55,6 +60,7 @@ MonoBehaviour:
         Prefab: {fileID: 3275510535045769556, guid: 1e5c0348ceb1dcd46add68e0e7e69432,
           type: 3}
         Prefabs: []
+        Size: {x: 1, y: 1}
         "\u5907\u6CE8": 
     - Key:
         _: House
@@ -62,6 +68,7 @@ MonoBehaviour:
         Prefab: {fileID: 919132149155446097, guid: e389191a0adf3094e97a6da0295330a2,
           type: 3}
         Prefabs: []
+        Size: {x: 1, y: 1}
         "\u5907\u6CE8": 
     - Key:
         _: AdobeHouse
@@ -69,6 +76,7 @@ MonoBehaviour:
         Prefab: {fileID: 919132149155446097, guid: e389191a0adf3094e97a6da0295330a2,
           type: 3}
         Prefabs: []
+        Size: {x: 1, y: 1}
         "\u5907\u6CE8": 
     - Key:
         _: Tree
@@ -78,4 +86,5 @@ MonoBehaviour:
         Prefabs:
         - {fileID: 919132149155446097, guid: 003a7f6256ac5f6489151533beef0788, type: 3}
         - {fileID: 919132149155446097, guid: 33deef01251064942bdfb4b84e68c980, type: 3}
+        Size: {x: 1, y: 1}
         "\u5907\u6CE8": 
