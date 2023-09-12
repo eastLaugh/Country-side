@@ -55,7 +55,7 @@ public class BuildMode : StateMachineBehaviour
             }
             else
             {
-                Debug.LogWarning("无法创建");
+                Debug.LogWarning("占位符不能在此处创建");
             }
 
 
