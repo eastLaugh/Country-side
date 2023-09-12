@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Ink.Runtime;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -10,22 +11,24 @@ public interface IDataVector<T> where T : IDataVector<T>
     T Add(T other);
 
     T Minus(T other);
+
+    T Multiply(T other);
 }
 
 
-public class GameDataWrapper<T> : IMiddleware<T> where T : IDataVector<T>
+public class GameDataWrapper<T> where T : IDataVector<T>
 {
-    [JsonIgnore] //不要序列化是因为，我想要在每次反序列化后重新计算current
-    T current;
     [JsonProperty]
-    public HashSet<IMiddleware<T>> Middlewares { get; protected set; } = new();
+    public T current{get;private set;}
+    [JsonProperty]
+    public HashSet<SolidMiddleware<T>> Middlewares { get; protected set; } = new();
 
     [JsonConstructor]
     public GameDataWrapper()
     {
     }
 
-    public GameDataWrapper(params IMiddleware<T>[] middlewares)
+    public GameDataWrapper(params SolidMiddleware<T>[] middlewares)
     {
         foreach (var middleware in middlewares)
         {
@@ -37,14 +40,13 @@ public class GameDataWrapper<T> : IMiddleware<T> where T : IDataVector<T>
     [System.Runtime.Serialization.OnDeserialized]
     void OnDeserializedMethod(System.Runtime.Serialization.StreamingContext context)
     {
-        current = default;
         foreach (var middleware in Middlewares)
         {
             AddMiddleware(middleware, true);
         }
     }
 
-    public void AddMiddleware(IMiddleware<T> middleware, bool force = false)
+    public void AddMiddleware(SolidMiddleware<T> middleware, bool force = false)
     {
         if (Middlewares.Contains(middleware) && !force)
         {
@@ -53,10 +55,10 @@ public class GameDataWrapper<T> : IMiddleware<T> where T : IDataVector<T>
         }
         else
         {
-            current = current.Add(middleware.GetValue());
             Middlewares.Add(middleware);
             middleware.OnMiddlewareUpdated += OnMiddlewaresUpdated;
-            OnMiddlewareUpdated?.Invoke(current);
+            middleware.Recaculate();
+            //OnMiddlewareUpdated?.Invoke(current);
         }
 
 
@@ -68,23 +70,20 @@ public class GameDataWrapper<T> : IMiddleware<T> where T : IDataVector<T>
         OnMiddlewareUpdated?.Invoke(t);
     }
 
-    public void DiscardMiddleware(IMiddleware<T> middleware)
-    {
-        if (Middlewares.Contains(middleware))
-        {
-            T dieValue = middleware.GetValue();
-            current = current.Minus(dieValue);
-            Middlewares.Remove(middleware);
-            middleware.OnMiddlewareUpdated -= OnMiddlewaresUpdated;
+    // public void DiscardMiddleware(IMiddleware<T> middleware)
+    // {
+    //     if (Middlewares.Contains(middleware))
+    //     {
+    //         T dieValue = middleware.GetValue();
+    //         current = current.Minus(dieValue);
+    //         Middlewares.Remove(middleware);
+    //         middleware.OnMiddlewareUpdated -= OnMiddlewaresUpdated;
 
-            OnMiddlewareUpdated?.Invoke(default(T).Minus(dieValue));
-        }
-    }
+    //         OnMiddlewareUpdated?.Invoke(default(T).Minus(dieValue));
+    //     }
+    // }
 
-    public T GetValue()
-    {
-        return current;
-    }
+
 
     public object GetHost()
     {
@@ -96,7 +95,7 @@ public class GameDataWrapper<T> : IMiddleware<T> where T : IDataVector<T>
 
 
 //该中间件表示一个定值
-public class SolidMiddleware<T> : IMiddleware<T> where T : IDataVector<T>
+public class SolidMiddleware<T> where T : IDataVector<T>
 {
     public event Action<T> OnMiddlewareUpdated;
 
@@ -104,8 +103,23 @@ public class SolidMiddleware<T> : IMiddleware<T> where T : IDataVector<T>
     public T solidValue { get; private set; }
 
     [JsonProperty]
+    public T currentValue { get; private set; }
+
+    [JsonProperty]
     public readonly object Host;
 
+    [JsonProperty]
+    public List<CPU> CPUs { get; private set; }
+
+    //先加再乘处理单元
+    public struct CPU
+    {
+        public T Addition;
+        public T Multiplication;
+
+        public bool Multipliable;
+
+    }
     public SolidMiddleware(T solidValue, object host)
     {
         this.solidValue = solidValue;
@@ -117,15 +131,26 @@ public class SolidMiddleware<T> : IMiddleware<T> where T : IDataVector<T>
         return Host;
     }
 
-    public T GetValue()
+    public void Recaculate()
     {
-        return solidValue;  //返回定值
+        T temp = solidValue;
+        foreach (var cpu in CPUs)
+        {
+            temp = temp.Add(cpu.Addition);
+            if (cpu.Multipliable)
+            {
+                temp = temp.Multiply(cpu.Multiplication);
+            }
+        }
+
+        OnMiddlewareUpdated?.Invoke(temp.Minus(currentValue));
+        currentValue = temp;
     }
 
     void UpdateValue(T solidValue)
     {
-        OnMiddlewareUpdated?.Invoke(solidValue.Minus(this.solidValue));
         this.solidValue = solidValue;
+        Recaculate();
     }
 
     public T Value
@@ -134,13 +159,25 @@ public class SolidMiddleware<T> : IMiddleware<T> where T : IDataVector<T>
         {
             UpdateValue(value);
         }
+        get => currentValue;
     }
 
+    public void AddCPU(CPU cpu)
+    {
+        CPUs.Add(cpu);
+        Recaculate();
+    }
+
+    public void RemoveCPU(CPU cpu)
+    {
+        CPUs.Remove(cpu);
+        Recaculate();
+    }
 }
 
-public interface IMiddleware<T>
-{
-    event Action<T> OnMiddlewareUpdated;
-    T GetValue();
-    object GetHost();
-}
+// public interface IMiddleware<T>
+// {
+//     event Action<T> OnMiddlewareUpdated;
+//     object GetHost();
+
+// }
