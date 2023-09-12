@@ -83,7 +83,7 @@ partial class Slot
             }
             else
             {
-                Debug.LogWarning("注入失败！");
+                Debug.LogError("注入失败！");
                 return false;
             }
         }
