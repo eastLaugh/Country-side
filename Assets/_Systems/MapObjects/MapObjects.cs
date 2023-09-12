@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using static Slot;
@@ -51,6 +52,11 @@ public static partial class MapObjects
     public class House : MapObject, MustNotExist<House>
     {
 
+        static House lastHouse;
+
+
+
+
         [JsonProperty]
         SolidMiddleware<GameDataVector> ConsumptionAndSalary;
         protected override void OnCreated()
@@ -62,7 +68,12 @@ public static partial class MapObjects
 
         protected override void OnEnable()
         {
-
+            // InfoWindow.Create(slot.worldPosition.ToString());
+            if (lastHouse != null)
+            {
+                ArrowRender.NewArrow(lastHouse.slot.worldPosition, slot.worldPosition);
+            }
+            lastHouse = this;
         }
 
         protected override void OnDisable()

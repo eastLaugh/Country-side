@@ -20,9 +20,9 @@ public static class BezierUtility
 
     public static Vector3 CubicBezier(Vector3 P0, Vector3 P3, float t)
     {
-        Vector3 P1 = P0 + (P3 - P0).Dot2(new Vector3(-0.3f, 0, 0.8f));
-        Vector3 P2 = P0 + (P3 - P0).Dot2(new Vector3(0.1f, 0, 1.4f));
-        return CubicBezier(P0, P1, P2, P3, t);
+        Vector3 P1 = P0 + (P3 - P0).Dot2(new Vector3(-0.3f, 0f, 0.8f));
+        Vector3 P2 = P0 + (P3 - P0).Dot2(new Vector3(0.1f, 0f, 1.4f));
+        return CubicBezier(P0, P1 + Vector3.up * 2, P2 + Vector3.up * 3, P3, t);
     }
 
     public static IEnumerable<Vector3> CubicBezier(Vector3 P0, Vector3 P3, int num)
