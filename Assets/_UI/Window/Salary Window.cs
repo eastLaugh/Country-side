@@ -68,7 +68,7 @@ public class SalaryWindow : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 if (IMiddleware.GetHost() is Slot.MapObject mapObject)
                 {
                     Vector3 screenPoint = Camera.main.WorldToScreenPoint(mapObject.slot.gameObject.transform.position);
-                    GUI.Label(new Rect(screenPoint.x, Screen.height - screenPoint.y, 100, 100), $"{middleware.SolidValue.dailyIncome}");
+                    //GUI.Label(new Rect(screenPoint.x, Screen.height - screenPoint.y, 100, 100), $"{middleware.SolidValue.dailyIncome}");
                 }
             }
         }

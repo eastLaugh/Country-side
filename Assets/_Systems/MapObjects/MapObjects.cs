@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using static Slot;
 
@@ -20,17 +21,17 @@ public static partial class MapObjects
 
         protected override void OnCreated()
         {
-            
+
         }
 
         protected override void OnDisable()
         {
-           
+
         }
 
         protected override void OnEnable()
         {
-            
+
         }
     }
     public class WheatFarm : Farm
@@ -50,23 +51,23 @@ public static partial class MapObjects
     public class House : MapObject, MustNotExist<House>
     {
 
-        //[JsonProperty]
-        //Middleware<GameDataVector> ConsumptionAndSalary;
+        [JsonProperty]
+        SolidMiddleware<GameDataVector> ConsumptionAndSalary;
         protected override void OnCreated()
         {
-            //ConsumptionAndSalary = new SolidMiddleware<GameDataVector>(new GameDataVector(0, -200f, 0, 30f), this);
-            //map.economyWrapper.AddMiddleware(ConsumptionAndSalary);
+            ConsumptionAndSalary = new SolidMiddleware<GameDataVector>(new GameDataVector(dailyIncome: 30, Money: -2000), this);
+            map.economyWrapper.AddMiddleware(ConsumptionAndSalary);
 
         }
 
         protected override void OnEnable()
         {
-           
+
         }
 
         protected override void OnDisable()
         {
-           
+
         }
 
         public override bool CanBeUnjected => true;

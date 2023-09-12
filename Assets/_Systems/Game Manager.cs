@@ -71,6 +71,7 @@ public class GameManager : MonoBehaviour
             debugSlotRender.slot.OnSlotUpdate -= UpdateDebugInfo;
         debugSlotRender = slotRender;
         debugSlotRender.slot.OnSlotUpdate += UpdateDebugInfo;
+        UpdateDebugInfo();
         void UpdateDebugInfo()
         {
             debugSlotInfo = debugSlotRender.slot.GetInfo(true);
@@ -90,18 +91,19 @@ public class GameManager : MonoBehaviour
     {
         SlotRender.OnAnySlotClicked += OnAnySlotClickedInAllMode;
         SlotRender.OnAnySlotClickedInBuildMode += OnAnySlotClickedInAllMode;
+        SlotRender.OnAnySlotEnter += OnAnySlotClickedInAllMode;  //触摸时实时更新调试信息
     }
 
     private void OnDisable()
     {
         SlotRender.OnAnySlotClicked -= OnAnySlotClickedInAllMode;
         SlotRender.OnAnySlotClickedInBuildMode -= OnAnySlotClickedInAllMode;
-
+        SlotRender.OnAnySlotEnter -= OnAnySlotClickedInAllMode;
 
     }
     private void Update()
     {
-        
+
     }
 
     private void Awake()
@@ -175,18 +177,7 @@ public class GameManager : MonoBehaviour
             seed = -1;
         }
         GUILayout.EndHorizontal();
-        // if (seed != -1)
-        // {
-        //     if (GUILayout.Button("新地图", layout2))
-        //     {
-        //         fsm.ChangeState(GameState.Loading);
-        //         seed = -1;
-        //         UnLoad();
-        //         var map = Map.Generate(size, seed);
-        //         LoadMap(map);
-        //         fsm.ChangeState(GameState.Playing);
-        //     }
-        // }
+
         if (GUILayout.Button("创建", buttonLayout))
         {
             UnLoad();
@@ -194,19 +185,6 @@ public class GameManager : MonoBehaviour
             LoadMap(map);
             SaveCurrentMap(Path.Combine(SaveDirectory, fileName));
         }
-        // if (GUILayout.Button("自动加载", layout2))
-        // {
-        //     fsm.ChangeState(GameState.Loading);
-        //     GenerateFromLocalFile(Path.Combine(SaveDirectory, autoFileName));
-        //     fsm.ChangeState(GameState.Playing);
-        // }
-
-        // if (GUILayout.Button("加载", buttonLayout))
-        // {
-        //     //fsm.ChangeState(GameState.Loading);
-        //     LoadFromLocalFile(Path.Combine(SaveDirectory, fileName));
-        //     //fsm.ChangeState(GameState.Playing);
-        // }
 
         if (globalData?.GameSaveFiles != null)
         {
@@ -276,7 +254,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if(GUILayout.Button("卸载", buttonLayout))
+        if (GUILayout.Button("卸载", buttonLayout))
         {
             UnLoad();
         }
@@ -286,7 +264,7 @@ public class GameManager : MonoBehaviour
             //显示一些经济参数
             GUILayout.BeginArea(new Rect(Screen.width - 200, 0, 200, Screen.height), GUI.skin.box);
             {
-                GUILayout.Label("经济参数");
+                GUILayout.Label("参数");
                 GUILayout.Label(JsonConvert.SerializeObject(currentEconomyVector, Formatting.Indented));
 
             }
@@ -323,7 +301,7 @@ public class GameManager : MonoBehaviour
     void UnLoad()
     {
         if (map != null)
-            map.economyWrapper.OnDataUpdated -= OnEconomyDataUpdated;
+            map.economyWrapper.OnMiddlewareUpdated -= OnEconomyDataUpdated;
         grid.transform.DestroyAllChild();
         map = null;
         OnMapUnloaded?.Invoke();
@@ -355,7 +333,7 @@ public class GameManager : MonoBehaviour
         //grid.transform.position = new Vector3(-map.size.x * grid.cellSize.x / 2f, 0, /*-map.size.y * grid.cellSize.z / 2f*/0); //对齐到左下角
         CinemachineVirtualCamera.transform.position = new Vector3(map.size.x * grid.cellSize.x / 2f, CinemachineVirtualCamera.transform.position.y, map.size.y * grid.cellSize.z / 2f);
 
-        map.economyWrapper.OnDataUpdated += OnEconomyDataUpdated;
+        map.economyWrapper.OnMiddlewareUpdated += OnEconomyDataUpdated;
         OnEconomyDataUpdated(map.economyWrapper.GetValue());
 
         OnMapLoaded?.Invoke(map);
@@ -367,7 +345,7 @@ public class GameManager : MonoBehaviour
         var File = Resources.Load<TextAsset>("Template");
         Map map = JsonConvert.DeserializeObject<Map>(File.text, SerializeSettings);
         LoadMap(map);
-        SaveCurrentMap(Path.Combine(SaveDirectory , fileName + ".dat"));
+        SaveCurrentMap(Path.Combine(SaveDirectory, fileName + ".dat"));
 
     }
     public void AutoSave()

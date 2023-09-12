@@ -56,25 +56,6 @@ public class MouseIndicator : MonoBehaviour
 
     public void Refresh(SlotRender render)
     {
-        // if (BuildingWindow.TryGetSelectedTypeConfig(out Type type, out MapObjectDatabase.Config config))
-        // {
-        //     //MainIndicator.transform.localScale = new Vector3(config.Size.x * 0.1f, 1, config.Size.y * 0.1f);
-        //     if (render.slot.mapObjects.Accessible(type))
-        //     {
-        //         SetColor(Color.green);
-        //     }
-        //     else
-        //     {
-        //         SetColor(Color.red);
-        //     }
-
-        //     BuildingWindow.Foreach(render.slot.position, config.Size, (x, y) =>
-        //     {
-        //         render.slot.map[x, y].slotRender.Shake();
-        //     });
-
-        // }
-
         if (BuildingWindow.TryGetSelectedTypeConfig(out Type selectedType, out MapObjectDatabase.Config config))
         {
 

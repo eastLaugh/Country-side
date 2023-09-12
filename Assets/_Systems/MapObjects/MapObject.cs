@@ -20,7 +20,7 @@ partial class Slot
         [JsonIgnore]
         public Map map => slot.map;
         [JsonProperty]
-        public Slot slot { get; private set; } = null;
+        public Slot slot { get; private set; }
 
 
         [JsonProperty]
@@ -48,7 +48,9 @@ partial class Slot
                 catch (KeyNotFoundException)
                 {
                     Debug.Log($"请遵从WorkFlow，在MapObject Database中为{GetType().Name}配置信息。由于未找到配置信息，已忽略Prefab");
+
                     config = default;
+                    
                 }
 
                 father = new GameObject(GetType().Name).transform;
@@ -169,9 +171,9 @@ partial class Slot
                 slot.OnSlotUpdate?.Invoke();
 
                 OnDisable();
+                OnUnjected?.Invoke(this);
                 this.slot = null;
 
-                OnUnjected?.Invoke(this);
             }
         }
 

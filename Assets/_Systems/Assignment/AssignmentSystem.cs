@@ -85,8 +85,8 @@ public class AssignmentSystem : MonoBehaviour
     }
     public void AssignmentInit()
     {
-        var tempAssignment1 = new BasicAssignment("½¨Èý¸öÄàÍÁ·¿",
-            "ÎÒÃÇÐèÒªÔö¼ÓÖÖÖ²ÇøµÄÃæ»ýÀ´±£ÕÏ´åÃñÓÐ¸ü¶à¶«Î÷³Ô£¬Èç¹ûÄÜÂô³öÈ¥×¬Ç®¾Í¸üºÃÁË¡£ÎÒÃÇÕâÀïÎÂÁ¹¡¢ÊªÈó£¬ÍÁÎªºÚÍÁµØ£¬Ó¦¸ÃÖÖÖ²Ð¡Âó»¹ÊÇË®µ¾ÄØ?",
+        var tempAssignment1 = new BasicAssignment("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
+            "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ï¿½ï¿½ï¿½Ð¸ï¿½ï¿½à¶«ï¿½ï¿½ï¿½Ô£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¥×¬Ç®ï¿½Í¸ï¿½ï¿½ï¿½ï¿½Ë¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êªï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½Ø£ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½Ö²Ð¡ï¿½ï¿½ï¿½ï¿½Ë®ï¿½ï¿½ï¿½ï¿½?",
             () =>
             {
                 //Debug.Log(map.GetBuildingNum("AdobeHouse"));
@@ -98,7 +98,7 @@ public class AssignmentSystem : MonoBehaviour
             },
             () =>
             {
-                map.economyWrapper.AddMiddleware(new SolidMiddleware<GameDataVector>(new GameDataVector(0, 1000, 0),this,map.economyWrapper));
+                //map.economyWrapper.AddMiddleware(new SolidMiddleware<GameDataVector>(new GameDataVector(0, 1000, 0),this,map.economyWrapper));
             });
         tempAssignment1.unlock = true;
         assignmentLists.Add(tempAssignment1);

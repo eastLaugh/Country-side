@@ -34,7 +34,7 @@ public class MapObjectAccumlator : MonoBehaviour
     private void OnUnjected(Slot.MapObject mapObject)
     {
         Map map = mapObject.map;
-        map.BuildingsNum[GetType().Name] -= 1;
+        map.BuildingsNum[mapObject.GetType().Name] -= 1;
         Debug.Log(GetType().Name + "-1");
     }
     

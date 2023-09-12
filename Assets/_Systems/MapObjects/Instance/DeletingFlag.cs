@@ -13,7 +13,6 @@ partial class MapObjects
 
         protected override void OnEnable()
         {
-            this.Unject();
         }
 
         protected override void OnDisable()
@@ -31,6 +30,7 @@ partial class MapObjects
 
         protected override void OnCreated()
         {
+            Unject();
         }
     }
 

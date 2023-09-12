@@ -347,7 +347,7 @@ PrefabInstance:
     - target: {fileID: 3539244381861504357, guid: 2341291eb0bcad044a95b18b5439c7bc,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 334.99997
+      value: 334.99988
       objectReference: {fileID: 0}
     - target: {fileID: 3862730955804731141, guid: 2341291eb0bcad044a95b18b5439c7bc,
         type: 3}
@@ -712,7 +712,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 119465631}
-  - component: {fileID: 119465632}
   m_Layer: 0
   m_Name: '@UI'
   m_TagString: Untagged
@@ -735,20 +734,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &119465632
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 119465630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b65cf9e9250381647b05fc45e56f13db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  illuBookUI: {fileID: 0}
-  eventUI: {fileID: 1677405564}
 --- !u!114 &165650018 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2380033076511142581, guid: af89d8bf6fa1f63499fb251437a58edd,
@@ -2866,7 +2851,6 @@ MonoBehaviour:
   grid: {fileID: 1423144532}
   CurrentSate: 
   Overlay: {fileID: 1652614060}
-  uiManager: {fileID: 119465632}
   CinemachineVirtualCamera: {fileID: 1591195965}
   roadRenderer: {fileID: 1994781814}
   size: {x: 50, y: 50}
@@ -3638,6 +3622,7 @@ MonoBehaviour:
   illuBookPanel: {fileID: 1752246639}
   timeController: {fileID: 951941567}
   btnClose: {fileID: 14900662}
+  btnOpen: {fileID: 0}
 --- !u!224 &1256322421 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3539244381861504357, guid: af89d8bf6fa1f63499fb251437a58edd,
@@ -4463,18 +4448,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1652614060}
   m_CullTransparentMesh: 1
---- !u!114 &1677405564 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2890640961144008920, guid: b1aeb1f4f6633344badd9b3e039bf07a,
-    type: 3}
-  m_PrefabInstance: {fileID: 680949592}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 880ef2b9f7a06bf4482c2cb228f9d781, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1732853945
 GameObject:
   m_ObjectHideFlags: 0
@@ -5747,7 +5720,7 @@ PrefabInstance:
     - target: {fileID: 3539244381861504357, guid: 2341291eb0bcad044a95b18b5439c7bc,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 334.06067
+      value: 334.0601
       objectReference: {fileID: 0}
     - target: {fileID: 3862730955804731141, guid: 2341291eb0bcad044a95b18b5439c7bc,
         type: 3}

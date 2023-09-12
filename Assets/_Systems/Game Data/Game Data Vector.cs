@@ -37,12 +37,12 @@ public struct GameDataVector : IDataVector<GameDataVector>
             left.Happiness - right.Happiness
         );
     }
-    public GameDataVector Add(GameDataVector other)
+    public readonly GameDataVector Add(GameDataVector other)
     {
         return this + other;
     }
 
-    public GameDataVector Minus(GameDataVector other)
+    public readonly GameDataVector Minus(GameDataVector other)
     {
         return this - other;    
     }

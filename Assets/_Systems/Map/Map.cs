@@ -54,7 +54,7 @@ public class Map
                 return null;
         }
     }
-    
+
 
     public static Map Generate(Vector2Int size, int seed = -1)
     {
@@ -69,11 +69,7 @@ public class Map
 
 
         //创建地图
-        Map map = null;
-        GameDataWrapper<GameDataVector> economyWrapper = new();
-
-        new SolidMiddleware<GameDataVector>(new GameDataVector(Random.Range(100, 1000), Random.Range(10000f, 1000000f), Random.Range(0f, 1f), 0f), map, economyWrapper);
-        map = new Map(size, slots, seed, economyWrapper);
+        Map map = new Map(size, slots, seed, new(new SolidMiddleware<GameDataVector>(new GameDataVector(Random.Range(100, 1000), Random.Range(10000, 1000000), 0, 0f), null)));
 
         //去中心化
         foreach (MapGenerator generator in InitAllGenerators())
@@ -107,10 +103,10 @@ public class Map
         if (BuildingsNum.ContainsKey(name))
         {
             return BuildingsNum[name];
-        }          
+        }
         else
         {
-            BuildingsNum.Add(name, 0);  
+            BuildingsNum.Add(name, 0);
             return 0;
         }
     }

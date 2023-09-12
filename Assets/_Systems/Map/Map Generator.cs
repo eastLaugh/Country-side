@@ -42,6 +42,7 @@ public class WaterAndPlain : MapGenerator
                 else
                 {
                     newSlot = new Slots.Water(map, new Vector2(i, j), new());
+                    new MapObjects.Lake().Inject(newSlot);
                 }
 
                 slots[i * size.y + j] = newSlot;

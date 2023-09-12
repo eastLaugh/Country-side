@@ -133,11 +133,13 @@ public class BuildingWindow : MonoBehaviour
             type = SelectedType;
             return true;
         }
-        catch (System.Exception)
+        catch (KeyNotFoundException)
         {
-            config = default;
-            type = null;
-            return false;
+            //没有配置Config
+
+            config = new MapObjectDatabase.Config() { Size = Vector2Int.one };
+            type = SelectedType;
+            return true;
         }
 
 
