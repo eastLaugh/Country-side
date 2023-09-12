@@ -14,7 +14,7 @@ public class Map
     [JsonProperty]
     public List<Lake.LakeEcosystem> lakeEcosystems { get; protected set; } = new();
     [JsonProperty]
-    public GameDataWrapper<EconomyVector> economyWrapper { get; private set; }
+    public GameDataWrapper<GameDataVector> economyWrapper { get; private set; }
     [JsonProperty]
     private Slot[] Slots;
     [JsonProperty]
@@ -31,7 +31,7 @@ public class Map
     public Dictionary<string, int> BuildingsNum = new Dictionary<string, int>();
 
 
-    public Map(Vector2Int size, Slot[] Slots, int RandomSeed, GameDataWrapper<EconomyVector> economyWrapper)
+    public Map(Vector2Int size, Slot[] Slots, int RandomSeed, GameDataWrapper<GameDataVector> economyWrapper)
     {
         this.size = size;
         this.Slots = Slots;
@@ -70,10 +70,9 @@ public class Map
 
         //创建地图
         Map map = null;
-        GameDataWrapper<EconomyVector> economyWrapper = new();
+        GameDataWrapper<GameDataVector> economyWrapper = new();
 
-        new SolidMiddleware<EconomyVector>(new EconomyVector(Random.Range(100f, 1000f), Random.Range(10000f, 1000000f), Random.Range(0f, 1f), 0f), map, economyWrapper);
-
+        new SolidMiddleware<GameDataVector>(new GameDataVector(Random.Range(100, 1000), Random.Range(10000f, 1000000f), Random.Range(0f, 1f), 0f), map, economyWrapper);
         map = new Map(size, slots, seed, economyWrapper);
 
         //去中心化

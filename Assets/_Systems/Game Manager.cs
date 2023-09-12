@@ -12,8 +12,6 @@ public class GameManager : MonoBehaviour
     public static event Action<Map> OnMapLoaded;
     [Obsolete("生命周期:  ....  → OnMapLoaded → AfterMapLoaded → End")]
     public static event Action<Map> AfterMapLoaded;
-    public static event Action OnGameUpdate;
-    public static event Action OnGameExit;
     public static GameManager current;
     public static int saveIndex = 0;
 
@@ -22,14 +20,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     public string CurrentSate;
     [SerializeField] GameObject Overlay;
-    [SerializeField] UIManager uiManager;
 
     public CinemachineVirtualCamera CinemachineVirtualCamera;
     public RoadRenderer roadRenderer;
     public static GlobalData globalData { get; private set; }
-    private TimeSystem timeSystem;
-    private illuBookSystem illuBookSystem;
-
 
 
 
@@ -83,9 +77,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    EconomyVector currentEconomyVector;
+    GameDataVector currentEconomyVector;
 
-    private void OnEconomyDataUpdated(EconomyVector _new)
+    private void OnEconomyDataUpdated(GameDataVector _new)
     {
         currentEconomyVector = _new;
     }
@@ -346,9 +340,7 @@ public class GameManager : MonoBehaviour
         else
         {
             UnLoad();
-            Debug.Log(FileName);
             string jsonText = File.ReadAllText(FileName);
-            Debug.Log(jsonText);
             Map map = JsonConvert.DeserializeObject<Map>(jsonText, SerializeSettings);
             LoadMap(map);
         }

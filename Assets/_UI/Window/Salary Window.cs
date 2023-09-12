@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 public class SalaryWindow : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     bool entered = false;
-    GameDataWrapper<EconomyVector> economyWrapper;
+    GameDataWrapper<GameDataVector> economyWrapper;
     public void OnPointerEnter(PointerEventData eventData)
     {
         entered = true;
@@ -69,7 +69,7 @@ public class SalaryWindow : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 if (middleware.Host != null && middleware.Host is Slot.MapObject mapObject)
                 {
                     Vector3 screenPoint = Camera.main.WorldToScreenPoint(mapObject.slot.gameObject.transform.position);
-                    GUI.Label(new Rect(screenPoint.x, Screen.height - screenPoint.y, 100, 100), $"+{middleware.SolidValue.日均收入}");
+                    GUI.Label(new Rect(screenPoint.x, Screen.height - screenPoint.y, 100, 100), $"{middleware.SolidValue.dailyIncome}");
                 }
             }
         }

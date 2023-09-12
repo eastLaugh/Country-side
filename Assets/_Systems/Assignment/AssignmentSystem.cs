@@ -98,7 +98,7 @@ public class AssignmentSystem : MonoBehaviour
             },
             () =>
             {
-                map.economyWrapper.AddMiddleware(new SolidMiddleware<EconomyVector>(new EconomyVector(0, 1000, 0),this));
+                map.economyWrapper.AddMiddleware(new SolidMiddleware<GameDataVector>(new GameDataVector(0, 1000, 0),this,map.economyWrapper));
             });
         tempAssignment1.unlock = true;
         assignmentLists.Add(tempAssignment1);

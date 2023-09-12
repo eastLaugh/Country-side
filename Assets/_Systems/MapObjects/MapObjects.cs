@@ -7,31 +7,66 @@ using static Slot;
 
 public static partial class MapObjects
 {
-    public class House : MapObject, MustNotExist<House>
+    #region 工业设施
+    public class Factory
     {
-        protected override GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
+
+    }
+    #endregion
+    #region 农业设施
+    public class Farm : MapObject
+    {
+        public override bool CanBeUnjected => throw new NotImplementedException();
+
+        protected override void OnCreated()
         {
-            IconPattern iconPattern = IconPattern.Create(father, Vector3.zero);
-            iconPattern.New("Building Icon");
-
-            return base.Render(prefab, prefabs, slotRender);
-        }
-
-        [JsonProperty]
-        SolidMiddleware<EconomyVector> ConsumptionAndSalary;
-
-
-        protected override void OnEnable()
-        {
+            
         }
 
         protected override void OnDisable()
         {
+           
         }
 
+        protected override void OnEnable()
+        {
+            
+        }
+    }
+    public class WheatFarm : Farm
+    {
+
+    }
+    public class RiceFarm : Farm
+    {
+
+    }
+    #endregion
+
+    #region 住宅楼
+    /// <summary>
+    /// 住宅基类
+    /// </summary>
+    public class House : MapObject, MustNotExist<House>
+    {
+
+        //[JsonProperty]
+        //Middleware<GameDataVector> ConsumptionAndSalary;
         protected override void OnCreated()
         {
-            ConsumptionAndSalary = new SolidMiddleware<EconomyVector>(new EconomyVector(0, -200f, 0, 日均收入: 30f), this, map.economyWrapper);
+            //ConsumptionAndSalary = new SolidMiddleware<GameDataVector>(new GameDataVector(0, -200f, 0, 30f), this);
+            //map.economyWrapper.AddMiddleware(ConsumptionAndSalary);
+
+        }
+
+        protected override void OnEnable()
+        {
+           
+        }
+
+        protected override void OnDisable()
+        {
+           
         }
 
         public override bool CanBeUnjected => true;
@@ -57,31 +92,9 @@ public static partial class MapObjects
     {
 
     }
-    //桑叶
-    public class Mulberry : Resource<Mulberry>
-    {
+    #endregion
 
-    }
-
-    //纺织厂
-    public class TextileMill : ResourceBuilding<Mulberry>
-    {
-        protected override void OnEnable()
-        {
-
-        }
-
-        protected override void OnCreated()
-        {
-        }
-
-        protected override void OnDisable()
-        {
-            throw new System.NotImplementedException();
-        }
-    }
-
-
+    #region 特殊建筑
     public class 市中心 : MapObject, MustNotExist<Tree>, IInfoProvider
     {
         public override bool CanBeUnjected => true;
@@ -106,6 +119,7 @@ public static partial class MapObjects
 
         }
     }
+    #endregion
 
     #region 污染源相关 测试Ripple系统
     public class Pollution : MapObject.Virtual, IInfoProvider  //MapObject.Virtual是一个虚拟的MapObject，不会被渲染，且尽量简单
@@ -132,84 +146,68 @@ public static partial class MapObjects
 
     #endregion
 
-    public class house1 : MapObject
+
+    public class Resource<T> : MapObject, MustNotExist<T> where T : Resource<T>
     {
         public override bool CanBeUnjected => true;
 
-        protected override void OnCreated()
+        protected override void OnEnable()
         {
         }
 
         protected override void OnDisable()
         {
+            throw new System.NotImplementedException();
         }
 
-        protected override void OnEnable()
+        protected override void OnCreated()
         {
         }
     }
-}
 
-public class Resource<T> : MapObject, MustNotExist<T> where T : Resource<T>
-{
-    public override bool CanBeUnjected => true;
 
-    protected override void OnEnable()
+    public abstract class ResourceBuilding<R> : MapObject, MustExist<R> where R : Resource<R>
     {
+        public override bool CanBeUnjected => true;
+
     }
 
-    protected override void OnDisable()
+    public abstract class RippleEffectBuilding<Eff> : MapObject where Eff : MapObject.Virtual, new()
     {
-        throw new System.NotImplementedException();
-    }
-
-    protected override void OnCreated()
-    {
-    }
-}
+        protected abstract int RippleRadius { get; }
 
 
-public abstract class ResourceBuilding<R> : MapObject, MustExist<R> where R : Resource<R>
-{
-    public override bool CanBeUnjected => true;
-
-}
-
-public abstract class RippleEffectBuilding<Eff> : MapObject where Eff : MapObject.Virtual, new()
-{
-    protected abstract int RippleRadius { get; }
-
-
-    [JsonProperty]
-    protected readonly List<Eff> Effects = new();
-    protected override void OnCreated()
-    {
-        for (int i = -RippleRadius; i <= RippleRadius; i++)
+        [JsonProperty]
+        protected readonly List<Eff> Effects = new();
+        protected override void OnCreated()
         {
-            for (int j = -RippleRadius; j <= RippleRadius; j++)
+            for (int i = -RippleRadius; i <= RippleRadius; i++)
             {
-                if (i * i + j * j <= RippleRadius * RippleRadius)
+                for (int j = -RippleRadius; j <= RippleRadius; j++)
                 {
-                    Slot s = map[slot.position + new Vector2(i, j)];
-                    if (s != null)
+                    if (i * i + j * j <= RippleRadius * RippleRadius)
                     {
-                        var eff = new Eff();
-                        if (eff.Inject(s))
+                        Slot s = map[slot.position + new Vector2(i, j)];
+                        if (s != null)
                         {
-                            Effects.Add(eff);
+                            var eff = new Eff();
+                            if (eff.Inject(s))
+                            {
+                                Effects.Add(eff);
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
-    protected override void OnDisable()
-    {
-        foreach (var eff in Effects)
+        protected override void OnDisable()
         {
-            eff.Unject();
+            foreach (var eff in Effects)
+            {
+                eff.Unject();
+            }
         }
-    }
 
+    }
 }
