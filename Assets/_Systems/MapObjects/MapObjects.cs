@@ -65,6 +65,17 @@ public static partial class MapObjects
             map.economyWrapper.AddMiddleware(ConsumptionAndSalary);
 
         }
+         
+        void On2Level()
+        {
+            ConsumptionAndSalary.Value = new GameDataVector(dailyIncome:40, Money: -2000);
+         }
+
+
+        void On3Level()
+        {
+            ConsumptionAndSalary.Value = new GameDataVector(dailyIncome: 100, Money: -2000);
+        }
 
         protected override void OnEnable()
         {
@@ -223,3 +234,40 @@ public static partial class MapObjects
 
     }
 }
+#region 注释
+/*
+     public class House : MapObject, MustNotExist<House>
+    {
+
+        static House lastHouse;
+
+
+
+
+        [JsonProperty]
+        SolidMiddleware<GameDataVector> ConsumptionAndSalary;
+        protected override void OnCreated()
+        {
+            ConsumptionAndSalary = new SolidMiddleware<GameDataVector>(new GameDataVector(dailyIncome: 30, Money: -2000), this);
+            map.economyWrapper.AddMiddleware(ConsumptionAndSalary);
+
+        }
+
+        protected override void OnEnable()
+        {
+            // InfoWindow.Create(slot.worldPosition.ToString());
+            if (lastHouse != null)
+            {
+                ArrowRender.NewArrow(lastHouse.slot.worldPosition, slot.worldPosition);
+            }
+            lastHouse = this;
+        }
+
+        protected override void OnDisable()
+        {
+
+        }
+
+        public override bool CanBeUnjected => true;
+    }*/
+#endregion
