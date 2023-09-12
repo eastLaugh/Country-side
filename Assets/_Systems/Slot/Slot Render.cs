@@ -13,11 +13,12 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public static event Action<SlotRender> OnAnySlotClickedInBuildMode;
     public event Action<SlotRender> OnSlotClicked;
     public static event Action<SlotRender> OnAnySlotClicked;
+
     public static event Action<SlotRender> OnAnySlotEnter;
     public static event Action<SlotRender> OnAnySlotExit;
 
     public static event Action<SlotRender, PointerEventData> OnDragSlot;
-    
+
 
     public event Action OnRender;
 
@@ -84,5 +85,26 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         lastTween?.Complete();
         lastTween = transform.DOShakePosition(0.5f, 0.1f, 10, 90, false, false);
+    }
+
+
+    Tween FloatTween;
+    public void Float()
+    {
+        StopAllFloat += StopFloat;
+        FloatTween = transform.DOLocalMoveY(transform.localPosition.y + 0.3f, 0.5f).SetEase(Ease.OutBack).SetLoops(-1, LoopType.Yoyo);
+    }
+    public void StopFloat()
+    {
+        StopAllFloat -= StopFloat;
+        //如何在这里让FloatTween销毁并回到初始状态
+        FloatTween?.Restart();
+        FloatTween?.Kill();
+    }
+
+    static Action StopAllFloat = null;
+    public static void ResetFloat()
+    {
+        StopAllFloat?.Invoke();
     }
 }

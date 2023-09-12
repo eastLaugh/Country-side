@@ -10,6 +10,21 @@ public class BuildingWindow : MonoBehaviour
     public GameObject ButtonPattern;
 
     List<Button> OptionButtons = new List<Button>();
+
+    private void OnEnable() {
+        SlotRender.OnAnySlotEnter += OnAnySlotEnter;
+    }
+
+    private void OnDisable() {
+        SlotRender.OnAnySlotEnter -= OnAnySlotEnter;
+    }
+
+    SlotRender enteredSlotRender;
+    private void OnAnySlotEnter(SlotRender render)
+    {
+        enteredSlotRender = render;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -82,12 +97,13 @@ public class BuildingWindow : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             selectedDirection = (selectedDirection + 1) % 4;
-
+            enteredSlotRender?.OnPointerEnter(null);
         }
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            selectedDirection = (selectedDirection - 1) % 4;
+            selectedDirection = (selectedDirection - 1 + 4) % 4;
+            enteredSlotRender?.OnPointerEnter(null);
         }
     }
     private void OnGUI()
