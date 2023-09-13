@@ -22,7 +22,7 @@ public static partial class MapObjects
         public abstract float Cost { get; }
         public abstract string Name { get; }
         public float Profit => m_profit.currentValue.m_value;
-        
+
         public ConstructType constructType => ConstructType.Farm;
 
         [JsonProperty]
@@ -98,7 +98,7 @@ public static partial class MapObjects
     /// <summary>
     /// 住宅基类
     /// </summary>
-    public abstract class House : MapObject, MustNotExist<House>, IConstruction
+    public abstract class House : MapObject, MustNotExist<House>, IConstruction 
     {
         //人口容量
         [JsonProperty] public SolidMiddleware<Int> Capacity;
@@ -130,7 +130,7 @@ public static partial class MapObjects
 
         protected override void OnEnable()
         {
-            
+
         }
     }
     /// <summary>
@@ -161,7 +161,7 @@ public static partial class MapObjects
     /// <summary>
     /// 水泥房
     /// </summary>
-    public class CementHouse : House,MustExist<TileHouse>
+    public class CementHouse : House, MustExist<TileHouse>
     {
         public override float Cost => 80;
 
@@ -171,6 +171,7 @@ public static partial class MapObjects
         {
             Capacity = new SolidMiddleware<Int>(new Int(60), this);
             map.Houses.Add(this);
+
         }
 
         protected override void OnDisable()
@@ -238,70 +239,70 @@ public static partial class MapObjects
     #endregion
 
 
-    public class Resource<T> : MapObject, MustNotExist<T> where T : Resource<T>
+
+
+}
+public class Resource<T> : MapObject, MustNotExist<T> where T : Resource<T>
+{
+    public override bool CanBeUnjected => true;
+
+    protected override void OnEnable()
     {
-        public override bool CanBeUnjected => true;
-
-        protected override void OnEnable()
-        {
-        }
-
-        protected override void OnDisable()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        protected override void OnCreated()
-        {
-        }
     }
 
-
-    public abstract class ResourceBuilding<R> : MapObject, MustExist<R> where R : Resource<R>
+    protected override void OnDisable()
     {
-        public override bool CanBeUnjected => true;
-
+        throw new System.NotImplementedException();
     }
 
-    public abstract class RippleEffectBuilding<Eff> : MapObject where Eff : MapObject.Virtual, new()
+    protected override void OnCreated()
     {
-        protected abstract int RippleRadius { get; }
+    }
+}
 
 
-        [JsonProperty]
-        protected readonly List<Eff> Effects = new();
-        protected override void OnCreated()
+public abstract class ResourceBuilding<R> : MapObject, MustExist<R> where R : Resource<R>
+{
+    public override bool CanBeUnjected => true;
+
+}
+
+public abstract class RippleEffectBuilding<Eff> : MapObject where Eff : MapObject.Virtual, new()
+{
+    protected abstract int RippleRadius { get; }
+
+
+    [JsonProperty]
+    protected readonly List<Eff> Effects = new();
+    protected override void OnCreated()
+    {
+        for (int i = -RippleRadius; i <= RippleRadius; i++)
         {
-            for (int i = -RippleRadius; i <= RippleRadius; i++)
+            for (int j = -RippleRadius; j <= RippleRadius; j++)
             {
-                for (int j = -RippleRadius; j <= RippleRadius; j++)
+                if (i * i + j * j <= RippleRadius * RippleRadius)
                 {
-                    if (i * i + j * j <= RippleRadius * RippleRadius)
+                    Slot s = map[slot.position + new Vector2(i, j)];
+                    if (s != null)
                     {
-                        Slot s = map[slot.position + new Vector2(i, j)];
-                        if (s != null)
+                        var eff = new Eff();
+                        if (eff.Inject(s))
                         {
-                            var eff = new Eff();
-                            if (eff.Inject(s))
-                            {
-                                Effects.Add(eff);
-                            }
+                            Effects.Add(eff);
                         }
                     }
                 }
             }
         }
-
-        protected override void OnDisable()
-        {
-            foreach (var eff in Effects)
-            {
-                eff.Unject();
-            }
-        }
-
     }
-    
+
+    protected override void OnDisable()
+    {
+        foreach (var eff in Effects)
+        {
+            eff.Unject();
+        }
+    }
 
 }
 public interface IConstruction
@@ -313,8 +314,11 @@ public interface IConstruction
 
 public enum ConstructType
 {
-    House,Farm,Factory,Supply,Road
+    House, Farm, Factory, Supply, Road
 }
+
+
+
 #region 注释
 /*
      public class House : MapObject, MustNotExist<House>

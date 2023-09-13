@@ -15,6 +15,13 @@ MonoBehaviour:
   Dict:
     _serializedList:
     - Key:
+        _: Tube
+      Value:
+        Prefab: {fileID: 2672945534118425153, guid: ee841073fed052943a882e9874f91480,
+          type: 3}
+        Prefabs: []
+        Size: {x: 1, y: 1}
+    - Key:
         _: TileHouse
       Value:
         Prefab: {fileID: 1812805813641912064, guid: 3b8d6b75408d1c04a80526a866c7d4e7,

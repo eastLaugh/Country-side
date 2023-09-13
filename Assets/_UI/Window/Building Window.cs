@@ -7,16 +7,19 @@ using UnityEngine.UI;
 
 public class BuildingWindow : MonoBehaviour
 {
+    public static event Action<Type> OnUpdate;
     public RectTransform Content;
     public GameObject ButtonPattern;
 
     List<Button> OptionButtons = new List<Button>();
 
-    private void OnEnable() {
+    private void OnEnable()
+    {
         SlotRender.OnAnySlotEnter += OnAnySlotEnter;
     }
 
-    private void OnDisable() {
+    private void OnDisable()
+    {
         SlotRender.OnAnySlotEnter -= OnAnySlotEnter;
     }
 
@@ -33,7 +36,7 @@ public class BuildingWindow : MonoBehaviour
         OptionButtons.Clear();
         foreach (Type mapObjectType in typeof(MapObjects).GetNestedTypes())
         {
-            if(!mapObjectType.IsAbstract && typeof(IConstruction).IsAssignableFrom(mapObjectType))
+            if (!mapObjectType.IsAbstract && typeof(IConstruction).IsAssignableFrom(mapObjectType))
             {
                 Debug.Log("entered");
                 var ins = Activator.CreateInstance(mapObjectType) as IConstruction;
@@ -42,19 +45,19 @@ public class BuildingWindow : MonoBehaviour
                     OnButtonClick(mapObjectType, button);
                 });
                 OptionButtons.Add(button);
-                
+
             }
-            
+
         }
         ButtonPattern.gameObject.SetActive(false);
 
-        Button NewOption(string title,float cost,UnityAction<Button> callback)
+        Button NewOption(string title, float cost, UnityAction<Button> callback)
         {
             GameObject buttonGameObject = Instantiate(ButtonPattern, Vector3.zero, Quaternion.identity, Content);
             Button button = buttonGameObject.GetComponent<Button>();
-            TMPro.TextMeshProUGUI [] Texts = buttonGameObject.GetComponentsInChildren<TMPro.TextMeshProUGUI>();
+            TMPro.TextMeshProUGUI[] Texts = buttonGameObject.GetComponentsInChildren<TMPro.TextMeshProUGUI>();
             Texts[0].text = title;
-            Texts[1].text = cost.ToString() +"万";
+            Texts[1].text = cost.ToString() + "万";
             buttonGameObject.SetActive(true);
             button.onClick.AddListener(() => callback(button));
             return button;
@@ -73,6 +76,9 @@ public class BuildingWindow : MonoBehaviour
             {
                 //反选
                 MouseAnimator.SetTrigger("BuildEnd");
+                SelectedType = null;
+                OnUpdate?.Invoke(null);
+
             }
             else
             {
@@ -91,6 +97,8 @@ public class BuildingWindow : MonoBehaviour
             SelectedType = builtType;
             lastSelectedButton = selectedButton;
             MouseAnimator.Play("Build Mode");
+
+            OnUpdate?.Invoke(SelectedType);
         }
     }
 
@@ -117,7 +125,7 @@ public class BuildingWindow : MonoBehaviour
     }
     private void OnGUI()
     {
-        GUI.Label(new Rect(0, 0, 100, 100), selectedDirection.ToString());
+        GUI.Label(new Rect(0, 0, 100, 100), SelectedType?.ToString() ?? "null");
     }
 
     public static void Foreach(Vector2 center, Vector2 size, Action<int, int> action)
@@ -169,5 +177,6 @@ public class BuildingWindow : MonoBehaviour
 
 
     }
+
 
 }

@@ -36,6 +36,11 @@ public abstract partial class Slot
         IEnumerable potentialProviders = new object[] { map, this, slotRender }.Concat(mapObjects);
         foreach (var obj in potentialProviders)
         {
+            if (debugDetailed)
+            {
+                builder.AppendLine("    " + obj.ToString() + " :");
+            }
+
             if (obj is IInfoProvider provider)
             {
                 bool appended = false;
@@ -49,10 +54,6 @@ public abstract partial class Slot
                     builder.Append(obj.ToString() + " :未提供信息");
                 }
                 builder.AppendLine();
-            }
-            else if (debugDetailed)
-            {
-                builder.AppendLine("[隐藏] " + obj.ToString());
             }
         }
         return builder.ToString();
@@ -90,7 +91,8 @@ public abstract partial class Slot
         return mapObjects.SingleOrDefault(mapObject => mapObject is T) as T;
     }
 
-    public MapObject GetMapObject(Type type){
+    public MapObject GetMapObject(Type type)
+    {
         return mapObjects.SingleOrDefault(mapObject => mapObject.GetType() == type);
     }
 

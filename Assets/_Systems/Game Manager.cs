@@ -13,18 +13,10 @@ public class GameManager : MonoBehaviour
     [Obsolete("生命周期:  ....  → OnMapLoaded → AfterMapLoaded → End")]
     public static event Action<Map> AfterMapLoaded;
     public static GameManager current;
-    public static int saveIndex = 0;
-
     public Grid grid;
 
-    [SerializeField]
-    public string CurrentSate;
-    [SerializeField] GameObject Overlay;
-
     public CinemachineVirtualCamera CinemachineVirtualCamera;
-    public RoadRenderer roadRenderer;
     public static GlobalData globalData { get; private set; }
-
 
 
     public Vector2Int size;

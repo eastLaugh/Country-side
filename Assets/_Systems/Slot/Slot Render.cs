@@ -107,4 +107,11 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         StopAllFloat?.Invoke();
     }
+
+    public int SetLayer(int v)
+    {
+        int origin = gameObject.layer;
+        gameObject.layer = v;
+        return origin;
+    }
 }
