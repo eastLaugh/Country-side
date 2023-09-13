@@ -15,6 +15,13 @@ MonoBehaviour:
   Dict:
     _serializedList:
     - Key:
+        _: AdobeHouse
+      Value:
+        Prefab: {fileID: 919132149155446097, guid: f29190b7c550a954b92e370ae029e69e,
+          type: 3}
+        Prefabs: []
+        Size: {x: 1, y: 1}
+    - Key:
         _: Tube
       Value:
         Prefab: {fileID: 2672945534118425153, guid: ee841073fed052943a882e9874f91480,
@@ -36,30 +43,9 @@ MonoBehaviour:
         Prefabs: []
         Size: {x: 0, y: 0}
     - Key:
-        _: Pollution
-      Value:
-        Prefab: {fileID: 4028269822862111206, guid: d724a54e695999f468572d768921fbd0,
-          type: 3}
-        Prefabs: []
-        Size: {x: 1, y: 1}
-    - Key:
         _: "\u5E02\u4E2D\u5FC3"
       Value:
         Prefab: {fileID: 919132149155446097, guid: 22bef38faeb0a384e9697a6975d3c964,
-          type: 3}
-        Prefabs: []
-        Size: {x: 1, y: 1}
-    - Key:
-        _: TextileMill
-      Value:
-        Prefab: {fileID: 919132149155446097, guid: 6ac1d576ddec5e74d9b46549324afd64,
-          type: 3}
-        Prefabs: []
-        Size: {x: 1, y: 1}
-    - Key:
-        _: Mulberry
-      Value:
-        Prefab: {fileID: 7283486670144764620, guid: 2b706258fd8dcb945901495109bdcb86,
           type: 3}
         Prefabs: []
         Size: {x: 1, y: 1}
@@ -71,16 +57,9 @@ MonoBehaviour:
         Prefabs: []
         Size: {x: 1, y: 1}
     - Key:
-        _: House
+        _: RiceFarm
       Value:
-        Prefab: {fileID: 919132149155446097, guid: a67fa18373df00e46ab880f7cb88541d,
-          type: 3}
-        Prefabs: []
-        Size: {x: 1, y: 1}
-    - Key:
-        _: AdobeHouse
-      Value:
-        Prefab: {fileID: 919132149155446097, guid: a67fa18373df00e46ab880f7cb88541d,
+        Prefab: {fileID: 5350475810461655204, guid: ea4482b2208c53a4a8db19f0fa6188ac,
           type: 3}
         Prefabs: []
         Size: {x: 1, y: 1}
