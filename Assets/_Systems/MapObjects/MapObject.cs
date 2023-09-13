@@ -62,6 +62,7 @@ partial class Slot
 
                 slot.map.OnCreated += _ => OnCreated();
 
+                OnInjected?.Invoke(this, force);
 
                 Awake();
                 if (GameManager.current.map == null)
@@ -79,7 +80,6 @@ partial class Slot
 
                 slot.OnSlotUpdate?.Invoke(); /*仅供表现层*/
                 slot.slotRender.Refresh();
-                OnInjected?.Invoke(this, force);
                 return true;
             }
             else

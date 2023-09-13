@@ -13,10 +13,10 @@ public class GameDataVector : IDataVector<GameDataVector>
         this.dailyIncome = dailyIncome;
         this.Happiness = Happiness;
     }
-    public int People { get; private set; }
-    public float dailyIncome { get; private set; }
-    public float Money { get; private set; }
-    public float Happiness { get; private set; }
+    public int People { get;  set; }
+    public float dailyIncome { get;  set; }
+    public float Money { get; set; }
+    public float Happiness { get; set; }
 
     public static GameDataVector operator +(GameDataVector left, GameDataVector right)
     {

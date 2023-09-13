@@ -10,7 +10,7 @@ public class BuildingWindow : MonoBehaviour
     public static event Action<Type> OnUpdate;
     public RectTransform Content;
     public GameObject ButtonPattern;
-
+    [SerializeField] Button btnRemove;
     List<Button> OptionButtons = new List<Button>();
 
     private void OnEnable()
@@ -38,7 +38,7 @@ public class BuildingWindow : MonoBehaviour
         {
             if (!mapObjectType.IsAbstract && typeof(IConstruction).IsAssignableFrom(mapObjectType))
             {
-                Debug.Log("entered");
+                //Debug.Log("entered");
                 var ins = Activator.CreateInstance(mapObjectType) as IConstruction;
                 Button button = NewOption(ins.Name, ins.Cost, button =>
                 {
@@ -49,6 +49,10 @@ public class BuildingWindow : MonoBehaviour
             }
 
         }
+        btnRemove.onClick.AddListener(() =>
+        {
+            OnButtonClick(typeof(MapObjects.DeletingFlag), btnRemove);
+        });
         ButtonPattern.gameObject.SetActive(false);
 
         Button NewOption(string title, float cost, UnityAction<Button> callback)

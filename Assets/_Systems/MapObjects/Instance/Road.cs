@@ -6,8 +6,6 @@ public static partial class MapObjects
 {
     public class Road : MapObject, MustNotExist<Road>, IInfoProvider, IConstruction
     {
-
-
         public override bool CanBeUnjected => true;
 
         protected override bool Clustered => true;
@@ -45,6 +43,7 @@ public static partial class MapObjects
         }
         protected override void OnCreated()
         {
+            map.MainData.Money -= Cost;
         }
 
         public void ProvideInfo(Action<string> provide)

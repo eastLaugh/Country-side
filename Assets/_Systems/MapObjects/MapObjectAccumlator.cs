@@ -33,9 +33,10 @@ public class MapObjectAccumlator : MonoBehaviour
     }
     private void OnUnjected(Slot.MapObject mapObject)
     {
+        if (mapObject.GetType() == typeof(MapObjects.DeletingFlag)) return;
         Map map = mapObject.map;
         map.BuildingsNum[mapObject.GetType().Name] -= 1;
-        Debug.Log(GetType().Name + "-1");
+        Debug.Log(mapObject.GetType().Name + "-1");
     }
     
 

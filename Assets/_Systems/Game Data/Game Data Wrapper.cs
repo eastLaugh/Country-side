@@ -120,10 +120,10 @@ public struct CPU
         public bool Multipliable;
 
     }
-    public SolidMiddleware(T solidValue, object host)
+    public SolidMiddleware(T solidValue)
     {
         this.solidValue = solidValue;
-        this.Host = host;
+        currentValue = solidValue;
     }
 
     public object GetHost()
@@ -147,7 +147,7 @@ public struct CPU
         currentValue = temp;
     }
 
-    void UpdateValue(T solidValue)
+    public void UpdateValue(T solidValue)
     {
         this.solidValue = solidValue;
         Recaculate();

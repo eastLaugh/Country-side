@@ -41,6 +41,7 @@ public class TimeController : MonoBehaviour
         {
             map.dateTime = map.dateTime.AddDays(1);
             EventHandler.CallDayPass();
+            Debug.Log("DayPass");
             timeBuffer = 0;
         }
         displayDate.text = GameManager.current.map.dateTime.Date.ToString("yyyy/MM/dd");

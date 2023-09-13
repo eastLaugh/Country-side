@@ -36,7 +36,7 @@ public class GameDataView : MonoBehaviour
     void Update()
     {
         m_data = map.MainData;
-        Money.text = m_data.Money.ToString()+"Íò";
+        Money.text = m_data.Money.ToString("F2")+"Íò";
         People.text = m_data.People.ToString();
         Happiness.text = m_data.Happiness.ToString();
     }

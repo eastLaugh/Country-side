@@ -33,6 +33,9 @@ public class Map
     public List<House> Houses = new List<House>();
     [JsonProperty]
     public List<Farm> Farms = new List<Farm>();
+    [JsonProperty]
+    public SolidMiddleware<Float> FarmProfitTotal = new SolidMiddleware<Float>(new Float(1f));
+
 
     public Map(Vector2Int size, Slot[] Slots, int RandomSeed, GameDataVector mainData)
     {
