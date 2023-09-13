@@ -19,7 +19,7 @@ public interface IDataVector<T> where T : IDataVector<T>
 public class GameDataWrapper<T> where T : IDataVector<T>
 {
     [JsonProperty]
-    public T current{get;private set;}
+    public T current { get; private set; }
     [JsonProperty]
     public HashSet<SolidMiddleware<T>> Middlewares { get; protected set; } = new();
 
@@ -109,10 +109,10 @@ public class SolidMiddleware<T> where T : IDataVector<T>
     public readonly object Host;
 
     [JsonProperty]
-    public List<CPU> CPUs { get; private set; }
+    public List<CPU> CPUs { get; private set; } = new();
 
-    //先加再乘处理单元
-    public struct CPU
+//先加再乘处理单元
+public struct CPU
     {
         public T Addition;
         public T Multiplication;

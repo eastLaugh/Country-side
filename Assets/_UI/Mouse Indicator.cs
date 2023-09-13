@@ -73,6 +73,11 @@ public class MouseIndicator : MonoBehaviour
             if (canBuild)
             {
                 SetColor(Color.green);
+                SlotRender.ResetFloat();
+                BuildingWindow.Foreach(render.slot.position, config.Size, (x, y) =>
+                    {
+                        render.slot.map[x, y].slotRender.Float();
+                    });
             }
             else
             {
