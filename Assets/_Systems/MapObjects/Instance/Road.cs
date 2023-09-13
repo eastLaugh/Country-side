@@ -4,13 +4,19 @@ using static Slot;
 
 public static partial class MapObjects
 {
-    public class Road : MapObject, MustNotExist<Road>, IInfoProvider
+    public class Road : MapObject, MustNotExist<Road>, IInfoProvider, IConstruction
     {
 
 
         public override bool CanBeUnjected => true;
 
         protected override bool Clustered => true;
+
+        public float Cost => 0.05f;
+
+        public string Name => "泥土路";
+
+        public ConstructType constructType => throw new NotImplementedException();
 
         protected override void Awake()
         {

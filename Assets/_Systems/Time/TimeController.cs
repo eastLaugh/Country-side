@@ -33,11 +33,6 @@ public class TimeController : MonoBehaviour
         enabled = true;
     }
 
-    private void OnDisable()
-    {
-
-    }
-    
 
     void Update()
     {

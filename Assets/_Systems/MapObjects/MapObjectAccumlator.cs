@@ -20,12 +20,12 @@ public class MapObjectAccumlator : MonoBehaviour
             Map map = mapObject.map; //获取地图
             if (map.BuildingsNum.ContainsKey(typename))
             {
-                Debug.Log(typename + "+1");
+                //Debug.Log(typename + "+1");
                 map.BuildingsNum[typename] += 1;
             }
             else
             {
-                Debug.Log(typename + "+1");
+                //Debug.Log(typename + "+1");
                 map.BuildingsNum.Add(typename, 1);
             }
         }

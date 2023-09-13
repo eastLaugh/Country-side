@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -17,23 +18,29 @@ public class BuildingWindow : MonoBehaviour
         OptionButtons.Clear();
         foreach (Type mapObjectType in typeof(MapObjects).GetNestedTypes())
         {
-            Button button = NewOption(mapObjectType.Name, button =>
+            if(!mapObjectType.IsAbstract && typeof(IConstruction).IsAssignableFrom(mapObjectType))
             {
-                OnButtonClick(mapObjectType, button);
-            });
-            OptionButtons.Add(button);
+                Debug.Log("entered");
+                var ins = Activator.CreateInstance(mapObjectType) as IConstruction;
+                Button button = NewOption(ins.Name, ins.Cost, button =>
+                {
+                    OnButtonClick(mapObjectType, button);
+                });
+                OptionButtons.Add(button);
+                
+            }
+            
         }
-
-
-
         ButtonPattern.gameObject.SetActive(false);
 
-        Button NewOption(string title, UnityAction<Button> callback)
+        Button NewOption(string title,float cost,UnityAction<Button> callback)
         {
             GameObject buttonGameObject = Instantiate(ButtonPattern, Vector3.zero, Quaternion.identity, Content);
             Button button = buttonGameObject.GetComponent<Button>();
-            buttonGameObject.GetComponentInChildren<TMPro.TextMeshProUGUI>().SetText(title);
-
+            TMPro.TextMeshProUGUI [] Texts = buttonGameObject.GetComponentsInChildren<TMPro.TextMeshProUGUI>();
+            Texts[0].text = title;
+            Texts[1].text = cost.ToString() +"万";
+            buttonGameObject.SetActive(true);
             button.onClick.AddListener(() => callback(button));
             return button;
         }
@@ -89,6 +96,8 @@ public class BuildingWindow : MonoBehaviour
         {
             selectedDirection = (selectedDirection - 1) % 4;
         }
+
+
     }
     private void OnGUI()
     {

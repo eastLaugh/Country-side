@@ -300,8 +300,8 @@ public class GameManager : MonoBehaviour
     public static event Action OnMapUnloaded;
     void UnLoad()
     {
-        if (map != null)
-            map.economyWrapper.OnMiddlewareUpdated -= OnEconomyDataUpdated;
+        //if (map != null)
+        //    map.economyWrapper.OnMiddlewareUpdated -= OnEconomyDataUpdated;
         grid.transform.DestroyAllChild();
         map = null;
         OnMapUnloaded?.Invoke();
@@ -333,8 +333,8 @@ public class GameManager : MonoBehaviour
         //grid.transform.position = new Vector3(-map.size.x * grid.cellSize.x / 2f, 0, /*-map.size.y * grid.cellSize.z / 2f*/0); //对齐到左下角
         CinemachineVirtualCamera.transform.position = new Vector3(map.size.x * grid.cellSize.x / 2f, CinemachineVirtualCamera.transform.position.y, map.size.y * grid.cellSize.z / 2f);
 
-        map.economyWrapper.OnMiddlewareUpdated += OnEconomyDataUpdated;
-        OnEconomyDataUpdated(map.economyWrapper.current);
+       // map.economyWrapper.OnMiddlewareUpdated += OnEconomyDataUpdated;
+        //OnEconomyDataUpdated(map.economyWrapper.current);
 
         OnMapLoaded?.Invoke(map);
         AfterMapLoaded?.Invoke(map);

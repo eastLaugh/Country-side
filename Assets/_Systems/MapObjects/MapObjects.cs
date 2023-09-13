@@ -16,10 +16,17 @@ public static partial class MapObjects
     }
     #endregion
     #region 农业设施
-    public class Farm : MapObject
+    public abstract class Farm : MapObject, IConstruction
     {
         public override bool CanBeUnjected => throw new NotImplementedException();
+        public abstract float Cost { get; }
+        public abstract string Name { get; }
+        public float Profit => m_profit.currentValue.m_value;
+        
+        public ConstructType constructType => ConstructType.Farm;
 
+        [JsonProperty]
+        protected SolidMiddleware<Float> m_profit;
         protected override void OnCreated()
         {
 
@@ -37,10 +44,52 @@ public static partial class MapObjects
     }
     public class WheatFarm : Farm
     {
+        public override float Cost => 5f;
 
+        public override string Name => "小麦田";
+
+        protected override void OnCreated()
+        {
+            m_profit = new SolidMiddleware<Float>(new Float(0.3f), this);
+            map.Farms.Add(this);
+        }
+        protected override void OnDisable()
+        {
+            map.Farms.Remove(this);
+        }
     }
     public class RiceFarm : Farm
     {
+        public override float Cost => 6f;
+
+        public override string Name => "水稻田";
+
+        protected override void OnCreated()
+        {
+            m_profit = new SolidMiddleware<Float>(new Float(0.35f), this);
+            map.Farms.Add(this);
+        }
+        protected override void OnDisable()
+        {
+            map.Farms.Remove(this);
+        }
+
+    }
+    public class CuttonFarm : Farm
+    {
+        public override float Cost => 10f;
+
+        public override string Name => "棉花田";
+
+        protected override void OnCreated()
+        {
+            m_profit = new SolidMiddleware<Float>(new Float(1.2f), this);
+            map.Farms.Add(this);
+        }
+        protected override void OnDisable()
+        {
+            map.Farms.Remove(this);
+        }
 
     }
     #endregion
@@ -49,71 +98,90 @@ public static partial class MapObjects
     /// <summary>
     /// 住宅基类
     /// </summary>
-    public class House : MapObject, MustNotExist<House>
+    public abstract class House : MapObject, MustNotExist<House>, IConstruction
     {
-
-        static House lastHouse;
-
-
-
-
-        [JsonProperty]
-        SolidMiddleware<GameDataVector> ConsumptionAndSalary;
-        protected override void OnCreated()
-        {
-            ConsumptionAndSalary = new SolidMiddleware<GameDataVector>(new GameDataVector(dailyIncome: 30, Money: -2000), this);
-            map.economyWrapper.AddMiddleware(ConsumptionAndSalary);
-
-        }
-         
-        void On2Level()
-        {
-            ConsumptionAndSalary.Value = new GameDataVector(dailyIncome:40, Money: -2000);
-         }
-
-
-        void On3Level()
-        {
-            ConsumptionAndSalary.Value = new GameDataVector(dailyIncome: 100, Money: -2000);
-        }
-
-        protected override void OnEnable()
-        {
-            // InfoWindow.Create(slot.worldPosition.ToString());
-            if (lastHouse != null)
-            {
-                ArrowRender.NewArrow(lastHouse.slot.worldPosition, slot.worldPosition);
-            }
-            lastHouse = this;
-        }
-
-        protected override void OnDisable()
-        {
-
-        }
-
+        //人口容量
+        [JsonProperty] public SolidMiddleware<Int> Capacity;
         public override bool CanBeUnjected => true;
+        public abstract float Cost { get; }
+        public abstract string Name { get; }
+        public ConstructType constructType => ConstructType.House;
+
     }
     /// <summary>
     /// 土坯房
     /// </summary>
     public class AdobeHouse : House
     {
+        public override float Cost => 8;
 
+        public override string Name => "土坯房";
+
+        protected override void OnCreated()
+        {
+            Capacity = new SolidMiddleware<Int>(new Int(10), this);
+            map.Houses.Add(this);
+        }
+
+        protected override void OnDisable()
+        {
+            map.Houses.Remove(this);
+        }
+
+        protected override void OnEnable()
+        {
+            
+        }
     }
     /// <summary>
     /// 砖瓦房
     /// </summary>
-    public class TileHouse : House, MustNotExist<TileHouse>
+    public class TileHouse : House, MustExist<AdobeHouse>
     {
+        public override float Cost => 25;
 
+        public override string Name => "砖瓦房";
+
+        protected override void OnCreated()
+        {
+            Capacity = new SolidMiddleware<Int>(new Int(30), this);
+            map.Houses.Add(this);
+        }
+
+        protected override void OnDisable()
+        {
+            map.Houses.Remove(this);
+        }
+
+        protected override void OnEnable()
+        {
+
+        }
     }
     /// <summary>
     /// 水泥房
     /// </summary>
-    public class CementHouse : House
+    public class CementHouse : House,MustExist<TileHouse>
     {
+        public override float Cost => 80;
 
+        public override string Name => "水泥房";
+
+        protected override void OnCreated()
+        {
+            Capacity = new SolidMiddleware<Int>(new Int(60), this);
+            map.Houses.Add(this);
+        }
+
+        protected override void OnDisable()
+        {
+            map.Houses.Remove(this);
+        }
+
+        protected override void OnEnable()
+        {
+
+        }
     }
     #endregion
 
@@ -233,6 +301,19 @@ public static partial class MapObjects
         }
 
     }
+    
+
+}
+public interface IConstruction
+{
+    public float Cost { get; }
+    public string Name { get; }
+    public ConstructType constructType { get; }
+}
+
+public enum ConstructType
+{
+    House,Farm,Factory,Supply,Road
 }
 #region 注释
 /*

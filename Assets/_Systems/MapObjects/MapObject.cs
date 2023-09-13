@@ -22,7 +22,6 @@ partial class Slot
         [JsonProperty]
         public Slot slot { get; private set; }
 
-
         [JsonProperty]
         public int Direction { get; protected set; }
 

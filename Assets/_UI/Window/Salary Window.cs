@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 public class SalaryWindow : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     bool entered = false;
-    GameDataWrapper<GameDataVector> economyWrapper;
+    GameDataVector economyWrapper;
     public void OnPointerEnter(PointerEventData eventData)
     {
         entered = true;
@@ -38,7 +38,7 @@ public class SalaryWindow : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     private void OnMapLoaded(Map map)
     {
-        economyWrapper = map.economyWrapper;
+        economyWrapper = map.MainData;
     }
 
     // Start is called before the first frame update
@@ -63,14 +63,14 @@ public class SalaryWindow : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
         if (entered && economyWrapper != null)
         {
-            foreach (var IMiddleware in economyWrapper.Middlewares)
-            {
-                if (IMiddleware.GetHost() is Slot.MapObject mapObject)
-                {
-                    Vector3 screenPoint = Camera.main.WorldToScreenPoint(mapObject.slot.gameObject.transform.position);
-                    //GUI.Label(new Rect(screenPoint.x, Screen.height - screenPoint.y, 100, 100), $"{middleware.SolidValue.dailyIncome}");
-                }
-            }
+            //foreach (var IMiddleware in economyWrapper.Middlewares)
+            //{
+            //    if (IMiddleware.GetHost() is Slot.MapObject mapObject)
+            //    {
+            //        Vector3 screenPoint = Camera.main.WorldToScreenPoint(mapObject.slot.gameObject.transform.position);
+            //        //GUI.Label(new Rect(screenPoint.x, Screen.height - screenPoint.y, 100, 100), $"{middleware.SolidValue.dailyIncome}");
+            //    }
+            //}
         }
     }
 }
