@@ -25,4 +25,14 @@ public class EventHandler
     {
         SavefileDeleted?.Invoke();
     }
+    public static event Action<float> MoneyUpdate;
+    public static void CallMoneyUpdate(float newValue)
+    {
+        MoneyUpdate?.Invoke(newValue);
+    }
+    public static event Action<int> PeopleUpdate;
+    public static void CallPeopleUpdate(int newValue)
+    {
+        PeopleUpdate?.Invoke(newValue);
+    }
 }

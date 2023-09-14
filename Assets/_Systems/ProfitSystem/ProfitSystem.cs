@@ -10,11 +10,11 @@ public class ProfitSystem : MonoBehaviour
         GameManager.OnMapLoaded += OnMapLoaded;
         GameManager.OnMapUnloaded += OnMapUnloaded;
         EventHandler.DayPass += CalcDailyProfit;
-        Debug.Log("OnEable");
+       // Debug.Log("OnEable");
     }
     private void CalcDailyProfit()
     {
-        Debug.Log("Enter");
+        //Debug.Log("Enter");
         float profit = 0;
         if (map != null) 
         {
@@ -23,14 +23,14 @@ public class ProfitSystem : MonoBehaviour
                 profit += map.Farms[i].Profit;
             }
         }
-        Debug.Log(map.Farms.Count);
+        //Debug.Log(map.Farms.Count);
         map.FarmProfitTotal.UpdateValue(new Float(profit));
         map.MainData.Money += map.FarmProfitTotal.currentValue.m_value;
     }
     private void OnDisable()
     {
         EventHandler.DayPass -= CalcDailyProfit;
-        Debug.Log("Ondisable");
+        //Debug.Log("Ondisable");
     }
     private void OnMapUnloaded()
     {

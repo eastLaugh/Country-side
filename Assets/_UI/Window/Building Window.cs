@@ -16,11 +16,13 @@ public class BuildingWindow : MonoBehaviour
     private void OnEnable()
     {
         SlotRender.OnAnySlotEnter += OnAnySlotEnter;
+        EventHandler.MoneyUpdate += CheckCost;
     }
 
     private void OnDisable()
     {
         SlotRender.OnAnySlotEnter -= OnAnySlotEnter;
+        EventHandler.MoneyUpdate += CheckCost;
     }
 
     SlotRender enteredSlotRender;
@@ -30,6 +32,28 @@ public class BuildingWindow : MonoBehaviour
     }
 
     // Start is called before the first frame update
+    void CheckCost(float money)
+    {
+        for (int i = 0; i < OptionButtons.Count; i++)
+        {
+            var pricetext = OptionButtons[i].GetComponentsInChildren<TMPro.TextMeshProUGUI>()[1];
+            if (money <float.Parse(pricetext.text.Split("万")[0]))
+            {
+                if (OptionButtons[i] == lastSelectedButton)
+                {
+                    lastSelectedButton.onClick?.Invoke();
+                    lastSelectedButton = null;
+                }
+                pricetext.color = Color.red;
+                OptionButtons[i].interactable = false;    
+            }
+            else if(pricetext.color == Color.red)
+            {
+                pricetext.color = Color.black;
+                OptionButtons[i].interactable = true;
+            }
+        }
+    }
     void Start()
     {
 

@@ -85,8 +85,40 @@ public class AssignmentSystem : MonoBehaviour
     }
     public void AssignmentInit()
     {
-        var tempAssignment1 = new BasicAssignment("������������",
-            "������Ҫ������ֲ������������ϴ����и��ණ���ԣ����������ȥ׬Ǯ�͸����ˡ���������������ʪ����Ϊ�����أ�Ӧ����ֲС����ˮ����?",
+        #region 任务初始化 
+
+        var Assignment1 = new BasicAssignment("建造20块田地","金钱10万",
+            "？？？",
+            () =>
+            {
+                //Debug.Log(map.GetBuildingNum("AdobeHouse"));
+                if (map.Farms.Count >= 20)
+                {
+                    return true;
+                }
+                else { return false; }
+            },
+            () =>
+            {
+                map.MainData.Money += 10;
+            });
+        var tutorial2 = new BasicAssignment("建一个水井",
+            "在建造栏点击水井，并在村庄网格中建造就行了","无",
+            () =>
+            {
+                //Debug.Log(map.GetBuildingNum("AdobeHouse"));
+                if (map.GetBuildingNum("Tube") >= 1)
+                {
+                    return true;
+                }
+                else { return false; }
+            },
+            () =>
+            {
+                map.MainData.Money += 100;
+            });
+        var tutorial1 = new BasicAssignment("建三个泥土房",
+            "在建造栏点击水井，并在村庄网格中建造就行了","无",
             () =>
             {
                 //Debug.Log(map.GetBuildingNum("AdobeHouse"));
@@ -98,10 +130,17 @@ public class AssignmentSystem : MonoBehaviour
             },
             () =>
             {
-                //map.economyWrapper.AddMiddleware(new SolidMiddleware<GameDataVector>(new GameDataVector(0, 1000, 0),this,map.economyWrapper));
+                tutorial2.unlock = true;
+                Assignment1.unlock = true;
+                map.MainData.Money += 100;
             });
-        tempAssignment1.unlock = true;
-        assignmentLists.Add(tempAssignment1);
+        
+
+        #endregion
+        tutorial1.unlock = true;
+        assignmentLists.Add(tutorial1);
+        assignmentLists.Add(tutorial2);
+        assignmentLists.Add(Assignment1);
         UIRefresh();
         //Debug.Log("added");
 

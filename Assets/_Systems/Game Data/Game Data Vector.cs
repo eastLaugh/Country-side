@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 using UnityEngine;
 public class GameDataVector : IDataVector<GameDataVector>
 {
+    private int m_people;
+    private float m_money;
 
     public GameDataVector(int People = 0, float Money = 0f, float dailyIncome = 0f, float Happiness = 0f)
     {
@@ -13,9 +15,38 @@ public class GameDataVector : IDataVector<GameDataVector>
         this.dailyIncome = dailyIncome;
         this.Happiness = Happiness;
     }
-    public int People { get;  set; }
+    public int People
+    {
+        get
+        {
+            return m_people;
+        }
+        set
+        {
+            if (value != m_people)
+            {
+                EventHandler.CallPeopleUpdate(value);
+            }
+            m_people = value;
+        }
+    }
     public float dailyIncome { get;  set; }
-    public float Money { get; set; }
+    public float Money 
+    {   
+        get
+        { 
+            return m_money; 
+        }
+        set 
+        {
+           if(value != m_money)
+           {
+                Debug.Log("MoneyChanged");
+                EventHandler.CallMoneyUpdate(value);
+                m_money = value;
+           }
+        } 
+    }
     public float Happiness { get; set; }
 
     public static GameDataVector operator +(GameDataVector left, GameDataVector right)

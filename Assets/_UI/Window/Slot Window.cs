@@ -4,6 +4,8 @@ using TMPro;
 public class SlotWindow : MonoBehaviour
 {
     public TextMeshProUGUI content;
+    public TextMeshProUGUI nameText;
+    public TextMeshProUGUI warining;
 
     // Start is called before the first frame update
     private void Awake()
@@ -41,11 +43,9 @@ public class SlotWindow : MonoBehaviour
         // var text = JsonConvert.SerializeObject(selected, GameManager.SerializeSettings);
         // JObject jObject = JObject.FromObject(selected, JsonSerializer.CreateDefault(GameManager.SerializeSettings));
         // jObject.Remove("map");
-        content.SetText(selectedSlot.GetInfo());
+        //content.SetText(selectedSlot.GetInfo());
 
-        GetComponent<Window>().SetTitle(selectedSlot.GetType().Name);
-
-
+        
     }
 
 

@@ -51,7 +51,7 @@ public static partial class MapObjects
         protected override void OnCreated()
         {
             base.OnCreated();
-            m_profit = new SolidMiddleware<Float>(new Float(0.3f));
+            m_profit = new SolidMiddleware<Float>(new Float(0.03f));
             map.Farms.Add(this);
         }
         protected override void OnDisable()
@@ -68,7 +68,7 @@ public static partial class MapObjects
         protected override void OnCreated()
         {
             base.OnCreated();
-            m_profit = new SolidMiddleware<Float>(new Float(0.35f));
+            m_profit = new SolidMiddleware<Float>(new Float(0.035f));
             map.Farms.Add(this);
         }
         protected override void OnDisable()
