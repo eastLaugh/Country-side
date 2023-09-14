@@ -25,6 +25,8 @@ partial class Slot
         [JsonProperty]
         public int Direction { get; protected set; }
 
+        public readonly static Vector2[] DirectionToVector2 = new Vector2[] { Vector2.up, Vector2.right, Vector2.down, Vector2.left };
+
         protected Transform father { get; private set; }
         protected GameObject gameObject => father.gameObject;
 
@@ -49,7 +51,7 @@ partial class Slot
                     Debug.Log($"请遵从WorkFlow，在MapObject Database中为{GetType().Name}配置信息。由于未找到配置信息，已忽略Prefab");
 
                     config = default;
-                    
+
                 }
 
                 father = new GameObject(GetType().Name).transform;
@@ -150,6 +152,23 @@ partial class Slot
                     }
                 }
             }
+
+
+        }
+        public void GetDirectedMapObject()
+        {
+            foreach (var dir in Slot.上下左右)
+            {
+                Slot nextSlot = map[slot.position + dir];
+                if (nextSlot != null)
+                {
+                    MapObject nextNode = nextSlot.GetMapObject(GetType());
+                    if (nextNode != null)
+                    {
+                        nextNode.Direction = (Direction + 2) % 4;
+                    }
+                }
+            }
         }
 
         #endregion
@@ -206,8 +225,8 @@ partial class Slot
         /// 执行时机：在地图格子全部创建完成之后
         /// </summary>
         protected abstract void OnEnable();
-        
-           
+
+
 
         /// <summary>
         /// 执行时机：一旦被实例化，立即执行
@@ -223,7 +242,7 @@ partial class Slot
         /// 
         /// </summary>
         protected abstract void OnDisable();
-        
+
 
         /// <summary>
         /// 执行时机：类似于OnEnable。不过，仅在首次被创建时才会执行。永远只执行一次，不会在读取存档时执行

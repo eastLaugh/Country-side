@@ -10,7 +10,7 @@ public static partial class MapObjects
     {
         public const int TubeRippleRadius = 5;
 
-        public override bool CanBeUnjected => throw new System.NotImplementedException();
+        public override bool CanBeUnjected => true;
 
         public float Cost => 0.05f;
 
@@ -27,7 +27,7 @@ public static partial class MapObjects
 
         protected override void OnDisable()
         {
-            
+
         }
 
         protected override void OnEnable()
@@ -53,16 +53,24 @@ public static partial class MapObjects
             protected override void OnEnable()
             {
                 SetTubeAreaHighlight += SetHighlight;
+                GameManager.OnMapUnloaded += OnMapUnloaded;
             }
+
+            private void OnMapUnloaded()
+            {
+                SetTubeAreaHighlight = null;
+            }
+
             protected override void OnDisable()
             {
                 SetTubeAreaHighlight -= SetHighlight;
+                GameManager.OnMapUnloaded -= OnMapUnloaded;
             }
 
             protected override void OnCreated()
             {
                 base.OnCreated();
-                
+
             }
         }
     }

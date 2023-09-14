@@ -92,7 +92,8 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void Float()
     {
         StopAllFloat += StopFloat;
-        FloatTween = transform.DOLocalMoveY(transform.localPosition.y + 0.3f, 0.5f).SetEase(Ease.OutBack).SetLoops(-1, LoopType.Yoyo);
+        if (Settings.开启浮动效果)
+            FloatTween = transform.DOLocalMoveY(transform.localPosition.y + 0.3f, 0.5f).SetEase(Ease.OutBack).SetLoops(-1, LoopType.Yoyo);
     }
     public void StopFloat()
     {
@@ -113,5 +114,20 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         int origin = gameObject.layer;
         gameObject.layer = v;
         return origin;
+    }
+
+    private void OnEnable()
+    {
+        GameManager.OnMapUnloaded += OnMapUnloaded;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnMapUnloaded -= OnMapUnloaded;
+    }
+    private void OnMapUnloaded()
+    {
+        StopAllFloat = null;
+
     }
 }

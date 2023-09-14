@@ -37,7 +37,7 @@ public class BuildingWindow : MonoBehaviour
         for (int i = 0; i < OptionButtons.Count; i++)
         {
             var pricetext = OptionButtons[i].GetComponentsInChildren<TMPro.TextMeshProUGUI>()[1];
-            if (money <float.Parse(pricetext.text.Split("万")[0]))
+            if (money < float.Parse(pricetext.text.Split("万")[0]))
             {
                 if (OptionButtons[i] == lastSelectedButton)
                 {
@@ -45,9 +45,9 @@ public class BuildingWindow : MonoBehaviour
                     lastSelectedButton = null;
                 }
                 pricetext.color = Color.red;
-                OptionButtons[i].interactable = false;    
+                OptionButtons[i].interactable = false;
             }
-            else if(pricetext.color == Color.red)
+            else if (pricetext.color == Color.red)
             {
                 pricetext.color = Color.black;
                 OptionButtons[i].interactable = true;
@@ -192,6 +192,7 @@ public class BuildingWindow : MonoBehaviour
         {
             config = GameManager.current.MapObjectDatabase[SelectedType];
             type = SelectedType;
+            Debug.Assert(config.Size.x > 0 && config.Size.y > 0, $"检测到Config.Size非法。在MapObject Database中为{SelectedType.Name}配置Size。");
             return true;
         }
         catch (KeyNotFoundException)

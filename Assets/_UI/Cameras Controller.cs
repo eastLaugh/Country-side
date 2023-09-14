@@ -46,6 +46,18 @@ public class CamerasController : MonoBehaviour
     private void OnEnable()
     {
         BuildingWindow.OnUpdate += OnBuildingWindowUpdate;
+        GameManager.OnMapLoaded += OnMapLoaded;
+    }
+
+    private void OnMapLoaded(Map map)
+    {
+        ResetLayer = null;
+    }
+
+    private void OnDisable()
+    {
+        BuildingWindow.OnUpdate -= OnBuildingWindowUpdate;
+        GameManager.OnMapLoaded -= OnMapLoaded;
     }
 
     private void Start()
