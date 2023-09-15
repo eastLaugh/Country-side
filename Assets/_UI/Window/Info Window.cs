@@ -24,6 +24,8 @@ public class InfoWindow : MonoBehaviour
         infoWindow.Text.SetText(text);
         return infoWindow;
     }
+
+    public static InfoWindow Create(object obj) => Create(obj.ToString());
     // Start is called before the first frame update
 
     void Start()

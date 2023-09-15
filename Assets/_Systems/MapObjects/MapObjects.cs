@@ -102,7 +102,7 @@ public static partial class MapObjects
     /// <summary>
     /// 住宅基类
     /// </summary>
-    public abstract class House : MapObject, MustNotExist<House>, IConstruction, MustNotExist<IConstruction>, IInfoProvider
+    public abstract class House : MapObject, IConstruction, MustNotExist<IConstruction>, IInfoProvider
     {
         //人口容量
         [JsonProperty] protected SolidMiddleware<Int> m_capacity;

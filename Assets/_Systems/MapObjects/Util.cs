@@ -2,12 +2,12 @@ using System.Collections;
 using System.Linq;
 using System;
 //建筑物冲突
-public interface MustNotExist<T>
+public interface MustNotExist<in T>
 {
 
 }
 //建筑物相容
-public interface MustExist<T>
+public interface MustExist<in T>
 {
 
 }
@@ -22,11 +22,21 @@ public static class TypeUtil
             if (typeof(MustNotExist<>).MakeGenericType(type).IsAssignableFrom(FindTypeIfPlaceHolder(element)))
                 return false;
         }
+
+        foreach (Type interf in type.GetInterfaces().Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(MustNotExist<>)))
+        {
+            foreach (var element in set)
+            {
+                if (interf.GetGenericArguments().First().IsAssignableFrom(FindTypeIfPlaceHolder(element)))
+                    return false;
+            }
+        }
+
         foreach (Type interf in type.GetInterfaces().Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(MustExist<>)))
         {
             foreach (var element in set)
             {
-                if (FindTypeIfPlaceHolder(element) == interf.GetGenericArguments().First())
+                if (interf.GetGenericArguments().First().IsAssignableFrom(FindTypeIfPlaceHolder(element)))
                     goto go_on;
             }
             return false;
@@ -35,10 +45,14 @@ public static class TypeUtil
         return true;
     }
 
-    public static Type FindTypeIfPlaceHolder(object unknownType){
-        if(unknownType is MapObjects.PlaceHolder placeholder){
+    public static Type FindTypeIfPlaceHolder(object unknownType)
+    {
+        if (unknownType is MapObjects.PlaceHolder placeholder)
+        {
             return placeholder.mapObject.GetType();
-        }else{
+        }
+        else
+        {
             return unknownType.GetType();
         }
     }

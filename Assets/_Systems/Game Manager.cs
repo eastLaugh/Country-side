@@ -251,17 +251,17 @@ public class GameManager : MonoBehaviour
             UnLoad();
         }
 
-        if (map != null)
-        {
-            //显示一些经济参数
-            GUILayout.BeginArea(new Rect(Screen.width - 200, 0, 200, Screen.height), GUI.skin.box);
-            {
-                GUILayout.Label("参数");
-                GUILayout.Label(JsonConvert.SerializeObject(currentEconomyVector, Formatting.Indented));
+        // if (map != null)
+        // {
+        //     //显示一些经济参数
+        //     GUILayout.BeginArea(new Rect(Screen.width - 200, 0, 200, Screen.height), GUI.skin.box);
+        //     {
+        //         GUILayout.Label("参数");
+        //         GUILayout.Label(JsonConvert.SerializeObject(currentEconomyVector, Formatting.Indented));
 
-            }
-            GUILayout.EndArea();
-        }
+        //     }
+        //     GUILayout.EndArea();
+        // }
     }
     public Map map { get; private set; }
     public void SaveCurrentMap(string filePath, bool temp = false)
