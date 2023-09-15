@@ -82,7 +82,7 @@ public abstract partial class Slot
 
 
     //上下左右
-    public static readonly Vector2[] 上下左右 = new Vector2[] { new Vector2(0, 1), new Vector2(0, -1), new Vector2(-1, 0), new Vector2(1, 0) };
+    public static readonly Vector2[] 上右下左 = new Vector2[] { new Vector2(0, 1), new Vector2(1, 0), new Vector2(0, -1), new Vector2(-1, 0) };
     public static readonly Vector2[] AllDirections = { new Vector2(0, 1), new Vector2(-1, 1), new Vector2(-1, 0), new Vector2(-1, -1), new Vector2(0, -1), new Vector2(1, -1), new Vector2(1, 0), new Vector2(1, 1) };
 
 
@@ -95,5 +95,30 @@ public abstract partial class Slot
     {
         return mapObjects.SingleOrDefault(mapObject => mapObject.GetType() == type);
     }
+
+
+    /// <summary>
+    /// 获取所有指向该单元格的MapObject
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerable<MapObject> GetReachableMapObject()
+    {
+        foreach (var dir in Slot.上右下左)
+        {
+            Slot neighborSlot = map[position + dir];
+
+            if (neighborSlot != null)
+            {
+                foreach (MapObject neighbor in neighborSlot.mapObjects)
+                {
+                    if (上右下左[neighbor.Direction] == -dir)
+                    {
+                        yield return neighbor;
+                    }
+                }
+            }
+        }
+    }
+
 
 }

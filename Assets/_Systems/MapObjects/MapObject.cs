@@ -126,7 +126,7 @@ partial class Slot
                             foundCluster = node.cluster;
                         }
 
-                        foreach (var dir in Slot.上下左右)
+                        foreach (var dir in Slot.上右下左)
                         {
                             Slot nextSlot = map[node.slot.position + dir];
                             if (nextSlot != null)
@@ -155,22 +155,7 @@ partial class Slot
 
 
         }
-        public void GetDirectedMapObject()
-        {
-            foreach (var dir in Slot.上下左右)
-            {
-                Slot nextSlot = map[slot.position + dir];
-                if (nextSlot != null)
-                {
-                    MapObject nextNode = nextSlot.GetMapObject(GetType());
-                    if (nextNode != null)
-                    {
-                        nextNode.Direction = (Direction + 2) % 4;
-                    }
-                }
-            }
-        }
-
+        
         #endregion
 
         Action OnlyRenderInvoke;

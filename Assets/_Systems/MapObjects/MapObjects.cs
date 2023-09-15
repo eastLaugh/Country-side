@@ -101,7 +101,7 @@ public static partial class MapObjects
     /// <summary>
     /// 住宅基类
     /// </summary>
-    public abstract class House : MapObject, MustNotExist<House>, IConstruction 
+    public abstract class House : MapObject, MustNotExist<House>, IConstruction, IInfoProvider
     {
         //人口容量
         [JsonProperty] public SolidMiddleware<Int> Capacity;
@@ -109,6 +109,27 @@ public static partial class MapObjects
         public abstract float Cost { get; }
         public abstract string Name { get; }
         public ConstructType constructType => ConstructType.House;
+
+        public void ProvideInfo(Action<string> provide)
+        {
+            provide($"当前朝向{Direction}");
+
+            foreach (var dir in 上右下左)
+            {
+                Road r = map[slot.position + dir].GetMapObject<Road>();
+                if (r != null)
+                {
+                    foreach (MapObject reachable in r.cluster.GetReachableMapObject())
+                    {
+                        if (reachable != this && reachable is House)
+                        {
+                            provide($"可到达 {reachable.slot.position}");
+                        }
+                    }
+                }
+            }
+        }
+
         protected override void OnCreated()
         {
             map.MainData.Money -= Cost;

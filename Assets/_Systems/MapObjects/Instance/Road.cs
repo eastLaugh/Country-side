@@ -23,7 +23,7 @@ public static partial class MapObjects
 
         protected override void OnEnable()
         {
-            foreach (var dir in Slot.上下左右)
+            foreach (var dir in Slot.上右下左)
             {
                 var target = slot.map[slot.position + dir];
                 if (target != null)

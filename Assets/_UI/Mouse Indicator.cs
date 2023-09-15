@@ -79,12 +79,6 @@ public class MouseIndicator : MonoBehaviour
             MainIndicator.transform.DOMove(center + PlaneIndicator.position, 0.1f).SetEase(Ease.OutQuad);
 
 
-            //根据次数旋转
-            MainIndicator.transform.rotation = Quaternion.identity;
-            for (int i = 0; i < (BuildingWindow.selectedDirection + 2) % 4; i++)
-            {
-                MainIndicator.transform.rotation *= Quaternion.Euler(0, 90, 0);
-            }
 
             if (canBuild)
             {
@@ -97,13 +91,25 @@ public class MouseIndicator : MonoBehaviour
         }
     }
 
+    void Rotate(int dir)
+    {
+        //根据次数旋转
+        MainIndicator.transform.rotation = Quaternion.identity;
+        for (int i = 0; i < (dir + 2) % 4; i++)
+        {
+            MainIndicator.transform.rotation *= Quaternion.Euler(0, 90, 0);
+        }
+    }
     private void OnAnySlotEnter(SlotRender slotRender)
     {
         MainIndicator.gameObject.SetActive(true);
+
+        Rotate(BuildingWindow.selectedDirection);
         if (!BuildMode.hasEntered)
         {
             MainIndicator.transform.DOMove(slotRender.transform.position + PlaneIndicator.position, 0.1f).SetEase(Ease.OutQuad);
             MainIndicator.transform.DOScale(new Vector3(1 * 0.1f, 1, 1 * 0.1f), 0.1f).SetEase(Ease.OutQuad);
+
         }
         MainIndicator.material.SetFloat("_Thickness", 0.2f);
         DOTween.To(() => MainIndicator.material.GetFloat("_Thickness"), t => MainIndicator.material.SetFloat("_Thickness", t), 0.2f, 0.15f).From(DefaultMaterial.GetFloat("_Thickness")).SetEase(Ease.InOutQuad);
