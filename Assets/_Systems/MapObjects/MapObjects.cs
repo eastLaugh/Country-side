@@ -102,11 +102,7 @@ public static partial class MapObjects
     /// <summary>
     /// 住宅基类
     /// </summary>
-<<<<<<< Updated upstream
-    public abstract class House : MapObject, MustNotExist<House>, IConstruction, IInfoProvider
-=======
-    public abstract class House : MapObject, MustNotExist<House>, IConstruction , MustNotExist<IConstruction>
->>>>>>> Stashed changes
+    public abstract class House : MapObject, MustNotExist<House>, IConstruction, MustNotExist<IConstruction>, IInfoProvider
     {
         //人口容量
         [JsonProperty] protected SolidMiddleware<Int> m_capacity;
@@ -117,21 +113,35 @@ public static partial class MapObjects
         public abstract string Name { get; }
         public ConstructType constructType => ConstructType.House;
 
+
+        [JsonIgnore]
+        List<ArrowRender> lastArrowRender = new();
         public void ProvideInfo(Action<string> provide)
         {
             provide($"当前朝向{Direction}");
 
-            foreach (var dir in 上右下左)
+            SlotRender.OnAnySlotExit += ResetArrow;
+
+            void ResetArrow(SlotRender _)
             {
-                Road r = map[slot.position + dir].GetMapObject<Road>();
-                if (r != null)
+                for (int i = lastArrowRender.Count - 1; i >= 0; i--)
                 {
-                    foreach (MapObject reachable in r.cluster.GetReachableMapObject())
+                    MonoBehaviour.Destroy(lastArrowRender[i].gameObject);
+                }
+                lastArrowRender.Clear();
+
+                SlotRender.OnAnySlotExit -= ResetArrow;
+            }
+
+            Road r = map[slot.position + 上右下左[Direction]].GetMapObject<Road>();
+            if (r != null)
+            {
+                foreach (MapObject reachable in r.cluster.GetReachableMapObject())
+                {
+                    if (reachable != this && reachable is House)
                     {
-                        if (reachable != this && reachable is House)
-                        {
-                            provide($"可到达 {reachable.slot.position}");
-                        }
+                        provide($"可到达 {reachable.slot.position}");
+                        lastArrowRender.Add(ArrowRender.NewArrow(slot.worldPosition, reachable.slot.worldPosition));
                     }
                 }
             }
@@ -144,7 +154,7 @@ public static partial class MapObjects
         }
     }
 
-    
+
     /// <summary>
     /// 土坯房
     /// </summary>

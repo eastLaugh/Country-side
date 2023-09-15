@@ -14,7 +14,7 @@ public static partial class MapObjects
 
         public string Name => "泥土路";
 
-        public ConstructType constructType => throw new NotImplementedException();
+        public ConstructType constructType => ConstructType.Road;
 
         protected override void Awake()
         {

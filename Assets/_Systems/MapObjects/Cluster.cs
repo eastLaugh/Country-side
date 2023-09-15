@@ -10,7 +10,10 @@ public class Cluster
 
     [JsonProperty]
     readonly Type MapObjectType;
-
+    /// <summary>
+    /// 获取所有可达的地图对象
+    /// </summary>
+    /// <returns></returns>
     public HashSet<MapObject> GetReachableMapObject()
     {
         HashSet<MapObject> tmp = new();
@@ -23,7 +26,6 @@ public class Cluster
         }
         return tmp;
     }
-
 
 
     public Cluster(Type mapObjectType)
