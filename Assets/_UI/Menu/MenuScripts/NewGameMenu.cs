@@ -43,6 +43,7 @@ public class NewGameMenu : MonoBehaviour
         GameManager.current.NewGame(fileName);
         gameObject.SetActive(false);
         Overlay.SetActive(false);
+        AudioSystem.current.SwitchMusic(SoundName.GameMusic);
         yield break;
     }
 }

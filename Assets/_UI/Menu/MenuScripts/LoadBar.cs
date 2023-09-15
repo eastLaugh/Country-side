@@ -22,11 +22,13 @@ public class LoadBar : MonoBehaviour
         nameText.text = Path.GetFileName(filePath).Split('.')[0];
         LoadBtn.onClick.AddListener(() =>
         {
+            EventHandler.CallInitSoundEffect(SoundName.BtnClick);
             Overlay.SetActive(true);
             StartCoroutine(Load(filePath));
         });
         DeleteBtn.onClick.AddListener(() =>
         {
+            EventHandler.CallInitSoundEffect(SoundName.BtnClick);
             GameManager.globalData.GameSaveFiles.Remove(filePath);
             GameManager.SaveGlobalData();
             EventHandler.CallSavefileDeleted();
@@ -41,6 +43,7 @@ public class LoadBar : MonoBehaviour
         
         Overlay.SetActive(false);
         loadMenu.gameObject.SetActive(false);
+        AudioSystem.current.SwitchMusic(SoundName.GameMusic);
         yield break;
     }
 }

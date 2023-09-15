@@ -21,6 +21,7 @@ public class BuildingWindow : MonoBehaviour
 
     private void OnDisable()
     {
+        Debug.Log("disable");
         SlotRender.OnAnySlotEnter -= OnAnySlotEnter;
         EventHandler.MoneyUpdate += CheckCost;
     }
@@ -56,7 +57,7 @@ public class BuildingWindow : MonoBehaviour
     }
     void Start()
     {
-
+        Debug.Log("Start");
         OptionButtons.Clear();
         foreach (Type mapObjectType in typeof(MapObjects).GetNestedTypes())
         {
@@ -66,6 +67,7 @@ public class BuildingWindow : MonoBehaviour
                 var ins = Activator.CreateInstance(mapObjectType) as IConstruction;
                 Button button = NewOption(ins.Name, ins.Cost, button =>
                 {
+                    EventHandler.CallInitSoundEffect(SoundName.BtnClick);
                     OnButtonClick(mapObjectType, button);
                 });
                 OptionButtons.Add(button);
@@ -73,6 +75,7 @@ public class BuildingWindow : MonoBehaviour
             }
 
         }
+        Debug.Log(btnRemove);
         btnRemove.onClick.AddListener(() =>
         {
             OnButtonClick(typeof(MapObjects.DeletingFlag), btnRemove);
@@ -106,6 +109,7 @@ public class BuildingWindow : MonoBehaviour
                 MouseAnimator.SetTrigger("BuildEnd");
                 SelectedType = null;
                 OnUpdate?.Invoke(null);
+                
 
             }
             else

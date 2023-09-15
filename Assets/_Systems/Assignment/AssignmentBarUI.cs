@@ -7,9 +7,11 @@ using TMPro;
 public class AssignmentBarUI : MonoBehaviour
 {
     public TextMeshProUGUI nameText;
-    public void UpdateBar(string name)
+    public TextMeshProUGUI prizeText;
+    public void UpdateBar(string name,string prize)
     {
         nameText.text = name;
+        prizeText.text = "½±Àø£º" + prize;
     }
     public void DestroyBar()
     {

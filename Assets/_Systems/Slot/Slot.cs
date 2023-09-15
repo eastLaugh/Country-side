@@ -86,7 +86,7 @@ public abstract partial class Slot
     public static readonly Vector2[] AllDirections = { new Vector2(0, 1), new Vector2(-1, 1), new Vector2(-1, 0), new Vector2(-1, -1), new Vector2(0, -1), new Vector2(1, -1), new Vector2(1, 0), new Vector2(1, 1) };
 
 
-    public T GetMapObject<T>() where T : MapObject
+    public T GetMapObject<T>() /*where T : MapObject*/ where T: class
     {
         return mapObjects.SingleOrDefault(mapObject => mapObject is T) as T;
     }

@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.Reflection.Emit;
 using TMPro;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 public class TimeController : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI displayDate;
     private float timeBuffer;
     private float timeScaleCache;
+    private bool isMapLoaded;
     private void OnEnable()
     {
         GameManager.OnMapLoaded+=OnMapLoaded;
@@ -18,33 +20,32 @@ public class TimeController : MonoBehaviour
 
     private void OnMapUnloaded()
     {
-        enabled = false;
+        isMapLoaded = false;
     }
     void Start()
     {
-        enabled = false;
     }
     Map map;
     private void OnMapLoaded(Map map)
     {
         this.map = map;
-        map.dateTime = Convert.ToDateTime("2015/01/01");
         Play();
-        enabled = true;
+        isMapLoaded=true;
     }
 
 
     void Update()
     {
+        if (!isMapLoaded) return;
         timeBuffer = timeBuffer + Time.deltaTime;
         if (timeBuffer > 2f)
         {
             map.dateTime = map.dateTime.AddDays(1);
             EventHandler.CallDayPass();
-            Debug.Log("DayPass");
+            //Debug.Log("DayPass");
             timeBuffer = 0;
         }
-        displayDate.text = GameManager.current.map.dateTime.Date.ToString("yyyy/MM/dd");
+        displayDate.text = map.dateTime.Date.ToString("yyyy/MM/dd");
     }
     public void Play()
     {

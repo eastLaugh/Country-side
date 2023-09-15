@@ -1,5 +1,8 @@
 using UnityEngine;
 using TMPro;
+using System;
+using System.Linq;
+using System.Collections.Generic;
 
 public class SlotWindow : MonoBehaviour
 {
@@ -15,11 +18,64 @@ public class SlotWindow : MonoBehaviour
     private void OnEnable()
     {
         SlotRender.OnAnySlotEnter += OnSlotSelected;
+        SlotRender.OnAnySlotClicked += OnSlotClicked;
+    }
+
+    private void OnSlotClicked(SlotRender render)
+    {
+        EventHandler.CallInitSoundEffect(SoundName.SlotClick);
+        if (!BuildMode.hasEntered)
+        {
+            var mapObjects = render.slot.mapObjects;
+            if (mapObjects.Count == 0 )
+            {
+
+                try
+                {
+                    var cfg = SlotDatabase.main[render.slot.GetType()];
+                    nameText.text = cfg.name;
+                    content.text = "";
+                    warining.text = "";
+                }
+                catch (KeyNotFoundException)
+                {
+
+                    throw;
+                }
+                finally
+                {
+                    
+                }
+
+                
+
+            }
+            else if (mapObjects.Count == 1)
+            {
+                var mapObject = mapObjects.ToArray()[0];
+                Type Mtype = mapObject.GetType();
+                if (mapObject is MapObjects.House house)
+                {
+                    nameText.text = house.Name;
+                    content.text = "容载人口："+house.Capacity.ToString();
+                    warining.text = "";
+                }
+                else if(mapObject is MapObjects.Farm farm) 
+                { 
+                    
+                    nameText.text = farm.Name;
+                    content.text = "产出："+farm.Profit.ToString()+"万";
+                    warining.text = "";
+                }
+            }
+            
+        }
     }
 
     private void OnDisable()
     {
         SlotRender.OnAnySlotExit -= OnSlotSelected;
+        SlotRender.OnAnySlotClicked -= OnSlotClicked;
     }
 
     void OnSlotSelected(SlotRender slotRender)

@@ -35,6 +35,7 @@ public class MapObjectDatabase : ScriptableObject
         public GameObject[] Prefabs;
 
         public Vector2Int Size;
+
     }
 
     public Config this[Type type]{

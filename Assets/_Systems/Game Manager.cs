@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour
     const string globalFileName = "GlobalSave.dat";
     // string autoFileName = "AutoSave.dat";
     string fileName = DefaultSaveName;
-    const string DefaultSaveName = "[默认存档].dat";
+    const string DefaultSaveName = "[默认存档]";
     readonly GUILayoutOption[] textFieldLayout = new GUILayoutOption[] { GUILayout.Height(50) };
     readonly GUILayoutOption[] buttonLayout = new GUILayoutOption[] { GUILayout.Height(50) };
     private void OnGUI()
@@ -175,7 +175,7 @@ public class GameManager : MonoBehaviour
             UnLoad();
             var map = Map.Generate(size, seed);
             LoadMap(map);
-            SaveCurrentMap(Path.Combine(SaveDirectory, fileName));
+            SaveCurrentMap(Path.Combine(SaveDirectory, fileName+".dat"));
         }
 
         if (globalData?.GameSaveFiles != null)
@@ -342,8 +342,9 @@ public class GameManager : MonoBehaviour
     }
     public void AutoSave()
     {
-        UnLoad();
         SaveCurrentMap(Path.Combine(SaveDirectory, fileName + ".dat"));
+        UnLoad();
+        
     }
 
 }

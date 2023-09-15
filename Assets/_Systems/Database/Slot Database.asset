@@ -19,10 +19,10 @@ MonoBehaviour:
       Value:
         Prefab: {fileID: 3275510535045769556, guid: 592cb1eccb49c544ba1aa2cb95a6af41,
           type: 3}
-        "\u5907\u6CE8": 
+        name: "\u5E73\u539F"
     - Key:
         _: Water
       Value:
         Prefab: {fileID: 7792084104417525877, guid: cca2591a5c3b5394887cb522e3eaa162,
           type: 3}
-        "\u5907\u6CE8": 
+        name: "\u6E56\u6CCA"

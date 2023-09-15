@@ -34,6 +34,7 @@ public class ReturnWindow : MonoBehaviour
         window.SetActive(false);
         gameManager.AutoSave();
         Overlay.SetActive(false);
+        AudioSystem.current.SwitchMusic(SoundName.MenuMusic);
         yield break;
 
     }

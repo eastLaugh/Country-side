@@ -35,4 +35,9 @@ public class EventHandler
     {
         PeopleUpdate?.Invoke(newValue);
     }
+    public static Action<SoundName> InitSoundEffect;
+    public static void CallInitSoundEffect(SoundName soundName)
+    {
+        InitSoundEffect?.Invoke(soundName);
+    }
 }

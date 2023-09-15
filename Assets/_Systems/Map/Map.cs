@@ -22,12 +22,12 @@ public class Map
     [JsonProperty]
     public Vector2Int size { get; private set; }
     [JsonProperty]
-    public DateTime dateTime;
+    public DateTime dateTime = Convert.ToDateTime("2015/01/01");
     [JsonProperty]
     public List<string> FinishedAssignments = new List<string>();
     [JsonProperty]
     public List<string> UnlockedAssignments = new List<string>();
-    //[JsonProperty]
+    [JsonProperty]
     public Dictionary<string, int> BuildingsNum = new Dictionary<string, int>();
     [JsonProperty]
     public List<House> Houses = new List<House>();
@@ -75,7 +75,7 @@ public class Map
 
 
         //创建地图
-        Map map = new Map(size, slots, seed,new GameDataVector(831, 1000, 0, 0f));
+        Map map = new Map(size, slots, seed,new GameDataVector(831, 100, 0, 0f));
 
         //去中心化
         foreach (MapGenerator generator in InitAllGenerators())

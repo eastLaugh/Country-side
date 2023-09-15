@@ -18,7 +18,10 @@ public class CamerasController : MonoBehaviour
 
     private void Awake()
     {
-        fsm.State(CameraState.Default);
+        fsm.State(CameraState.Default).OnEnter(() =>
+        {
+            SlotRender.StopAllFloat?.Invoke();
+        });
         fsm.State(CameraState.Tube).OnEnter(() =>
         {
             Cameras["Tube Camera"].enabled = true;
@@ -91,16 +94,20 @@ public class CamerasController : MonoBehaviour
                 if (i * i + j * j <= MapObjects.Tube.TubeRippleRadius * MapObjects.Tube.TubeRippleRadius)
                 {
                     var slot = slotRender.slot.map[slotRender.slot.position + new Vector2(i, j)];
-                    int originLayer = slot.slotRender.SetLayer(LayerMask.NameToLayer("Highlight"));
-                    if (originLayer == LayerMask.NameToLayer("Highlight"))
+                    if (slot != null)
                     {
-                        //说明这个slot原本就是高亮的,不需要恢复
-                    }
-                    else
-                    {
-                        ResetLayer += () => slot.slotRender.SetLayer(originLayer);
+                        int originLayer = slot.slotRender.SetLayer(LayerMask.NameToLayer("Highlight"));
+                        if (originLayer == LayerMask.NameToLayer("Highlight"))
+                        {
+                            //说明这个slot原本就是高亮的,不需要恢复
+                        }
+                        else
+                        {
+                            ResetLayer += () => slot.slotRender.SetLayer(originLayer);
 
+                        }
                     }
+
                 }
             }
         }

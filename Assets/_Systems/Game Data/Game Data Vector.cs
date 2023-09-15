@@ -41,7 +41,7 @@ public class GameDataVector : IDataVector<GameDataVector>
         {
            if(value != m_money)
            {
-                Debug.Log("MoneyChanged");
+                //Debug.Log("MoneyChanged");
                 EventHandler.CallMoneyUpdate(value);
                 m_money = value;
            }

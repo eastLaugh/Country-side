@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Ink.Runtime;
 using Newtonsoft.Json;
 using TMPro;
 using Unity.VisualScripting;
@@ -18,7 +19,7 @@ public static partial class MapObjects
     #region 农业设施
     public abstract class Farm : MapObject, IConstruction
     {
-        public override bool CanBeUnjected => throw new NotImplementedException();
+        public override bool CanBeUnjected => true;
         public abstract float Cost { get; }
         public abstract string Name { get; }
         public float Profit => m_profit.currentValue.m_value;
@@ -101,10 +102,16 @@ public static partial class MapObjects
     /// <summary>
     /// 住宅基类
     /// </summary>
+<<<<<<< Updated upstream
     public abstract class House : MapObject, MustNotExist<House>, IConstruction, IInfoProvider
+=======
+    public abstract class House : MapObject, MustNotExist<House>, IConstruction , MustNotExist<IConstruction>
+>>>>>>> Stashed changes
     {
         //人口容量
-        [JsonProperty] public SolidMiddleware<Int> Capacity;
+        [JsonProperty] protected SolidMiddleware<Int> m_capacity;
+
+        public int Capacity => m_capacity.currentValue.m_value;
         public override bool CanBeUnjected => true;
         public abstract float Cost { get; }
         public abstract string Name { get; }
@@ -136,6 +143,8 @@ public static partial class MapObjects
             //Debug.Log(map.MainData.Money);
         }
     }
+
+    
     /// <summary>
     /// 土坯房
     /// </summary>
@@ -148,7 +157,7 @@ public static partial class MapObjects
         protected override void OnCreated()
         {
             base.OnCreated();
-            Capacity = new SolidMiddleware<Int>(new Int(10));
+            m_capacity = new SolidMiddleware<Int>(new Int(10));
             map.Houses.Add(this);
         }
 
@@ -174,7 +183,7 @@ public static partial class MapObjects
         protected override void OnCreated()
         {
             base.OnCreated();
-            Capacity = new SolidMiddleware<Int>(new Int(30));
+            m_capacity = new SolidMiddleware<Int>(new Int(30));
             map.Houses.Add(this);
         }
 
@@ -200,7 +209,7 @@ public static partial class MapObjects
         protected override void OnCreated()
         {
             base.OnCreated();
-            Capacity = new SolidMiddleware<Int>(new Int(60));
+            m_capacity = new SolidMiddleware<Int>(new Int(60));
             map.Houses.Add(this);
 
         }

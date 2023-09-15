@@ -12,31 +12,31 @@ public class AssignmentSystem : MonoBehaviour
     [SerializeField] AssignmentBarUI assignmentBarPrefab;
     public List<BasicAssignment> assignmentLists = new List<BasicAssignment>();
     public List<BasicAssignment> displayList = new List<BasicAssignment>();
-
+    public bool isMapLoaded = false;
     private void OnEnable()
     {
         GameManager.OnMapLoaded += OnMapLoaded;
         GameManager.OnMapUnloaded += OnMapUnloaded;
     }
-
     private void OnMapUnloaded()
     {
-        enabled = false;      
+        displayList.Clear();
+        assignmentLists.Clear();     
+        isMapLoaded = false;
     }
-
     private void OnMapLoaded(Map map)
     {
         this.map = map;
         AssignmentInit();
-        enabled = true;
-    }
-    void Start()
-    {
-        enabled = false;
+        isMapLoaded=true;
     }
     private void Update()
     {
-        CheckAssignments();
+        if (isMapLoaded) 
+        {
+            CheckAssignments();
+        }
+        
     }
     private void CheckAssignments()
     {
@@ -52,6 +52,7 @@ public class AssignmentSystem : MonoBehaviour
     private void AssignmentFinished(BasicAssignment basicAssignment,int index)
     {
         basicAssignment.Finish();
+        map.FinishedAssignments.Add(basicAssignment.name);
         displayList.RemoveAt(index);
         RuleItemRoot.GetChild(index).GetComponent<AssignmentBarUI>().DestroyBar();
         StartCoroutine(WaitforDestroy());
@@ -78,15 +79,16 @@ public class AssignmentSystem : MonoBehaviour
         {
             //var item = InventoryManager.Instance.GetItemDetails(list[i].itemID);
             var Bar = Instantiate(assignmentBarPrefab, RuleItemRoot);
-            Debug.Log(displayList[i].name);
-            Bar.UpdateBar(displayList[i].name);
+            //Debug.Log(displayList[i].name);
+            Bar.UpdateBar(displayList[i].name, displayList[i].prizeText);
             Bar.gameObject.SetActive(true);
+
         }
     }
     public void AssignmentInit()
     {
         #region 任务初始化 
-
+        Debug.Log(assignmentLists.Count);
         var Assignment1 = new BasicAssignment("建造20块田地","金钱10万",
             "？？？",
             () =>
@@ -130,8 +132,8 @@ public class AssignmentSystem : MonoBehaviour
             },
             () =>
             {
-                tutorial2.unlock = true;
-                Assignment1.unlock = true;
+                UnlockAssignment(Assignment1);
+                UnlockAssignment(tutorial2);
                 map.MainData.Money += 100;
             });
         
@@ -141,10 +143,28 @@ public class AssignmentSystem : MonoBehaviour
         assignmentLists.Add(tutorial1);
         assignmentLists.Add(tutorial2);
         assignmentLists.Add(Assignment1);
+        for(int i = 0;i<map.UnlockedAssignments.Count;i++)
+        {
+            var unlockAssignment = assignmentLists.Find((assignment) => { return assignment.name == map.UnlockedAssignments[i]; });   
+            unlockAssignment.unlock = true;
+        }
+        for (int i = 0; i < map.FinishedAssignments.Count; i++)
+        {
+            var unlockAssignment = assignmentLists.Find((assignment) => { return assignment.name == map.FinishedAssignments[i]; });
+            unlockAssignment.finished = true;
+        }
+
         UIRefresh();
         //Debug.Log("added");
 
     }
-
+    void UnlockAssignment(BasicAssignment assignment)
+    {
+        assignment.unlock = true;
+        if(!map.UnlockedAssignments.Contains(assignment.name))
+        {
+            map.UnlockedAssignments.Add(assignment.name);
+        }       
+    }
     
 }

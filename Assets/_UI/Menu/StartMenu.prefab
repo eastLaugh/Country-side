@@ -148,6 +148,7 @@ GameObject:
   - component: {fileID: 773113530389578642}
   - component: {fileID: 3560324665819660636}
   - component: {fileID: 5795703867658622905}
+  - component: {fileID: 1565367888696172147}
   m_Layer: 5
   m_Name: BtnExit
   m_TagString: Untagged
@@ -257,7 +258,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3560324665819660636}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1565367888696172147}
+        m_TargetAssemblyTypeName: PlaySound, Assembly-CSharp
+        m_MethodName: Excecute
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: BtnClick
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1565367888696172147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1015095692973040183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e2cb576fba68204ba5bbcb07cf1591e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1781782502490369812
 GameObject:
   m_ObjectHideFlags: 0
@@ -473,6 +498,7 @@ GameObject:
   - component: {fileID: 711176660217783717}
   - component: {fileID: 1254143077472521539}
   - component: {fileID: 845398337836138704}
+  - component: {fileID: 8214307640550956262}
   m_Layer: 5
   m_Name: BtnSettings
   m_TagString: Untagged
@@ -607,6 +633,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8214307640550956262}
+        m_TargetAssemblyTypeName: PlaySound, Assembly-CSharp
+        m_MethodName: Excecute
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: BtnClick
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &8214307640550956262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3809186368006600841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e2cb576fba68204ba5bbcb07cf1591e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4645322542885741472
 GameObject:
   m_ObjectHideFlags: 0
@@ -1246,6 +1296,7 @@ GameObject:
   - component: {fileID: 7765010369214853010}
   - component: {fileID: 3057051551280758197}
   - component: {fileID: 2541403686697296117}
+  - component: {fileID: 8874887393841310918}
   m_Layer: 5
   m_Name: BtnNewGame
   m_TagString: Untagged
@@ -1380,6 +1431,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8874887393841310918}
+        m_TargetAssemblyTypeName: PlaySound, Assembly-CSharp
+        m_MethodName: Excecute
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: BtnClick
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &8874887393841310918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9074501971999058056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e2cb576fba68204ba5bbcb07cf1591e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9124765466937403510
 GameObject:
   m_ObjectHideFlags: 0
@@ -1392,6 +1467,7 @@ GameObject:
   - component: {fileID: 2085688490537159889}
   - component: {fileID: 2790158309659695492}
   - component: {fileID: 3524114797859359092}
+  - component: {fileID: 6942136135399800910}
   m_Layer: 5
   m_Name: BtnLoad
   m_TagString: Untagged
@@ -1526,3 +1602,27 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 6942136135399800910}
+        m_TargetAssemblyTypeName: PlaySound, Assembly-CSharp
+        m_MethodName: Excecute
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: BtnClick
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &6942136135399800910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9124765466937403510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e2cb576fba68204ba5bbcb07cf1591e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

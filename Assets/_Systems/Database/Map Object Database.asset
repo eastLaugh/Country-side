@@ -41,7 +41,7 @@ MonoBehaviour:
         Prefab: {fileID: 919132149155446097, guid: 3906826ba1c8cfd458f1a6abbae5fa85,
           type: 3}
         Prefabs: []
-        Size: {x: 0, y: 0}
+        Size: {x: 1, y: 1}
     - Key:
         _: "\u5E02\u4E2D\u5FC3"
       Value:

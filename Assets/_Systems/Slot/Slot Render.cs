@@ -103,7 +103,7 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         FloatTween?.Kill();
     }
 
-    static Action StopAllFloat = null;
+    public static Action StopAllFloat { get; set; }=null;
     public static void ResetFloat()
     {
         StopAllFloat?.Invoke();
