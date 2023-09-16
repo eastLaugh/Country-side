@@ -46,7 +46,7 @@ public static partial class MapObjects
 
         public static Action<bool> SetTubeAreaHighlight { get; private set; } = null;
 
-        public override bool CanBeUnjected => true;
+        public override bool CanBeUnjected => false;
 
         //void SetHighlight(bool highlight)
         //{

@@ -351,7 +351,7 @@ public abstract class RippleEffectBuilding<Eff> : MapObject where Eff : MapObjec
     {
         foreach (var eff in Effects)
         {
-            eff.Unject();
+            eff.Unject(true);
         }
     }
 
