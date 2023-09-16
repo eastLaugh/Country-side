@@ -76,7 +76,7 @@ public abstract partial class Slot
 
         foreach (var item in mapObjects)
         {
-            item.Inject(this, true);//反序列化注入
+            item.Inject(this, true,item.Direction);//反序列化注入
         }
     }
 

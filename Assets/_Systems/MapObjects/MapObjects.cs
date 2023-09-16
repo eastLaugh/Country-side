@@ -133,7 +133,8 @@ public static partial class MapObjects
                 SlotRender.OnAnySlotExit -= ResetArrow;
             }
 
-            Road r = map[slot.position + 上右下左[Direction]].GetMapObject<Road>();
+            Road r = map[slot.position + 上右下左[Direction]]?.GetMapObject<Road>();
+
             if (r != null)
             {
                 foreach (MapObject reachable in r.cluster.GetReachableMapObject())
