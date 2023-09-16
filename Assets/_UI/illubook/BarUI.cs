@@ -41,7 +41,7 @@ public class BarUI : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, I
     {
         BuildingDetails = Building;
         BuildingName.text = BuildingDetails.chineseName;
-        image.sprite = BuildingDetails.icon;
+        image.sprite = null;
         if(BuildingDetails.unclock)
         {
             Mask.gameObject.SetActive(false); 

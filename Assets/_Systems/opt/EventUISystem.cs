@@ -11,6 +11,7 @@ public class EventUISystem : MonoBehaviour
     /// <summary>
     /// csv��ʽ
     /// </summary>
+    /// 
     public List<TextAsset> EventDataFiles;
     public TextMeshProUGUI mainContent;
     public GameObject EventUI;
@@ -19,32 +20,35 @@ public class EventUISystem : MonoBehaviour
     public string[] optRows;
     public GameObject optButtonTemplate;
     public RectTransform optRoot;
+    public bool isMapLoaded;
+    private Map map;
     /// <summary>
     /// TODO
     /// </summary>
     Dictionary<string, Sprite> imageDic = new Dictionary<string, Sprite>();
     private void Start()
     {
-        enabled = false;
+        
     }
     private void OnEnable()
     {
         GameManager.OnMapLoaded += OnMapLoaded;
         GameManager.OnMapUnloaded += OnMapUnloaded;
     }
-    public void OnMapLoaded(Map _)
+    public void OnMapLoaded(Map map)
     {
-        enabled = true;
+        this.map = map;
+        isMapLoaded = true;
         InitOptEvents();
         EventHandler.DayPass += RandomEvent;
     }
     public void OnMapUnloaded()
     {
-        enabled = false;
+        isMapLoaded = false;
     }
     private void RandomEvent()
     {
-        int random = UnityEngine.Random.Range(0, 100);
+        int random = UnityEngine.Random.Range(0, 30);
         if (random == 1)
         {
             GenerateEvent();
@@ -76,7 +80,7 @@ public class EventUISystem : MonoBehaviour
                 //
                 optIndex = int.Parse(cell[3]);//TODO
                 var continueBtn = Instantiate(optButtonTemplate, optRoot);
-                continueBtn.GetComponentInChildren<TMP_Text>().text = "����";
+                continueBtn.GetComponentInChildren<TMP_Text>().text = "继续";
                 continueBtn.GetComponent<Button>().onClick.AddListener(() =>
                 {
                     for (int i = 0; i < optRoot.childCount; i++)
@@ -102,7 +106,7 @@ public class EventUISystem : MonoBehaviour
             {
                 mainContent.text = cell[2];
                 var endBtn = Instantiate(optButtonTemplate, optRoot);
-                endBtn.GetComponentInChildren<TMP_Text>().text = "����";
+                endBtn.GetComponentInChildren<TMP_Text>().text = "结束";
                 endBtn.GetComponent<Button>().onClick.AddListener(() =>
                 {
                     for (int i = 0; i < optRoot.childCount; i++)
@@ -147,12 +151,20 @@ public class EventUISystem : MonoBehaviour
     {
         OptEvents.Add("AddMoney", (value) =>
         {
-            //GameManager.current.map.economyWrapper.AddMiddleware(new SolidMiddleware<EconomyVector>(new EconomyVector(0, value, 0), null));
+            map.MainData.Money += value;
         });
         OptEvents.Add("AddPopulation", (value) =>
         {
-            //GameManager.current.map.economyWrapper.AddMiddleware(new SolidMiddleware<EconomyVector>(new EconomyVector(value, 0, 0), null));
-            //GameManager.current.map.economyWrapper.AddMiddleware(new SolidMiddleware<GameDataVector>(new GameDataVector(0, value, 0), null));
+            map.MainData.People += value;
+        });
+        OptEvents.Add("AddHappiness", (value) =>
+        {
+            map.MainData.Happiness += value;
+        });
+        OptEvents.Add("AddFarmProfitR", (value) =>
+        {
+            map.FarmProfitTotal.AddCPU(new SolidMiddleware<Float>.CPU
+            { name = "事件", Addition = new Float(0f), Multipliable = true, Multiplication = new Float(1+value/100f) });
         });
 
     }

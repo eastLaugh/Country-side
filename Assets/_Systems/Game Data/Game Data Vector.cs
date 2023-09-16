@@ -7,6 +7,7 @@ public class GameDataVector : IDataVector<GameDataVector>
 {
     private int m_people;
     private float m_money;
+    [JsonProperty]
     public int totalCapacity = 0;
 
     public GameDataVector(int People = 0, float Money = 0f, float dailyIncome = 0f, int Happiness = 0)
@@ -15,6 +16,7 @@ public class GameDataVector : IDataVector<GameDataVector>
         this.Money = Money;
         this.dailyIncome = dailyIncome;
         this.Happiness = Happiness;
+        totalCapacity = 0;
     }
     public int People
     {

@@ -17,7 +17,7 @@ public static partial class MapObjects
     }
     #endregion
     #region 农业设施
-    public abstract class Farm : MapObject, IConstruction
+    public abstract class Farm : MapObject, IConstruction, MustNotExist<IConstruction>
     {
         public override bool CanBeUnjected => true;
         public abstract float Cost { get; }
@@ -78,31 +78,31 @@ public static partial class MapObjects
         }
 
     }
-    public class CuttonFarm : Farm
-    {
-        public override float Cost => 10f;
-
-        public override string Name => "棉花田";
-
-        protected override void OnCreated()
-        {
-            base.OnCreated();
-            m_profit = new SolidMiddleware<Float>(new Float(1.2f));
-            map.Farms.Add(this);
-        }
-        protected override void OnDisable()
-        {
-            map.Farms.Remove(this);
-        }
-
-    }
+    //public class CuttonFarm : Farm
+    //{
+    //    public override float Cost => 10f;
+    //
+    //    public override string Name => "棉花田";
+    //
+    //    protected override void OnCreated()
+    //    {
+    //        base.OnCreated();
+    //        m_profit = new SolidMiddleware<Float>(new Float(1.2f));
+    //        map.Farms.Add(this);
+    //    }
+    //    protected override void OnDisable()
+    //    {
+    //        map.Farms.Remove(this);
+    //    }
+    //
+    //}
     #endregion
 
     #region 住宅楼
     /// <summary>
     /// 住宅基类
     /// </summary>
-    public abstract class House : MapObject, IConstruction, MustNotExist<IConstruction>, IInfoProvider
+    public abstract class House : MapObject, IConstruction, MustNotExist<IConstruction>
     {
         //人口容量
         [JsonProperty] protected SolidMiddleware<Int> m_capacity;
@@ -111,40 +111,37 @@ public static partial class MapObjects
         public override bool CanBeUnjected => true;
         public abstract float Cost { get; }
         public abstract string Name { get; }
+        public string Warning;
         public ConstructType constructType => ConstructType.House;
 
-
-        [JsonIgnore]
-        List<ArrowRender> lastArrowRender = new();
-        public void ProvideInfo(Action<string> provide)
+        public void CheckConnection()
         {
-            provide($"当前朝向{Direction}");
-
-            SlotRender.OnAnySlotExit += ResetArrow;
-
-            void ResetArrow(SlotRender _)
-            {
-                for (int i = lastArrowRender.Count - 1; i >= 0; i--)
-                {
-                    MonoBehaviour.Destroy(lastArrowRender[i].gameObject);
-                }
-                lastArrowRender.Clear();
-
-                SlotRender.OnAnySlotExit -= ResetArrow;
-            }
-
             Road r = map[slot.position + 上右下左[Direction]]?.GetMapObject<Road>();
-
+            bool Connected = false;
             if (r != null)
             {
                 foreach (MapObject reachable in r.cluster.GetReachableMapObject())
                 {
-                    if (reachable != this && reachable is House)
+                    if (reachable != this && reachable is Administration)
                     {
-                        provide($"可到达 {reachable.slot.position}");
-                        lastArrowRender.Add(ArrowRender.NewArrow(slot.worldPosition, reachable.slot.worldPosition));
+                        Connected = true;
+                        break;
                     }
                 }
+            }
+            
+            var ConnectCPU = m_capacity.CPUs.Find((cpu) => { return cpu.name == "未连通"; });
+            if (!Connected && ConnectCPU.name == null)
+            {
+                m_capacity.AddCPU(new SolidMiddleware<Int>.CPU
+                { name = "未连通", Addition = new Int(0), Multipliable = true, Multiplication = new Int(0) });
+                Warning = "未连通";
+
+            }
+            else if (Connected && ConnectCPU.name != null)
+            {
+                m_capacity.RemoveCPU(ConnectCPU);
+                Warning = null;
             }
         }
 
@@ -152,6 +149,18 @@ public static partial class MapObjects
         {
             map.MainData.Money -= Cost;
             //Debug.Log(map.MainData.Money);
+        }
+        protected override void OnEnable()
+        {
+            Debug.Log("HouseEnable");
+            CheckConnection();
+            EventHandler.DayPass += CheckConnection;
+            GameManager.OnMapUnloaded += OnMapUnloaded;
+        }
+        private void OnMapUnloaded()
+        {
+            GameManager.OnMapUnloaded -= OnMapUnloaded;
+            EventHandler.DayPass -= CheckConnection;
         }
     }
 
@@ -168,7 +177,7 @@ public static partial class MapObjects
         protected override void OnCreated()
         {
             base.OnCreated();
-            m_capacity = new SolidMiddleware<Int>(new Int(10));
+            
             map.Houses.Add(this);
         }
 
@@ -179,14 +188,15 @@ public static partial class MapObjects
 
         protected override void OnEnable()
         {
-
+            m_capacity = new SolidMiddleware<Int>(new Int(100));
+            base.OnEnable();
         }
     }
     /// <summary>
     /// 砖瓦房
     /// </summary>
-    public class TileHouse : House, MustExist<AdobeHouse>
-    {
+    public class TileHouse : House
+    { 
         public override float Cost => 25;
 
         public override string Name => "砖瓦房";
@@ -205,13 +215,13 @@ public static partial class MapObjects
 
         protected override void OnEnable()
         {
-
+            base.OnEnable();
         }
     }
     /// <summary>
     /// 水泥房
     /// </summary>
-    public class CementHouse : House, MustExist<TileHouse>
+    public class CementHouse : House
     {
         public override float Cost => 80;
 
@@ -232,20 +242,22 @@ public static partial class MapObjects
 
         protected override void OnEnable()
         {
-
+            base.OnEnable();
         }
     }
     #endregion
 
     #region 特殊建筑
-    public class 市中心 : MapObject, MustNotExist<Tree>, IInfoProvider
+    public class Administration : MapObject, MustNotExist<IConstruction>,IConstruction
     {
-        public override bool CanBeUnjected => true;
+        public override bool CanBeUnjected => false;
 
-        public void ProvideInfo(Action<string> provide)
-        {
-            provide("市中心");
-        }
+        public float Cost => 0f;
+
+        public string Name => "乡镇机关";
+
+        public ConstructType constructType => ConstructType.Govern;
+
 
         protected override void OnCreated()
         {
@@ -365,7 +377,7 @@ public interface IConstruction
 
 public enum ConstructType
 {
-    House, Farm, Factory, Supply, Road
+    House, Farm, Factory, Supply, Road,Govern
 }
 
 
@@ -405,5 +417,37 @@ public enum ConstructType
         }
 
         public override bool CanBeUnjected => true;
-    }*/
+    }
+    public void ProvideInfo(Action<string> provide)
+        {
+            provide($"当前朝向{Direction}");
+
+            SlotRender.OnAnySlotExit += ResetArrow;
+
+            void ResetArrow(SlotRender _)
+            {
+                for (int i = lastArrowRender.Count - 1; i >= 0; i--)
+                {
+                    MonoBehaviour.Destroy(lastArrowRender[i].gameObject);
+                }
+                lastArrowRender.Clear();
+
+                SlotRender.OnAnySlotExit -= ResetArrow;
+            }
+
+            Road r = map[slot.position + 上右下左[Direction]]?.GetMapObject<Road>();
+
+            if (r != null)
+            {
+                foreach (MapObject reachable in r.cluster.GetReachableMapObject())
+                {
+                    if (reachable != this && reachable is House)
+                    {
+                        provide($"可到达 {reachable.slot.position}");
+                        lastArrowRender.Add(ArrowRender.NewArrow(slot.worldPosition, reachable.slot.worldPosition));
+                    }
+                }
+            }
+        }
+*/
 #endregion

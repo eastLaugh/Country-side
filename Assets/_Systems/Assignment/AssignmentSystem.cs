@@ -189,8 +189,8 @@ public class AssignmentSystem : MonoBehaviour
             {
                 UnlockAssignment(Assignment1);
             });
-        var tutorial1 = new BasicAssignment("建三个泥土房",
-            "在建造栏点击泥土房，并在村庄网格中建造就行了","无",
+        var tutorial1 = new BasicAssignment("建三个土坯房",
+            "在建造栏点击土坯房，并在村庄网格中建造就行了","无",
             () =>
             {
                 //Debug.Log(map.GetBuildingNum("AdobeHouse"));
