@@ -5,15 +5,18 @@ using UnityEngine;
 public class ProfitSystem : MonoBehaviour
 {
     Map map;
+    public bool isMaploaded = false;
     private void OnEnable()
     {
         GameManager.OnMapLoaded += OnMapLoaded;
         GameManager.OnMapUnloaded += OnMapUnloaded;
-        EventHandler.DayPass += CalcDailyProfit;
+        
        // Debug.Log("OnEable");
     }
+   
     private void CalcDailyProfit()
     {
+        if (!isMaploaded) return;
         //Debug.Log("Enter");
         float profit = 0;
         if (map != null) 
@@ -30,20 +33,23 @@ public class ProfitSystem : MonoBehaviour
     private void OnDisable()
     {
         EventHandler.DayPass -= CalcDailyProfit;
+        GameManager.OnMapUnloaded -= OnMapUnloaded;
         //Debug.Log("Ondisable");
     }
     private void OnMapUnloaded()
     {
-        enabled = false;
+        EventHandler.DayPass -= CalcDailyProfit;
+        isMaploaded = false;
     }
     void Start()
     {
-        enabled = false;
+        
     }
 
     private void OnMapLoaded(Map map)
     {
         this.map = map;
-        enabled = true;
+        isMaploaded= true;
+        EventHandler.DayPass += CalcDailyProfit;
     }
 }

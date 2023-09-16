@@ -22,9 +22,16 @@ MonoBehaviour:
         Prefabs: []
         Size: {x: 1, y: 1}
     - Key:
-        _: Tube
+        _: WaterArea
       Value:
-        Prefab: {fileID: 2672945534118425153, guid: ee841073fed052943a882e9874f91480,
+        Prefab: {fileID: 4106138064997208481, guid: 13bf4b7afda86844e99dc7bb45d407bf,
+          type: 3}
+        Prefabs: []
+        Size: {x: 1, y: 1}
+    - Key:
+        _: Well
+      Value:
+        Prefab: {fileID: 4559752107709957308, guid: 78c4f1abbb95e8748baabdd638793597,
           type: 3}
         Prefabs: []
         Size: {x: 1, y: 1}

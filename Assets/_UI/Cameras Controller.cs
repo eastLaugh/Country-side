@@ -31,7 +31,7 @@ public class CamerasController : MonoBehaviour
             SlotRender.OnAnySlotClickedInBuildMode += RefreshTubeState;
             // SlotRender.OnAnySlotClickedInBuildMode += _ => InfoWindow.Create("OnAnySlotClickedInBuildMode");
 
-            MapObjects.Tube.TubeArea.SetTubeAreaHighlight?.Invoke(true);
+            MapObjects.WaterArea.SetTubeAreaHighlight?.Invoke(true);
         }).OnExit(() =>
         {
             Cameras["Tube Camera"].enabled = false;
@@ -40,7 +40,7 @@ public class CamerasController : MonoBehaviour
             SlotRender.OnAnySlotClickedInBuildMode -= RefreshTubeState;
 
             ResetLayer?.Invoke();
-            MapObjects.Tube.TubeArea.SetTubeAreaHighlight?.Invoke(false);
+            MapObjects.WaterArea.SetTubeAreaHighlight?.Invoke(false);
         });
 
         fsm.ChangeState(CameraState.Default);
@@ -70,7 +70,7 @@ public class CamerasController : MonoBehaviour
 
     private void OnBuildingWindowUpdate(Type type)
     {
-        if (type == typeof(MapObjects.Tube))
+        if (type == typeof(MapObjects.Well))
         {
             fsm.ChangeState(CameraState.Tube);
         }
@@ -83,33 +83,33 @@ public class CamerasController : MonoBehaviour
     Action ResetLayer = null;
     void RefreshTubeState(SlotRender slotRender)
     {
-        MapObjects.Tube.TubeArea.SetTubeAreaHighlight?.Invoke(true);
+        MapObjects.WaterArea.SetTubeAreaHighlight?.Invoke(true);
 
         ResetLayer?.Invoke();
         ResetLayer = null;
-        for (int i = -MapObjects.Tube.TubeRippleRadius; i <= MapObjects.Tube.TubeRippleRadius; i++)
-        {
-            for (int j = -MapObjects.Tube.TubeRippleRadius; j <= MapObjects.Tube.TubeRippleRadius; j++)
-            {
-                if (i * i + j * j <= MapObjects.Tube.TubeRippleRadius * MapObjects.Tube.TubeRippleRadius)
-                {
-                    var slot = slotRender.slot.map[slotRender.slot.position + new Vector2(i, j)];
-                    if (slot != null)
-                    {
-                        int originLayer = slot.slotRender.SetLayer(LayerMask.NameToLayer("Highlight"));
-                        if (originLayer == LayerMask.NameToLayer("Highlight"))
-                        {
-                            //说明这个slot原本就是高亮的,不需要恢复
-                        }
-                        else
-                        {
-                            ResetLayer += () => slot.slotRender.SetLayer(originLayer);
-
-                        }
-                    }
-
-                }
-            }
-        }
+        //for (int i = -MapObjects.Well.TubeRippleRadius; i <= MapObjects.Well.TubeRippleRadius; i++)
+        //{
+        //    for (int j = -MapObjects.Well.TubeRippleRadius; j <= MapObjects.Well.TubeRippleRadius; j++)
+        //    {
+        //        if (i * i + j * j <= MapObjects.Well.TubeRippleRadius * MapObjects.Well.TubeRippleRadius)
+        //        {
+        //            var slot = slotRender.slot.map[slotRender.slot.position + new Vector2(i, j)];
+        //            if (slot != null)
+        //            {
+        //                int originLayer = slot.slotRender.SetLayer(LayerMask.NameToLayer("Highlight"));
+        //                if (originLayer == LayerMask.NameToLayer("Highlight"))
+        //                {
+        //                    //说明这个slot原本就是高亮的,不需要恢复
+        //                }
+        //                else
+        //                {
+        //                    ResetLayer += () => slot.slotRender.SetLayer(originLayer);
+        //
+        //                }
+        //            }
+        //
+        //        }
+        //    }
+        //}
     }
 }

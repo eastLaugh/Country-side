@@ -133,7 +133,8 @@ public static partial class MapObjects
                 SlotRender.OnAnySlotExit -= ResetArrow;
             }
 
-            Road r = map[slot.position + 上右下左[Direction]].GetMapObject<Road>();
+            Road r = map[slot.position + 上右下左[Direction]]?.GetMapObject<Road>();
+
             if (r != null)
             {
                 foreach (MapObject reachable in r.cluster.GetReachableMapObject())
@@ -317,7 +318,7 @@ public abstract class ResourceBuilding<R> : MapObject, MustExist<R> where R : Re
 
 }
 
-public abstract class RippleEffectBuilding<Eff> : MapObject where Eff : MapObject.Virtual, new()
+public abstract class RippleEffectBuilding<Eff> : MapObject where Eff : MapObject, new()
 {
     protected abstract int RippleRadius { get; }
 

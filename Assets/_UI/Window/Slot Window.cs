@@ -27,49 +27,31 @@ public class SlotWindow : MonoBehaviour
         if (!BuildMode.hasEntered)
         {
             var mapObjects = render.slot.mapObjects;
-            if (mapObjects.Count == 0 )
+            foreach(var mapObject  in mapObjects)
             {
-
-                try
-                {
-                    var cfg = SlotDatabase.main[render.slot.GetType()];
-                    nameText.text = cfg.name;
-                    content.text = "";
-                    warining.text = "";
-                }
-                catch (KeyNotFoundException)
-                {
-
-                    throw;
-                }
-                finally
-                {
-                    
-                }
-
-                
-
-            }
-            else if (mapObjects.Count == 1)
-            {
-                var mapObject = mapObjects.ToArray()[0];
-                Type Mtype = mapObject.GetType();
                 if (mapObject is MapObjects.House house)
                 {
                     nameText.text = house.Name;
-                    content.text = "容载人口："+house.Capacity.ToString();
+                    content.text = "容载人口：" + house.Capacity.ToString();
                     warining.text = "";
+                    return;
                 }
-                else if(mapObject is MapObjects.Farm farm) 
-                { 
-                    
+                else if (mapObject is MapObjects.Farm farm)
+                {
+
                     nameText.text = farm.Name;
-                    content.text = "产出："+farm.Profit.ToString()+"万";
+                    content.text = "产出：" + farm.Profit.ToString() + "万";
                     warining.text = "";
+                    return;
                 }
             }
-            
+            var cfg = SlotDatabase.main[render.slot.GetType()];
+            nameText.text = cfg.name;
+            content.text = "";
+            warining.text = "";
+            return;
         }
+            
     }
 
     private void OnDisable()
