@@ -120,9 +120,13 @@ public class GameManager : MonoBehaviour
             globalData = new GlobalData();
             SaveGlobalData();
         }
+        Settings.GetSettings();
+
     }
+    
     public static void SaveGlobalData()
     {
+        Settings.ExportSettings();
         Directory.CreateDirectory(SaveDirectory);
         // if (File.Exists(Path.Combine(SaveDirectory, globalFileName)))
         //     File.Delete(Path.Combine(SaveDirectory, globalFileName));

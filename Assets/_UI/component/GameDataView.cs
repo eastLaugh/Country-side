@@ -72,11 +72,11 @@ public class GameDataView : MonoBehaviour
         while (Mathf.Abs(endValue - startValue) > 1f)
         {
             startValue = (int)(Mathf.Lerp(startValue, endValue, 0.3f));
-            People.text = startValue.ToString();
+            People.text = startValue.ToString() + "/" +map.MainData.totalCapacity;
             yield return new WaitForSeconds(0.07f);
         }
         //Money.color = Color.white;
-        People.text = m_data.People.ToString();
+        People.text = m_data.People.ToString() + "/" + map.MainData.totalCapacity;
         yield break;
     }
     // Update is called once per frame

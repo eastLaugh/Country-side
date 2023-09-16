@@ -35,7 +35,8 @@ public class Map
     public List<Farm> Farms = new List<Farm>();
     [JsonProperty]
     public SolidMiddleware<Float> FarmProfitTotal = new SolidMiddleware<Float>(new Float(1f));
-
+    [JsonProperty]
+    public SolidMiddleware<Int> HappinessTotal = new SolidMiddleware<Int>(new Int(0));
 
     public Map(Vector2Int size, Slot[] Slots, int RandomSeed, GameDataVector mainData)
     {
@@ -75,7 +76,7 @@ public class Map
 
 
         //创建地图
-        Map map = new Map(size, slots, seed,new GameDataVector(831, 100, 0, 0f));
+        Map map = new Map(size, slots, seed,new GameDataVector(831, 300, 0, 0));
 
         //去中心化
         foreach (MapGenerator generator in InitAllGenerators())

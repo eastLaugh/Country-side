@@ -317,7 +317,7 @@ public abstract class ResourceBuilding<R> : MapObject, MustExist<R> where R : Re
 
 }
 
-public abstract class RippleEffectBuilding<Eff> : MapObject where Eff : MapObject.Virtual, new()
+public abstract class RippleEffectBuilding<Eff> : MapObject where Eff : MapObject, new()
 {
     protected abstract int RippleRadius { get; }
 

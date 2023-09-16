@@ -12,6 +12,7 @@ public class StartMenu : MonoBehaviour
     {
         BtnExit.onClick.AddListener(() =>
         {
+            GameManager.SaveGlobalData();
             Application.Quit();
         });
     }
@@ -19,6 +20,7 @@ public class StartMenu : MonoBehaviour
     {
         BtnExit?.onClick.RemoveListener(() =>
         {
+            GameManager.SaveGlobalData();
             Application.Quit();
         });
     }

@@ -751,6 +751,7 @@ GameObject:
   - component: {fileID: 6287204807024171478}
   - component: {fileID: 3191159468267956699}
   - component: {fileID: 3293607189030650176}
+  - component: {fileID: 388370616552544205}
   m_Layer: 5
   m_Name: BtnYes
   m_TagString: Untagged
@@ -860,7 +861,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3191159468267956699}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 388370616552544205}
+        m_TargetAssemblyTypeName: PlaySound, Assembly-CSharp
+        m_MethodName: Excecute
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: BtnClick
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &388370616552544205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5142440545784543970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e2cb576fba68204ba5bbcb07cf1591e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5422713429363754548
 GameObject:
   m_ObjectHideFlags: 0
@@ -1033,6 +1058,7 @@ GameObject:
   - component: {fileID: 5143958848247332187}
   - component: {fileID: 4840614191783881652}
   - component: {fileID: 3195522814370287460}
+  - component: {fileID: 7210164324458224517}
   m_Layer: 5
   m_Name: BtnNo
   m_TagString: Untagged
@@ -1142,7 +1168,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4840614191783881652}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7210164324458224517}
+        m_TargetAssemblyTypeName: PlaySound, Assembly-CSharp
+        m_MethodName: Excecute
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: BtnClick
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &7210164324458224517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6883660347941251511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e2cb576fba68204ba5bbcb07cf1591e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7778985327084379677
 GameObject:
   m_ObjectHideFlags: 0

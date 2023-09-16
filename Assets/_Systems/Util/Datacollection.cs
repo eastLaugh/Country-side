@@ -24,6 +24,14 @@ public class GlobalData
     //记录存档列表
     [JsonProperty]
     public HashSet<string> GameSaveFiles = new();
+    [JsonProperty]
+    public float MasterVolume = 10;
+    [JsonProperty]
+    public float MusicVolume = 10;
+    [JsonProperty]
+    public float EffectVolume = 10;
+    [JsonProperty]
+    public bool GridOn = true;
 
     public GlobalData()
     {

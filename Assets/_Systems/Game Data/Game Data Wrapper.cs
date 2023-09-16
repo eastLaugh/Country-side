@@ -112,11 +112,11 @@ public class SolidMiddleware<T> where T : IDataVector<T>
     public List<CPU> CPUs { get; private set; } = new();
 
 //先加再乘处理单元
-public struct CPU
+    public struct CPU
     {
         public T Addition;
         public T Multiplication;
-
+        public string name;
         public bool Multipliable;
 
     }

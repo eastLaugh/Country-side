@@ -7,8 +7,9 @@ public class GameDataVector : IDataVector<GameDataVector>
 {
     private int m_people;
     private float m_money;
+    public int totalCapacity = 0;
 
-    public GameDataVector(int People = 0, float Money = 0f, float dailyIncome = 0f, float Happiness = 0f)
+    public GameDataVector(int People = 0, float Money = 0f, float dailyIncome = 0f, int Happiness = 0)
     {
         this.People = People;
         this.Money = Money;
@@ -47,7 +48,8 @@ public class GameDataVector : IDataVector<GameDataVector>
            }
         } 
     }
-    public float Happiness { get; set; }
+    public int Happiness { get; set; }
+    
 
     public static GameDataVector operator +(GameDataVector left, GameDataVector right)
     {

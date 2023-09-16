@@ -4,16 +4,14 @@ using static Slot;
 
 public static partial class MapObjects
 {
-    public class Road : MapObject, MustNotExist<Road>, IInfoProvider, IConstruction
+    public abstract class Road : MapObject, MustNotExist<Road>, IInfoProvider, IConstruction
     {
         public override bool CanBeUnjected => true;
 
         protected override bool Clustered => true;
 
-        public float Cost => 0.05f;
-
-        public string Name => "泥土路";
-
+        public abstract float Cost { get; }
+        public abstract string Name { get; }
         public ConstructType constructType => ConstructType.Road;
 
         protected override void Awake()
@@ -74,5 +72,17 @@ public static partial class MapObjects
         }
 
 
+    }
+    public class DirtRoad : Road
+    {
+        public override float Cost => 0.05f;
+
+        public override string Name => "泥土路";
+    }
+    public class CementRoad : Road
+    {
+        public override float Cost => 0.3f;
+
+        public override string Name => "水泥路";
     }
 }

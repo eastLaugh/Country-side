@@ -88,9 +88,78 @@ public class AssignmentSystem : MonoBehaviour
     public void AssignmentInit()
     {
         #region 任务初始化 
-        Debug.Log(assignmentLists.Count);
-        var Assignment1 = new BasicAssignment("建造20块田地","金钱10万",
-            "？？？",
+        var Assignment5 = new BasicAssignment("建造30条水泥路", "",
+             "幸福度+10",
+             () =>
+             {
+                 if (map.GetBuildingNum("CementRoad") >= 30)
+                 {
+                     return true;
+                 }
+                 else { return false; }
+             },
+             () =>
+             {
+                 map.MainData.Happiness += 8;
+                 map.MainData.Money += 30;
+             });
+        var Assignment4 = new BasicAssignment("建造5个砖瓦房", "",
+             "金钱10万，幸福度+8",
+             () =>
+             {
+                 if (map.GetBuildingNum("TileHouse") >= 30)
+                 {
+                     return true;
+                 }
+                 else { return false; }
+             },
+             () =>
+             {
+                 map.MainData.Happiness += 8;
+                 map.MainData.Money += 30;
+                 UnlockAssignment(Assignment5);
+             });
+        var Assignment3 = new BasicAssignment("为所有农田供水", "",
+            "金钱30万",
+            () =>
+            {
+                for (int i = 0; i < map.Farms.Count; i++)
+                {
+                    var TubeArea = map.Farms[i].slot.GetMapObject<MapObjects.WaterArea>();
+                    if (TubeArea == null)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            },
+            () =>
+            {
+                map.MainData.Money += 30;
+                UnlockAssignment(Assignment4);
+            });
+        var Assignment2 = new BasicAssignment("为所有住宅供水", "",
+            "金钱10万,幸福度+3",
+            () =>
+            {
+                for (int i = 0;i<map.Houses.Count; i++)
+                {
+                    var TubeArea = map.Houses[i].slot.GetMapObject<MapObjects.WaterArea>();
+                    if (TubeArea==null)
+                    {
+                        return false;
+                    }                   
+                }
+                return true;
+            },
+            () =>
+            {
+                map.MainData.Money += 10;
+                map.MainData.Happiness += 3;
+                UnlockAssignment(Assignment3);
+            });
+        var Assignment1 = new BasicAssignment("建造20块农田","",
+            "金钱10万",
             () =>
             {
                 //Debug.Log(map.GetBuildingNum("AdobeHouse"));
@@ -102,6 +171,7 @@ public class AssignmentSystem : MonoBehaviour
             },
             () =>
             {
+                UnlockAssignment(Assignment2);
                 map.MainData.Money += 10;
             });
         var tutorial2 = new BasicAssignment("建一个水井",
@@ -109,7 +179,7 @@ public class AssignmentSystem : MonoBehaviour
             () =>
             {
                 //Debug.Log(map.GetBuildingNum("AdobeHouse"));
-                if (map.GetBuildingNum("Tube") >= 1)
+                if (map.GetBuildingNum("Well") >= 1)
                 {
                     return true;
                 }
@@ -117,10 +187,10 @@ public class AssignmentSystem : MonoBehaviour
             },
             () =>
             {
-                map.MainData.Money += 100;
+                UnlockAssignment(Assignment1);
             });
         var tutorial1 = new BasicAssignment("建三个泥土房",
-            "在建造栏点击水井，并在村庄网格中建造就行了","无",
+            "在建造栏点击泥土房，并在村庄网格中建造就行了","无",
             () =>
             {
                 //Debug.Log(map.GetBuildingNum("AdobeHouse"));
@@ -132,9 +202,9 @@ public class AssignmentSystem : MonoBehaviour
             },
             () =>
             {
-                UnlockAssignment(Assignment1);
+                
                 UnlockAssignment(tutorial2);
-                map.MainData.Money += 100;
+                
             });
         
 
@@ -143,6 +213,10 @@ public class AssignmentSystem : MonoBehaviour
         assignmentLists.Add(tutorial1);
         assignmentLists.Add(tutorial2);
         assignmentLists.Add(Assignment1);
+        assignmentLists.Add(Assignment2);
+        assignmentLists.Add(Assignment3);
+        assignmentLists.Add(Assignment4);
+        assignmentLists.Add(Assignment5);
         for(int i = 0;i<map.UnlockedAssignments.Count;i++)
         {
             var unlockAssignment = assignmentLists.Find((assignment) => { return assignment.name == map.UnlockedAssignments[i]; });   
