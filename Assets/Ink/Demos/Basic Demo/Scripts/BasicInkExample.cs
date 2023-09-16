@@ -21,25 +21,22 @@ public class BasicInkExample : MonoBehaviour
 			return null;
 		});
 
-		Story.BindExternalFunction("LOCK", LOCK);
-		Story.BindExternalFunction("Assign", (string text) =>
+		Story.BindExternalFunction("Check", (string text) =>
 		{
-			if (text == "Building3AdobeHouses")
+			LOCK(true);
+			AssignmentSystem.Instance.assignmentLists.ForEach((BasicAssignment assignment) =>
 			{
-				Debug.Log(LOCKED);
-				StartCoroutine(Wait3s());
-				IEnumerator Wait3s()
+				if (assignment.name == text)
 				{
-					yield return new WaitForSeconds(3);
-					LOCK(); //假设任务已完成，再次调用LOCK ，解锁按钮
+					assignment.onAssignmentFinished += () => LOCK(false);
 				}
-			}
+			});
 		});
 	}
 
-	void LOCK()
+	void LOCK(bool state)
 	{
-		LOCKED = !LOCKED;
+		LOCKED = state;
 		foreach (Button btn in panel.GetComponentsInChildren<Button>())
 		{
 			btn.interactable = !LOCKED;

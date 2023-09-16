@@ -37,6 +37,7 @@ public class EventUISystem : MonoBehaviour
     }
     public void OnMapLoaded(Map map)
     {
+        OptEvents = new();
         this.map = map;
         isMapLoaded = true;
         InitOptEvents();

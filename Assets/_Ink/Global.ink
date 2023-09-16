@@ -1,3 +1,3 @@
 EXTERNAL InfoWindowCreate(text)
-EXTERNAL LOCK()
-EXTERNAL Assign(text)
+
+EXTERNAL Check(text)

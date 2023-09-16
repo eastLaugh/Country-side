@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class AssignmentSystem : MonoBehaviour
 {
+
+    public static AssignmentSystem Instance;
     Map map;
     [SerializeField] Transform RuleItemRoot;
     [SerializeField] AssignmentBarUI assignmentBarPrefab;
@@ -15,6 +17,8 @@ public class AssignmentSystem : MonoBehaviour
     public bool isMapLoaded = false;
     private void OnEnable()
     {
+    
+        Instance = this;
         GameManager.OnMapLoaded += OnMapLoaded;
         GameManager.OnMapUnloaded += OnMapUnloaded;
     }
