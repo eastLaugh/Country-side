@@ -155,27 +155,30 @@ partial class Slot
 
 
         }
-        
+
         #endregion
 
         Action OnlyRenderInvoke;
 
-        public void Unject()
+        public void Unject(bool force = false)
         {
-            if (this.slot != null && this.slot.mapObjects.Contains(this) && CanBeUnjected)
+            if (this.slot != null && this.slot.mapObjects.Contains(this))
             {
+                if (CanBeUnjected || force)
+                {
+                    slot.mapObjects.Remove(this);
+                    slot.slotRender.OnRender -= OnlyRenderInvoke;
+                    slot.slotRender.OnSlotClicked -= _ => OnClick();
+                    slot.map.OnCreated -= _ => OnCreated();
 
-                slot.mapObjects.Remove(this);
-                slot.slotRender.OnRender -= OnlyRenderInvoke;
-                slot.slotRender.OnSlotClicked -= _ => OnClick();
-                slot.map.OnCreated -= _ => OnCreated();
+                    UnityEngine.Object.Destroy(father.gameObject);
+                    slot.OnSlotUpdate?.Invoke();
 
-                UnityEngine.Object.Destroy(father.gameObject);
-                slot.OnSlotUpdate?.Invoke();
+                    OnDisable();
+                    OnUnjected?.Invoke(this);
+                    this.slot = null;
+                }
 
-                OnDisable();
-                OnUnjected?.Invoke(this);
-                this.slot = null;
 
             }
         }

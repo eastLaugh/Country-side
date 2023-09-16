@@ -9,10 +9,22 @@ public class BasicInkExample : MonoBehaviour
 {
 	public static event Action<Story> OnCreateStory;
 
+	private void Awake()
+	{
+		Story = new Story(inkJSONAsset.text);
+		Story.BindExternalFunction("InfoWindowCreate", (string text) =>
+		{
+			InfoWindow.Create(text);
+			return null;
+		});
+
+		Story.BindExternalFunction("Assign", (string obj) =>
+		{
+			
+		});
+	}
 	void Start()
 	{
-		InfoWindow.Create("提示框");
-
 		// Remove the default message
 		RemoveChildren();
 		StartStory();
@@ -21,12 +33,7 @@ public class BasicInkExample : MonoBehaviour
 	// Creates a new Story object with the compiled story which we can then play!
 	void StartStory()
 	{
-		story = new Story(inkJSONAsset.text);
-		story.BindExternalFunction("getInfo", (string str) =>
-		{
-			InfoWindow.Create(str);
-		});
-		if (OnCreateStory != null) OnCreateStory(story);
+		OnCreateStory?.Invoke(Story);
 		RefreshView();
 	}
 
@@ -39,10 +46,10 @@ public class BasicInkExample : MonoBehaviour
 		RemoveChildren();
 
 		// Read all the content until we can't continue any more
-		while (story.canContinue)
+		while (Story.canContinue)
 		{
 			// Continue gets the next line of the story
-			string text = story.Continue();
+			string text = Story.Continue();
 			// This removes any white space from the text.
 			text = text.Trim();
 			// Display the text on screen!
@@ -50,11 +57,11 @@ public class BasicInkExample : MonoBehaviour
 		}
 
 		// Display all the choices, if there are any!
-		if (story.currentChoices.Count > 0)
+		if (Story.currentChoices.Count > 0)
 		{
-			for (int i = 0; i < story.currentChoices.Count; i++)
+			for (int i = 0; i < Story.currentChoices.Count; i++)
 			{
-				Choice choice = story.currentChoices[i];
+				Choice choice = Story.currentChoices[i];
 				Button button = CreateChoiceView(choice.text.Trim());
 				// Tell the button what to do when we press it
 				button.onClick.AddListener(delegate
@@ -77,7 +84,7 @@ public class BasicInkExample : MonoBehaviour
 	// When we click the choice button, tell the story to choose that choice!
 	void OnClickChoiceButton(Choice choice)
 	{
-		story.ChooseChoiceIndex(choice.index);
+		Story.ChooseChoiceIndex(choice.index);
 		RefreshView();
 	}
 
@@ -121,7 +128,7 @@ public class BasicInkExample : MonoBehaviour
 
 	[SerializeField]
 	private TextAsset inkJSONAsset = null;
-	public Story story;
+	public static Story Story { get; private set; }
 
 	[SerializeField]
 	private GameObject panel = null;

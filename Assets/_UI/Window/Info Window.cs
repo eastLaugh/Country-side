@@ -13,6 +13,8 @@ public class InfoWindow : MonoBehaviour
         {
             Ovary = this;
             gameObject.SetActive(false);
+
+            
         }
     }
 

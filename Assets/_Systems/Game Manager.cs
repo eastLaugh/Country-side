@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        
+
     }
 
     #region 调试 debug
@@ -175,7 +175,7 @@ public class GameManager : MonoBehaviour
             UnLoad();
             var map = Map.Generate(size, seed);
             LoadMap(map);
-            SaveCurrentMap(Path.Combine(SaveDirectory, fileName+".dat"));
+            SaveCurrentMap(Path.Combine(SaveDirectory, fileName + ".dat"));
         }
 
         if (globalData?.GameSaveFiles != null)
@@ -325,7 +325,7 @@ public class GameManager : MonoBehaviour
         //grid.transform.position = new Vector3(-map.size.x * grid.cellSize.x / 2f, 0, /*-map.size.y * grid.cellSize.z / 2f*/0); //对齐到左下角
         CinemachineVirtualCamera.transform.position = new Vector3(map.size.x * grid.cellSize.x / 2f, CinemachineVirtualCamera.transform.position.y, map.size.y * grid.cellSize.z / 2f);
 
-       // map.economyWrapper.OnMiddlewareUpdated += OnEconomyDataUpdated;
+        // map.economyWrapper.OnMiddlewareUpdated += OnEconomyDataUpdated;
         //OnEconomyDataUpdated(map.economyWrapper.current);
 
         OnMapLoaded?.Invoke(map);
@@ -344,9 +344,8 @@ public class GameManager : MonoBehaviour
     {
         SaveCurrentMap(Path.Combine(SaveDirectory, fileName + ".dat"));
         UnLoad();
-        
-    }
 
+    }
 }
 
 
