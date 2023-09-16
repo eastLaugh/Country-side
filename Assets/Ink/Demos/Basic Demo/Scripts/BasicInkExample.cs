@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Linq;
 using Ink.Runtime;
 using TMPro;
 using UnityEngine;
@@ -9,6 +11,7 @@ public class BasicInkExample : MonoBehaviour
 {
 	public static event Action<Story> OnCreateStory;
 
+	bool LOCKED = false;
 	private void Awake()
 	{
 		Story = new Story(inkJSONAsset.text);
@@ -18,11 +21,31 @@ public class BasicInkExample : MonoBehaviour
 			return null;
 		});
 
-		Story.BindExternalFunction("Assign", (string obj) =>
+		Story.BindExternalFunction("LOCK", LOCK);
+		Story.BindExternalFunction("Assign", (string text) =>
 		{
-			
+			if (text == "Building3AdobeHouses")
+			{
+				Debug.Log(LOCKED);
+				StartCoroutine(Wait3s());
+				IEnumerator Wait3s()
+				{
+					yield return new WaitForSeconds(3);
+					LOCK(); //假设任务已完成，再次调用LOCK ，解锁按钮
+				}
+			}
 		});
 	}
+
+	void LOCK()
+	{
+		LOCKED = !LOCKED;
+		foreach (Button btn in panel.GetComponentsInChildren<Button>())
+		{
+			btn.interactable = !LOCKED;
+		}
+	}
+
 	void Start()
 	{
 		// Remove the default message
@@ -73,11 +96,12 @@ public class BasicInkExample : MonoBehaviour
 		// If we've read all the content and there's no choices, the story is finished!
 		else
 		{
-			Button choice = CreateChoiceView("End of story.\nRestart?");
-			choice.onClick.AddListener(delegate
-			{
-				StartStory();
-			});
+			// Button choice = CreateChoiceView("End of story.\nRestart?");
+			// choice.onClick.AddListener(delegate
+			// {
+			// 	StartStory();
+			// });
+			panel.SetActive(false);
 		}
 	}
 
@@ -103,6 +127,7 @@ public class BasicInkExample : MonoBehaviour
 		// Creates the button from a prefab
 		Button choice = Instantiate(buttonPrefab).GetComponent<Button>();
 		choice.transform.SetParent(panel.transform, false);
+		choice.interactable = !LOCKED;
 
 		// Gets the text from the button prefab
 		TextMeshProUGUI choiceText = choice.GetComponentInChildren<TextMeshProUGUI>();
