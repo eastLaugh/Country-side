@@ -36,7 +36,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 65721be5e24724a4a829e4217da553ab,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.04
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 65721be5e24724a4a829e4217da553ab,
         type: 3}
@@ -86,7 +86,17 @@ PrefabInstance:
     - target: {fileID: -7899583183492811408, guid: 65721be5e24724a4a829e4217da553ab,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.057
+      value: 0.00088013173
+      objectReference: {fileID: 0}
+    - target: {fileID: -7899583183492811408, guid: 65721be5e24724a4a829e4217da553ab,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.000049913564
+      objectReference: {fileID: 0}
+    - target: {fileID: -7899583183492811408, guid: 65721be5e24724a4a829e4217da553ab,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.0053225337
       objectReference: {fileID: 0}
     - target: {fileID: 65702495048144492, guid: 65721be5e24724a4a829e4217da553ab,
         type: 3}
@@ -97,6 +107,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: rice1 Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 5469863667692737199, guid: 65721be5e24724a4a829e4217da553ab,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.117
+      objectReference: {fileID: 0}
+    - target: {fileID: 5469863667692737199, guid: 65721be5e24724a4a829e4217da553ab,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.019
+      objectReference: {fileID: 0}
+    - target: {fileID: 5469863667692737199, guid: 65721be5e24724a4a829e4217da553ab,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.073
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

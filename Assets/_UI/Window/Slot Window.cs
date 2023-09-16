@@ -33,16 +33,23 @@ public class SlotWindow : MonoBehaviour
                 {
                     nameText.text = house.Name;
                     content.text = "容载人口：" + house.Capacity.ToString();
-                    warining.text = "";
+                    warining.text = house.Warning;
                     return;
                 }
                 else if (mapObject is MapObjects.Farm farm)
                 {
 
                     nameText.text = farm.Name;
-                    content.text = "产出：" + farm.Profit.ToString() + "万";
+                    var profitTotal = GameManager.current.map.FarmProfitTotal;
+                    profitTotal.UpdateValue(new Float(farm.Profit));
+                    var profit = profitTotal.currentValue.m_value;
+                    content.text = "产出：" + profit.ToString() + "万";
                     warining.text = "";
                     return;
+                }
+                else if(mapObject is MapObjects.Administration administration)
+                {
+                    nameText.text = administration.Name;
                 }
             }
             var cfg = SlotDatabase.main[render.slot.GetType()];

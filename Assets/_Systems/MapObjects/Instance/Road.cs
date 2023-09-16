@@ -21,18 +21,18 @@ public static partial class MapObjects
 
         protected override void OnEnable()
         {
-            foreach (var dir in Slot.上右下左)
-            {
-                var target = slot.map[slot.position + dir];
-                if (target != null)
-                {
-                    var road = target.GetMapObject<Road>();
-                    if (road != null)
-                    {
-                        RoadRenderer.Instance.Connect(this, road);
-                    }
-                }
-            }
+            //foreach (var dir in Slot.上右下左)
+            //{
+            //    var target = slot.map[slot.position + dir];
+            //    if (target != null)
+            //    {
+            //        var road = target.GetMapObject<Road>();
+            //        if (road != null)
+            //        {
+            //            RoadRenderer.Instance.Connect(this, road);
+            //        }
+            //    }
+            //}
         }
 
         protected override void OnDisable()
@@ -65,11 +65,7 @@ public static partial class MapObjects
             }
         }
 
-        protected override GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
-        {
-            //覆盖默认的渲染方式
-            return null;
-        }
+        
 
 
     }

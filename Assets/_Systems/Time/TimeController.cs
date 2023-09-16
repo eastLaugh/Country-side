@@ -57,7 +57,7 @@ public class TimeController : MonoBehaviour
     }
     public void FastForward()
     {
-        Time.timeScale = 5.0f;
+        Time.timeScale = 2.0f;
     }
     public void Pause()
     {

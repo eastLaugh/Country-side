@@ -15,29 +15,41 @@ public class GameDataView : MonoBehaviour
     [SerializeField] TextMeshProUGUI Happiness;
     float MoneyCache = 0f;
     int PeopleCache = 0;
+    public bool isMapLoaded = false;
     private void OnEnable()
     {
         MoneyCache = 0f;
         PeopleCache = 0;
         GameManager.OnMapLoaded += OnMapLoaded;
         GameManager.OnMapUnloaded += OnMapUnloaded;
-        EventHandler.MoneyUpdate += OnMoneyChange;
-        EventHandler.PeopleUpdate += OnPeopleChange;
+        
+    }
+    private void OnDisable()
+    {
+        GameManager.OnMapLoaded -= OnMapLoaded;
+        GameManager.OnMapUnloaded -= OnMapUnloaded;
+        
     }
 
     private void OnMapUnloaded()
     {
-        enabled = false;
+        isMapLoaded = false;
+        EventHandler.MoneyUpdate -= OnMoneyChange;
+        EventHandler.PeopleUpdate -= OnPeopleChange;
     }
     void Start()
     {
-        enabled = false;
+        
     }
     
     private void OnMapLoaded(Map map)
     {
         this.map = map;
-        enabled = true;
+        isMapLoaded = true;
+        EventHandler.MoneyUpdate += OnMoneyChange;
+        EventHandler.PeopleUpdate += OnPeopleChange;
+        OnMoneyChange(map.MainData.Money);
+        OnPeopleChange(map.MainData.People);
     }
     private void OnMoneyChange(float newValue)
     {
@@ -82,18 +94,19 @@ public class GameDataView : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(!isMapLoaded) { return; }
         m_data = map.MainData;
+        var totalHappiness = map.HappinessTotal.currentValue.m_value;
         
-        
-        if(m_data.Happiness < 20)
+        if(totalHappiness < 20)
         {
             Happiness.color = Color.red;
         }
-        else if (m_data.Happiness >= 20 && m_data.Happiness < 50)
+        else if (totalHappiness >= 20 && totalHappiness < 50)
         { 
             Happiness.color = Color.yellow;
         }
-        else if (m_data.Happiness >= 50 && m_data.Happiness < 80)
+        else if (totalHappiness >= 50 && totalHappiness < 80)
         {
             Happiness.color = Color.blue;
         }
@@ -103,6 +116,6 @@ public class GameDataView : MonoBehaviour
         }
 
 
-        Happiness.text = m_data.Happiness.ToString();
+        Happiness.text = totalHappiness.ToString();
     }
 }
