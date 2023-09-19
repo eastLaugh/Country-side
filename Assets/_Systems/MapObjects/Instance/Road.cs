@@ -14,7 +14,7 @@ public static partial class MapObjects
         public abstract string Name { get; }
         public ConstructType constructType => ConstructType.Road;
 
-       
+
 
         protected override void OnEnable()
         {
@@ -48,21 +48,24 @@ public static partial class MapObjects
 
         public override void OnClick()
         {
-            foreach (var mapObject in cluster.mapObjects)
+            if (cluster != null)
             {
-                if (mapObject is Road road)
+                foreach (var mapObject in cluster.mapObjects)
                 {
-                    road.slot.slotRender.Shake();
-                    
-                }
-                else
-                {
-                    InfoWindow.Create("Cluster模块 出错了");
+                    if (mapObject is Road road)
+                    {
+                        road.slot.slotRender.Shake();
+
+                    }
+                    else
+                    {
+                        InfoWindow.Create("Cluster模块 出错了");
+                    }
                 }
             }
         }
 
-        
+
 
 
     }

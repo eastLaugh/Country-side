@@ -24,6 +24,7 @@ public abstract partial class Slot
     public GameObject gameObject { get; private set; }
 
     public event Action OnSlotUpdate; //当Slot更新时触发:被单击、注入建筑物时（频繁被调用，仅用于替代表现层的一些Update消息。相关逻辑实现不要使用这个）
+    public event Action<Slot, MapObject> OnInjected;
     internal void InvokeOnSlotUpdate()
     {
         OnSlotUpdate?.Invoke();
@@ -76,7 +77,7 @@ public abstract partial class Slot
 
         foreach (var item in mapObjects)
         {
-            item.Inject(this, true,item.Direction);//反序列化注入
+            item.Inject(this, true, item.Direction);//反序列化注入
         }
     }
 
@@ -85,7 +86,7 @@ public abstract partial class Slot
     public static readonly Vector2[] 上右下左 = new Vector2[] { new Vector2(0, 1), new Vector2(1, 0), new Vector2(0, -1), new Vector2(-1, 0) };
     public static readonly Vector2[] AllDirections = { new Vector2(0, 1), new Vector2(-1, 1), new Vector2(-1, 0), new Vector2(-1, -1), new Vector2(0, -1), new Vector2(1, -1), new Vector2(1, 0), new Vector2(1, 1) };
 
-    public T GetMapObject<T>() /*where T : MapObject*/ where T: class
+    public T GetMapObject<T>() /*where T : MapObject*/ where T : class
     {
         return mapObjects.FirstOrDefault(mapObject => mapObject is T) as T;
     }

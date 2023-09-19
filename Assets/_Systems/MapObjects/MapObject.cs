@@ -18,6 +18,8 @@ partial class Slot
         public static event Action<MapObject, bool> OnInjected;
         public static event Action<MapObject> OnUnjected;
 
+        public event Action<MapObject> OnMapObjectUnjected;
+
         [JsonIgnore]
         public Map map => slot.map;
         [JsonProperty]
@@ -82,6 +84,7 @@ partial class Slot
                 }
 
                 slot.OnSlotUpdate?.Invoke(); /*仅供表现层*/
+                slot.OnInjected?.Invoke(slot, this); /*仅供逻辑层*/
                 slot.slotRender.Refresh();
                 return true;
             }
@@ -101,9 +104,18 @@ partial class Slot
         public Cluster cluster { get; private set; }
         private void OnCreatedInside()
         {
+            FetchCluster();
+        }
+
+        /// <summary>
+        /// 重新计算集群
+        /// </summary>
+        /// <param name="deprecated">是否舍弃旧集群</param>
+        public void FetchCluster(bool deprecated = false)
+        {
             if (Clustered)
             {
-                if (cluster == null)
+                if (cluster == null || deprecated)
                 {
                     Cluster foundCluster = null;
                     Action<Cluster> ApplyTo = null;
@@ -122,7 +134,7 @@ partial class Slot
                             }
                         };
 
-                        if (node.cluster != null)
+                        if (node.cluster != null && !deprecated)
                         {
                             foundCluster = node.cluster;
                         }
@@ -139,22 +151,15 @@ partial class Slot
                                 }
                             }
                         }
-
-                        //visited.Remove(node);
-
                     }
-                    if (foundCluster == null)
+                    if (foundCluster == null || deprecated)
                     {
-                        ApplyTo?.Invoke(new Cluster(GetType()));
+                        foundCluster = new Cluster(GetType());
                     }
-                    else
-                    {
-                        ApplyTo?.Invoke(foundCluster);
-                    }
+                    ApplyTo?.Invoke(foundCluster);
+                    foundCluster.Recalculate();
                 }
             }
-
-
         }
 
         #endregion
@@ -177,6 +182,8 @@ partial class Slot
 
                     OnDisable();
                     OnUnjected?.Invoke(this);
+                    OnMapObjectUnjected?.Invoke(this);
+                    this.cluster = null;
                     this.slot = null;
                 }
             }
@@ -189,6 +196,7 @@ partial class Slot
         {
             if (prefab != null)
             {
+                father.DestroyAllChild();
                 GameObject obj = MonoBehaviour.Instantiate(prefab, father);
                 obj.transform.DOScale(Vector3.zero, Settings.建筑时物体缓动持续时间).From().SetEase(Ease.OutBack);
 

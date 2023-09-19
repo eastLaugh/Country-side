@@ -129,7 +129,7 @@ public static partial class MapObjects
                     }
                 }
             }
-            
+
             var ConnectCPU = m_capacity.CPUs.Find((cpu) => { return cpu.name == "未连通"; });
             if (!Connected && ConnectCPU.name == null)
             {
@@ -162,6 +162,20 @@ public static partial class MapObjects
             GameManager.OnMapUnloaded -= OnMapUnloaded;
             EventHandler.DayPass -= CheckConnection;
         }
+
+        public override void OnClick()
+        {
+            if (MapObjectDatabase.main[GetType()].Size == Vector2Int.one)
+            {
+                //转变朝向
+                Direction = (Direction + 1) % 4;
+                slot.slotRender.Refresh();
+            }
+            else
+            {
+                //暂不支持多格建筑物转向
+            }
+        }
     }
 
 
@@ -177,7 +191,7 @@ public static partial class MapObjects
         protected override void OnCreated()
         {
             base.OnCreated();
-            
+
             map.Houses.Add(this);
         }
 
@@ -196,7 +210,7 @@ public static partial class MapObjects
     /// 砖瓦房
     /// </summary>
     public class TileHouse : House
-    { 
+    {
         public override float Cost => 25;
 
         public override string Name => "砖瓦房";
@@ -248,7 +262,7 @@ public static partial class MapObjects
     #endregion
 
     #region 特殊建筑
-    public class Administration : MapObject, MustNotExist<IConstruction>,IConstruction
+    public class Administration : MapObject, MustNotExist<IConstruction>, IConstruction
     {
         public override bool CanBeUnjected => false;
 
@@ -391,7 +405,7 @@ public interface IConstruction
 
 public enum ConstructType
 {
-    House, Farm, Factory, Supply, Road,Govern
+    House, Farm, Factory, Supply, Road, Govern
 }
 
 

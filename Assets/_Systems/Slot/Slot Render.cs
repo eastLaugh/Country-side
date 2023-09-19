@@ -52,14 +52,12 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void OnPointerEnter(PointerEventData eventData)
     {
         OnAnySlotEnter?.Invoke(this);
-        //transform.position = new Vector3(transform.position.x, transform.position.y + 0.3f, transform.position.z);
 
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         OnAnySlotExit?.Invoke(this);
-        //transform.position = new Vector3(transform.position.x, transform.position.y - 0.3f, transform.position.z);
     }
 
     //加载动画
