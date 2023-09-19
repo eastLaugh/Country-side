@@ -277,11 +277,25 @@ public static partial class MapObjects
     #endregion
 
     #region 污染源相关 测试Ripple系统
-    public class Pollution : MapObject.Virtual, IInfoProvider  //MapObject.Virtual是一个虚拟的MapObject，不会被渲染，且尽量简单
+    public class Pollution : MapObject, IInfoProvider  //MapObject.Virtual是一个虚拟的MapObject，不会被渲染，且尽量简单
     {
+        public override bool CanBeUnjected => throw new NotImplementedException();
+
         public void ProvideInfo(Action<string> provide)
         {
             provide("污染");
+        }
+
+        protected override void OnCreated()
+        {
+        }
+
+        protected override void OnDisable()
+        {
+        }
+
+        protected override void OnEnable()
+        {
         }
     }
 

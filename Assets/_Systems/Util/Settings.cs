@@ -8,11 +8,15 @@ public static class Settings
     public const float 建筑时物体缓动持续时间 = 0.25f;
     public const float 相机初始高度 = 10f;
 
-    public const bool 开启浮动效果 = false;
+    public static readonly bool 开启浮动效果;
 
     public static float MasterVolume;
     public static float MusicVolume;
     public static float EffectVolume;
+    static Settings()
+    {
+        开启浮动效果 = false;
+    }
 
     public static bool GridOn;
     public static void GetSettings()
@@ -28,5 +32,6 @@ public static class Settings
         GameManager.globalData.MusicVolume = MusicVolume;
         GameManager.globalData.EffectVolume = EffectVolume;
     }
+
 
 }

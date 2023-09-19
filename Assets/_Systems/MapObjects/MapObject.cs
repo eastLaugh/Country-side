@@ -17,6 +17,7 @@ partial class Slot
     {
         public static event Action<MapObject, bool> OnInjected;
         public static event Action<MapObject> OnUnjected;
+
         [JsonIgnore]
         public Map map => slot.map;
         [JsonProperty]
@@ -178,16 +179,12 @@ partial class Slot
                     OnUnjected?.Invoke(this);
                     this.slot = null;
                 }
-
-
             }
         }
 
         public virtual void OnClick()
         {
-
         }
-
         protected virtual GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
         {
             if (prefab != null)
@@ -207,52 +204,14 @@ partial class Slot
                 return null;
             }
         }
-
-
-        /// <summary>
-        /// 执行时机：在地图格子全部创建完成之后
-        /// </summary>
         protected abstract void OnEnable();
-
-
-
-        /// <summary>
-        /// 执行时机：一旦被实例化，立即执行
-        /// </summary>
-        protected virtual void Awake()
+        private void Awake()
         {
             EventHandler.CallilluBookUnlocked(GetType().Name);
-            //Debug.Log(GetType().Name);
         }
-
         public abstract bool CanBeUnjected { get; }
-        /// <summary>
-        /// 
-        /// </summary>
         protected abstract void OnDisable();
-
-
-        /// <summary>
-        /// 执行时机：类似于OnEnable。不过，仅在首次被创建时才会执行。永远只执行一次，不会在读取存档时执行
-        /// </summary>
         protected abstract void OnCreated();
-
-        public class Virtual : MapObject
-        {
-            public override bool CanBeUnjected => true;
-
-            protected override void OnCreated()
-            {
-            }
-
-            protected override void OnDisable()
-            {
-            }
-
-            protected override void OnEnable()
-            {
-            }
-        }
     }
 
 }

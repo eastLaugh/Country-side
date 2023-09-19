@@ -14,10 +14,7 @@ public static partial class MapObjects
         public abstract string Name { get; }
         public ConstructType constructType => ConstructType.Road;
 
-        protected override void Awake()
-        {
-            base.Awake();
-        }
+       
 
         protected override void OnEnable()
         {

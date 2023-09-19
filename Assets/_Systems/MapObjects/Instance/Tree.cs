@@ -34,11 +34,6 @@ partial class MapObjects
         }
         #endregion
 
-        protected override void Awake()
-        {
-            base.Awake();
-
-        }
         protected override GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
         {
             // base.Render(prefab, prefabs, slotRender); 我们不需要默认的渲染方式，故注释
