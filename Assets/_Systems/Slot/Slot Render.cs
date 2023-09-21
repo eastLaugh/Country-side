@@ -32,16 +32,20 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (BuildMode.hasEntered)
+        if (!eventData.dragging)
         {
-            OnAnySlotClickedInBuildMode?.Invoke(this); //仅建造模式
+            if (BuildMode.hasEntered)
+            {
+                OnAnySlotClickedInBuildMode?.Invoke(this); //仅建造模式
+            }
+            else
+            {
+                OnAnySlotClicked?.Invoke(this); //全局
+                OnSlotClicked?.Invoke(this);
+                slot.InvokeOnSlotUpdate();
+            }
         }
-        else
-        {
-            OnAnySlotClicked?.Invoke(this); //全局
-            OnSlotClicked?.Invoke(this);
-            slot.InvokeOnSlotUpdate();
-        }
+
 
 #if UNITY_EDITOR
         Selection.SetActiveObjectWithContext(gameObject, null);
@@ -101,7 +105,7 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         FloatTween?.Kill();
     }
 
-    public static Action StopAllFloat { get; set; }=null;
+    public static Action StopAllFloat { get; set; } = null;
     public static void ResetFloat()
     {
         StopAllFloat?.Invoke();

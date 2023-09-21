@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using Ink.Runtime;
 using Newtonsoft.Json;
 using TMPro;
@@ -102,7 +103,7 @@ public static partial class MapObjects
     /// <summary>
     /// 住宅基类
     /// </summary>
-    public abstract class House : MapObject, IConstruction, MustNotExist<IConstruction>
+    public abstract class House : MapObject, IConstruction, MustNotExist<IConstruction>, IInfoProvider
     {
         //人口容量
         [JsonProperty] protected SolidMiddleware<Int> m_capacity;
@@ -152,7 +153,8 @@ public static partial class MapObjects
         }
         protected override void OnEnable()
         {
-            Debug.Log("HouseEnable");
+
+
             CheckConnection();
             EventHandler.DayPass += CheckConnection;
             GameManager.OnMapUnloaded += OnMapUnloaded;
@@ -176,6 +178,38 @@ public static partial class MapObjects
                 //暂不支持多格建筑物转向
             }
         }
+
+        public void ProvideInfo(Action<string> provide)
+        {
+            SlotRender.OnAnySlotExit += ResetArrow;
+
+            void ResetArrow(SlotRender _)
+            {
+                for (int i = lastArrowRender.Count - 1; i >= 0; i--)
+                {
+                    MonoBehaviour.Destroy(lastArrowRender[i].gameObject);
+                }
+                lastArrowRender.Clear();
+
+                SlotRender.OnAnySlotExit -= ResetArrow;
+            }
+
+            Road r = map[slot.position + 上右下左[Direction]]?.GetMapObject<Road>();
+
+            if (r != null)
+            {
+                provide("道路");
+                foreach (MapObject reachable in r.cluster.RechableMapObjects)
+                {
+                    if (reachable != this)
+                    {
+                        lastArrowRender.Add(ArrowRender.NewArrow(slot.worldPosition, reachable.slot.worldPosition));
+                    }
+                }
+            }
+        }
+        [JsonIgnore]
+        static List<ArrowRender> lastArrowRender = new();
     }
 
 
@@ -418,6 +452,15 @@ public enum ConstructType
         static House lastHouse;
 
 
+        protected override void OnEnable()
+        {
+            // InfoWindow.Create(slot.worldPosition.ToString());
+            if (lastHouse != null)
+            {
+                ArrowRender.NewArrow(lastHouse.slot.worldPosition, slot.worldPosition);
+            }
+            lastHouse = this;
+        }
 
 
         [JsonProperty]
@@ -429,15 +472,6 @@ public enum ConstructType
 
         }
 
-        protected override void OnEnable()
-        {
-            // InfoWindow.Create(slot.worldPosition.ToString());
-            if (lastHouse != null)
-            {
-                ArrowRender.NewArrow(lastHouse.slot.worldPosition, slot.worldPosition);
-            }
-            lastHouse = this;
-        }
 
         protected override void OnDisable()
         {

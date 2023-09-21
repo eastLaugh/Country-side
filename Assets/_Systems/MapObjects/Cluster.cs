@@ -8,14 +8,12 @@ using static Slot;
 
 public class Cluster
 {
+    public event Action<MapObject> OnReach;
 
     [JsonProperty]
     readonly Type MapObjectType;
 
-    /// <summary>
-    /// 获取所有可达的地图对象
-    /// </summary>
-    /// <returns></returns>
+    [Obsolete("高能耗的")]
     public HashSet<MapObject> GetReachableMapObject()
     {
         HashSet<MapObject> tmp = new();
@@ -41,8 +39,10 @@ public class Cluster
     }
 
     [JsonProperty]
-    public HashSet<Slot.MapObject> mapObjects { get; private set; } = new();
+    public HashSet<MapObject> mapObjects { get; private set; } = new();
 
+    [JsonProperty]
+    public HashSet<MapObject> RechableMapObjects { get; private set; } = new();
     public void Push(Slot.MapObject targetMapObject)
     {
         if (targetMapObject.GetType() != MapObjectType)
@@ -50,6 +50,7 @@ public class Cluster
             throw new Exception("类型不匹配");
         }
         mapObjects.Add(targetMapObject);
+        targetMapObject.OnMapObjectUnjected += OnMapObjectUnjected;
     }
 
     [System.Runtime.Serialization.OnDeserialized]
@@ -73,6 +74,10 @@ public class Cluster
                     {
                         //此为集群边缘外一层
                         target.OnInjected += OnInjected;
+                        foreach (var existedMapObject in target.mapObjects)
+                        {
+                            OnInjected(target, existedMapObject);
+                        }
                     }
                 }
             }
@@ -81,7 +86,7 @@ public class Cluster
 
     [JsonProperty]
     public HashSet<MapObject> ReachableMapObjects = new();
-    private void OnInjected(Slot slot, MapObject @object)
+    private void OnInjected(Slot slot, MapObject mapObject)
     {
         //TODO:这里有问题，如果是集群边缘外一层的话
         if (slot.GetMapObject(MapObjectType) != null)
@@ -89,15 +94,18 @@ public class Cluster
             //如果是集群内部的话
             slot.OnInjected -= OnInjected;
         }
-        else
+        else if (slot.map[slot.position + Slot.上右下左[mapObject.Direction]].GetMapObject(MapObjectType) != null)
         {
-
+            if (!ReachableMapObjects.Contains(mapObject))
+            {
+                RechableMapObjects.Add(mapObject);
+                OnReach?.Invoke(mapObject);
+            }
         }
     }
 
     private void OnMapObjectUnjected(MapObject mapObject)
     {
-        Debug.Log("Cluster.OnMapObjectUnjected");
         mapObject.OnMapObjectUnjected -= OnMapObjectUnjected;
         if (mapObjects.Contains(mapObject))
         {

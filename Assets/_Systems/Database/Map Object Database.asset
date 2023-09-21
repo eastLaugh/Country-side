@@ -24,7 +24,7 @@ MonoBehaviour:
     - Key:
         _: AdobeHouse
       Value:
-        Prefab: {fileID: 919132149155446097, guid: f29190b7c550a954b92e370ae029e69e,
+        Prefab: {fileID: 7239331957558054306, guid: 6865d750fd05a5c448a404c286c7f8d9,
           type: 3}
         Prefabs: []
         Size: {x: 1, y: 1}
