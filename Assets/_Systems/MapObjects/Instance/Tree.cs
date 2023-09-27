@@ -34,7 +34,7 @@ partial class MapObjects
         }
         #endregion
 
-        protected override GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
+        protected override void Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
         {
             // base.Render(prefab, prefabs, slotRender); 我们不需要默认的渲染方式，故注释
 
@@ -59,7 +59,7 @@ partial class MapObjects
             for (int i = 0; i < TreeModels.Length; i++)
             {
                 GameObject tree = UnityEngine.Object.Instantiate(prefabs[TreeModels[i].prefabIndex], slotRender.transform.position + TreeModels[i].offset, Quaternion.identity, father);
-                tree.SetActive(false);
+                // tree.SetActive(false);
 
                 GameManager.current.StartCoroutine(WaitOneTick());
                 IEnumerator WaitOneTick()
@@ -80,7 +80,6 @@ partial class MapObjects
 
             // RefreshChopping(); 这里不能写这个，因为这里是Render（） API 仅限于渲染相关
 
-            return null; //无用
         }
 
         [JsonProperty] //树木是否正在砍伐，这需要记录下来

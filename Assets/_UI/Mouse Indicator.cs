@@ -75,8 +75,10 @@ public class MouseIndicator : MonoBehaviour
                     }
                 });
             center /= config.Size.x * config.Size.y;
+            center.y = MainIndicator.transform.position.y;
+
             MainIndicator.transform.DOScale(new Vector3(config.Size.x * 0.1f, 1, config.Size.y * 0.1f), 0.1f).SetEase(Ease.OutQuad);
-            MainIndicator.transform.DOMove(center + PlaneIndicator.position, 0.1f).SetEase(Ease.OutQuad);
+            MainIndicator.transform.DOMove(center, 0.1f).SetEase(Ease.OutQuad);
 
 
 
@@ -107,7 +109,7 @@ public class MouseIndicator : MonoBehaviour
         Rotate(BuildingWindow.selectedDirection);
         if (!BuildMode.hasEntered)
         {
-            MainIndicator.transform.DOMove(slotRender.transform.position + PlaneIndicator.position, 0.1f).SetEase(Ease.OutQuad);
+            MainIndicator.transform.DOMove(new Vector3(slotRender.transform.position.x, MainIndicator.transform.position.y, slotRender.transform.position.z), 0.1f).SetEase(Ease.OutQuad);
             MainIndicator.transform.DOScale(new Vector3(1 * 0.1f, 1, 1 * 0.1f), 0.1f).SetEase(Ease.OutQuad);
 
         }

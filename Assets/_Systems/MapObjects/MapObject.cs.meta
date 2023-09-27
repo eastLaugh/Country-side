@@ -1,5 +1,7 @@
 fileFormatVersion: 2
 guid: c39eb007ffbb84042a3b119b71a596cf
+labels:
+- WorkFlow
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2

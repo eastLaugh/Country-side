@@ -9,6 +9,9 @@ using static Slot;
 using DG.Tweening;
 using static MapObjects;
 using Unity.VisualScripting;
+using UnityEngine.UI;
+using Unity.AI.Navigation;
+using UnityEngine.AI;
 
 partial class Slot
 {
@@ -61,8 +64,11 @@ partial class Slot
                 father.SetParent(slot.slotRender.transform);
                 father.localPosition = Vector3.zero;
 
-                OnlyRenderInvoke = () => Render(config.Prefab, config.Prefabs, slot.slotRender);
-                slot.slotRender.OnRender += OnlyRenderInvoke;
+                UniqueRenderInvoke = delegate
+                {
+                    Render(config.Prefab, config.Prefabs, slot.slotRender);
+                };
+                slot.slotRender.OnRender += UniqueRenderInvoke;
                 slot.slotRender.OnSlotClicked += _ => OnClick();
 
                 slot.map.OnCreated += _ => OnCreated();
@@ -73,14 +79,14 @@ partial class Slot
                 if (GameManager.current.map == null)
                 {
                     //地图尚未完成加载，(说明)此Inject为系统读档操作
-                    GameManager.OnMapLoaded += _ => OnEnable();
+                    GameManager.OnMapLoaded += _ => OnEnableInside();
                 }
                 else
                 {
                     //地图已完成加载，(说明)此Inject为玩家操作
                     OnCreated();
                     OnCreatedInside();
-                    OnEnable();
+                    OnEnableInside();
                 }
 
                 slot.OnSlotUpdate?.Invoke(); /*仅供表现层*/
@@ -93,6 +99,11 @@ partial class Slot
                 Debug.LogError("注入失败！");
                 return false;
             }
+        }
+
+        void OnEnableInside()
+        {
+            OnEnable();
         }
 
         #region  集群
@@ -164,7 +175,7 @@ partial class Slot
 
         #endregion
 
-        Action OnlyRenderInvoke;
+        Action UniqueRenderInvoke;
 
         public void Unject(bool force = false)
         {
@@ -173,7 +184,7 @@ partial class Slot
                 if (CanBeUnjected || force)
                 {
                     slot.mapObjects.Remove(this);
-                    slot.slotRender.OnRender -= OnlyRenderInvoke;
+                    slot.slotRender.OnRender -= UniqueRenderInvoke;
                     slot.slotRender.OnSlotClicked -= _ => OnClick();
                     slot.map.OnCreated -= _ => OnCreated();
 
@@ -192,7 +203,7 @@ partial class Slot
         public virtual void OnClick()
         {
         }
-        protected virtual GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
+        protected virtual void Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
         {
             if (prefab != null)
             {
@@ -205,11 +216,14 @@ partial class Slot
                     obj.transform.rotation *= Quaternion.Euler(0, 90, 0);
                 }
 
-                return new[] { obj };
-            }
-            else
-            {
-                return null;
+                //这里为了尽可能不用对原项目进行修改，所以进行了容错处理：
+                if (!obj.GetComponentInChildren<NavMeshModifier>() && !obj.GetComponentInChildren<NavMeshModifierVolume>())
+                {
+                    var navMeshModifier = obj.AddComponent<NavMeshModifier>(); navMeshModifier.overrideArea = true;
+                    navMeshModifier.area = NavMesh.GetAreaFromName("Not Walkable");
+                }
+
+                GameManager.current?.RefreshNavMesh();
             }
         }
         protected abstract void OnEnable();

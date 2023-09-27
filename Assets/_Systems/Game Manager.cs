@@ -3,6 +3,12 @@ using Newtonsoft.Json;
 using System.IO;
 using System;
 using Cinemachine;
+using Unity.AI.Navigation;
+using NaughtyAttributes;
+using System.Collections;
+
+
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -10,12 +16,12 @@ using UnityEditor;
 public class GameManager : MonoBehaviour
 {
     public static event Action<Map> OnMapLoaded;
-    [Obsolete("生命周期:  ....  → OnMapLoaded → AfterMapLoaded → End")]
-    public static event Action<Map> AfterMapLoaded;
     public static GameManager current;
     public Grid grid;
 
+    public static bool DebugMode { get; private set; } = true;
     public CinemachineVirtualCamera CinemachineVirtualCamera;
+    public Transform PlaneIndicator;
     public static GlobalData globalData { get; private set; }
 
 
@@ -70,13 +76,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    GameDataVector currentEconomyVector;
-
-    private void OnEconomyDataUpdated(GameDataVector _new)
-    {
-        currentEconomyVector = _new;
-    }
-
     #endregion
 
     private void OnEnable()
@@ -123,7 +122,7 @@ public class GameManager : MonoBehaviour
         Settings.GetSettings();
 
     }
-    
+
     public static void SaveGlobalData()
     {
         Settings.ExportSettings();
@@ -147,6 +146,8 @@ public class GameManager : MonoBehaviour
         GUI.skin.button.fontSize = 25;
         GUI.skin.label.fontSize = 25;
 
+        DebugMode = GUILayout.Toggle(DebugMode, "开发者模式");
+        if (!DebugMode) return;
 
         GUILayout.BeginHorizontal();
         fileName = GUILayout.TextField(fileName, textFieldLayout);
@@ -326,15 +327,34 @@ public class GameManager : MonoBehaviour
         this.map = map;
         seed = map.MainRandomSeed;
 
-        //grid.transform.position = new Vector3(-map.size.x * grid.cellSize.x / 2f, 0, /*-map.size.y * grid.cellSize.z / 2f*/0); //对齐到左下角
+        //对齐到左下角
         CinemachineVirtualCamera.transform.position = new Vector3(map.size.x * grid.cellSize.x / 2f, CinemachineVirtualCamera.transform.position.y, map.size.y * grid.cellSize.z / 2f);
 
-        // map.economyWrapper.OnMiddlewareUpdated += OnEconomyDataUpdated;
-        //OnEconomyDataUpdated(map.economyWrapper.current);
+        PlaneIndicator.transform.position = new Vector3(map.size.x * grid.cellSize.x / 2f, PlaneIndicator.transform.position.y, map.size.y * grid.cellSize.z / 2f);
+        //
+        PlaneIndicator.transform.localScale = new Vector3(map.size.x / 10f, 1, map.size.y / 10f);
 
         OnMapLoaded?.Invoke(map);
-        AfterMapLoaded?.Invoke(map);
+
+        RefreshNavMesh();
     }
+
+    [Button]
+    public void RefreshNavMesh()
+    {
+        // StartCoroutine(WaitOneTick());
+        // IEnumerator WaitOneTick()
+        {
+            // yield return null;
+            NavMeshSurface navMeshSurface = PlaneIndicator.GetComponent<NavMeshSurface>();
+            if (navMeshSurface)
+            {
+                navMeshSurface.RemoveData();
+                navMeshSurface.BuildNavMesh();
+            }
+        }
+    }
+
     public void NewGame(string fileName)
     {
         UnLoad();

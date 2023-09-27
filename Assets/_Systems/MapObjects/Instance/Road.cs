@@ -54,7 +54,7 @@ public static partial class MapObjects
                 {
                     if (mapObject is Road road)
                     {
-                        road.slot.slotRender.Shake();
+                        //road.slot.slotRender.Shake();
 
                     }
                     else
