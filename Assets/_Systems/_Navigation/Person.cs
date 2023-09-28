@@ -1,18 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 
-public class Person : MonoBehaviour
+public class Person
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public readonly string name;
 
-    // Update is called once per frame
-    void Update()
+    [JsonProperty]
+    public Vector3 worldPosition { get; private set; }
+    [JsonProperty]
+    public Slot destination { get;  set; }
+    public Person(string name)
     {
-        
+        this.name = name;
     }
 }

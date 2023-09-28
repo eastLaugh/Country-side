@@ -38,6 +38,9 @@ public class Map
     [JsonProperty]
     public SolidMiddleware<Int> HappinessTotal = new SolidMiddleware<Int>(new Int(0));
 
+    [JsonProperty]
+    public PersonSystem PersonSystem = new PersonSystem();
+
     public Map(Vector2Int size, Slot[] Slots, int RandomSeed, GameDataVector mainData)
     {
         this.size = size;
