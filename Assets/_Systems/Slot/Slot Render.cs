@@ -32,7 +32,7 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!eventData.dragging)
+        if (!eventData.dragging && eventData.button == PointerEventData.InputButton.Left)
         {
             if (BuildMode.hasEntered)
             {

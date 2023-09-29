@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
@@ -21,6 +22,51 @@ public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExit
         person = new Person(gameObject.name);
 
     }
+    private void OnEnable()
+    {
+        person.OnDataUpdate += OnDataUpdate;
+    }
+
+
+    private void OnDisable()
+    {
+        person.OnDataUpdate -= OnDataUpdate;
+    }
+
+    private void OnDataUpdate()
+    {
+        if (person.PathPoints.Count > 0)
+        {
+            // person.destination = person.PathPoints[0];
+            // agent.SetDestination(person.PathPoints[0].worldPosition);
+        }
+    }
+
+    private void Update()
+    {
+        
+        {
+            if (agent.remainingDistance < 0.2f)
+            {
+                if (person.PathPoints.Count > 0)
+                {
+                    int index = person.PathPoints.IndexOf(person.destination);
+                    if (index == -1)
+                    {
+                        person.destination = person.PathPoints[0];
+                        agent.SetDestination(person.PathPoints[0].worldPosition);
+                    }
+                    else
+                    {
+                        person.destination = person.PathPoints[(index + 1) % person.PathPoints.Count];
+                        agent.SetDestination(person.destination.worldPosition);
+                    }
+                }
+            }
+        }
+
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (SelectedPerson != this)
@@ -37,7 +83,7 @@ public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExit
         }
         else
         {
-            SelectedPerson = null;
+
             DeSelect();
 
             OnPointerEnter(null);
@@ -45,12 +91,42 @@ public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExit
         }
     }
 
+    bool isRecording = false;
     private void OnGUI()
     {
         if (SelectedPerson == this)
         {
-            var rect = new Rect(0, 0, 200, 200);
-            GUI.Box(rect, "Person");
+            Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
+            var rect = new Rect(screenPos.x, Screen.height - screenPos.y, 200, 200);
+            // GUI.Box(rect, "Person");
+            GUILayout.BeginArea(rect, GUI.skin.box);
+
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(person.name);
+                if (GUILayout.Button("X"))
+                {
+                    DeSelect();
+                }
+                GUILayout.EndHorizontal();
+            }
+            if (!isRecording && GUILayout.Button("录入路径点"))
+            {
+                SlotRender.OnAnySlotClicked += OnAnySlotClicked;
+                isRecording = true;
+            }
+            if (isRecording && GUILayout.Button("结束录入"))
+            {
+                SlotRender.OnAnySlotClicked -= OnAnySlotClicked;
+                isRecording = false;
+            }
+            if (GUILayout.Button("清除路径点"))
+            {
+
+            }
+
+
+            GUILayout.EndArea();
         }
     }
 
@@ -60,7 +136,6 @@ public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExit
         {
             outline.OutlineColor = EnterColor;
             outline.enabled = true;
-
         }
     }
 
@@ -74,20 +149,19 @@ public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     void OnSelect()
     {
-        SlotRender.OnAnySlotClicked += OnAnySlotClicked;
     }
 
     void DeSelect()
     {
+        if (SelectedPerson == this)
+            SelectedPerson = null;
         outline.enabled = false;
-        SlotRender.OnAnySlotClicked -= OnAnySlotClicked;
     }
 
     private void OnAnySlotClicked(SlotRender render)
     {
-        DeSelect();
-        person.destination = render.slot;
+        person.AddPathPoint(render.slot);
 
-        agent.SetDestination(render.slot.worldPosition);
+        // agent.SetDestination(render.slot.worldPosition);
     }
 }
