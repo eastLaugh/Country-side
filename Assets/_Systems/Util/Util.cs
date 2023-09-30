@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class Extension
 {
-    public static void DestroyAllChild(this Transform transform)
+    public static void DestroyAllChildren(this Transform transform)
     {
         for (int i = transform.childCount - 1; i >= 0; i--)
         {

@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 
 public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    Person person;
+    public Person person;
     public Outline outline;
 
     public Color EnterColor;
@@ -19,7 +19,6 @@ public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public NavMeshAgent agent;
     private void Awake()
     {
-        person = new Person(gameObject.name);
 
     }
     private void OnEnable()
@@ -44,7 +43,7 @@ public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     private void Update()
     {
-        
+
         {
             if (agent.remainingDistance < 0.2f)
             {
@@ -69,6 +68,7 @@ public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnPointerClick(PointerEventData eventData)
     {
+
         if (SelectedPerson != this)
         {
             if (SelectedPerson != null)
@@ -89,44 +89,50 @@ public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExit
             OnPointerEnter(null);
 
         }
+
+
     }
 
     bool isRecording = false;
     private void OnGUI()
     {
-        if (SelectedPerson == this)
+        if (GameManager.DebugMode)
         {
-            Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
-            var rect = new Rect(screenPos.x, Screen.height - screenPos.y, 200, 200);
-            // GUI.Box(rect, "Person");
-            GUILayout.BeginArea(rect, GUI.skin.box);
 
+            if (SelectedPerson == this)
             {
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(person.name);
-                if (GUILayout.Button("X"))
+                Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
+                var rect = new Rect(screenPos.x, Screen.height - screenPos.y, 200, 200);
+                // GUI.Box(rect, "Person");
+                GUILayout.BeginArea(rect, GUI.skin.box);
+
                 {
-                    DeSelect();
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label(person.name);
+                    if (GUILayout.Button("X"))
+                    {
+                        DeSelect();
+                    }
+                    GUILayout.EndHorizontal();
                 }
-                GUILayout.EndHorizontal();
-            }
-            if (!isRecording && GUILayout.Button("录入路径点"))
-            {
-                SlotRender.OnAnySlotClicked += OnAnySlotClicked;
-                isRecording = true;
-            }
-            if (isRecording && GUILayout.Button("结束录入"))
-            {
-                SlotRender.OnAnySlotClicked -= OnAnySlotClicked;
-                isRecording = false;
-            }
-            if (GUILayout.Button("清除路径点"))
-            {
+                if (!isRecording && GUILayout.Button("录入路径点"))
+                {
+                    SlotRender.OnAnySlotClicked += OnAnySlotClicked;
+                    isRecording = true;
+                }
+                if (isRecording && GUILayout.Button("结束录入"))
+                {
+                    SlotRender.OnAnySlotClicked -= OnAnySlotClicked;
+                    isRecording = false;
+                }
+                if (GUILayout.Button("清除路径点"))
+                {
 
-            }
+                }
 
 
-            GUILayout.EndArea();
+                GUILayout.EndArea();
+            }
         }
     }
 

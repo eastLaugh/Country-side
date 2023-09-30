@@ -38,7 +38,7 @@ partial class MapObjects
         {
             // base.Render(prefab, prefabs, slotRender); 我们不需要默认的渲染方式，故注释
 
-            father.DestroyAllChild();  //Render()这是个可能被系统多次调用的API，所以请确保可以被重复调用的健全性，需要删除“上次”的已渲染物体，避免重复
+            father.DestroyAllChildren();  //Render()这是个可能被系统多次调用的API，所以请确保可以被重复调用的健全性，需要删除“上次”的已渲染物体，避免重复
 
             if (TreeModels == null)
             {

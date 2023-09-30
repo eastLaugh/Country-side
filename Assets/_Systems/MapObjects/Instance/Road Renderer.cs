@@ -19,7 +19,7 @@ public class RoadRenderer : MonoBehaviour
 
     private void Refresh()
     {
-        transform.DestroyAllChild();
+        transform.DestroyAllChildren();
     }
 
     private void Awake()

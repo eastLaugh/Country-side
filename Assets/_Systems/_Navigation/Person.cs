@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine;
 
-public class Person
+public partial class Person
 {
     public readonly string name;
 
@@ -16,9 +16,10 @@ public class Person
     [JsonProperty]
     public List<Slot> PathPoints { get; set; } = new();
     public event Action OnDataUpdate;
-    public Person(string name)
+    public Person(string name, Vector3 worldPosition)
     {
         this.name = name;
+        this.worldPosition = worldPosition;
     }
 
     public void AddPathPoint(Slot slot)
@@ -26,4 +27,6 @@ public class Person
         PathPoints.Add(slot);
         OnDataUpdate?.Invoke();
     }
+
+
 }

@@ -145,6 +145,7 @@ public class GameManager : MonoBehaviour
         GUI.skin.textField.fontSize = 25;
         GUI.skin.button.fontSize = 25;
         GUI.skin.label.fontSize = 25;
+        GUI.skin.toggle.fontSize = 25;
 
         DebugMode = GUILayout.Toggle(DebugMode, "开发者模式");
         if (!DebugMode) return;
@@ -299,7 +300,7 @@ public class GameManager : MonoBehaviour
     {
         //if (map != null)
         //    map.economyWrapper.OnMiddlewareUpdated -= OnEconomyDataUpdated;
-        grid.transform.DestroyAllChild();
+        grid.transform.DestroyAllChildren();
         map = null;
         OnMapUnloaded?.Invoke();
 
@@ -342,15 +343,17 @@ public class GameManager : MonoBehaviour
     [Button]
     public void RefreshNavMesh()
     {
-        // StartCoroutine(WaitOneTick());
-        // IEnumerator WaitOneTick()
+        StartCoroutine(WaitOneTick());
+        IEnumerator WaitOneTick()
         {
-            // yield return null;
+            yield return null;
             NavMeshSurface navMeshSurface = PlaneIndicator.GetComponent<NavMeshSurface>();
             if (navMeshSurface)
             {
                 navMeshSurface.RemoveData();
                 navMeshSurface.BuildNavMesh();
+
+                Debug.Log("NavMesh Refreshed");
             }
         }
     }

@@ -6,6 +6,7 @@ using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;
 using static MapObjects;
 using System.Linq;
+using static Person;
 
 public class Map
 {
@@ -119,5 +120,9 @@ public class Map
             BuildingsNum.Add(name, 0);
             return 0;
         }
+    }
+
+    public Slot GetRandomSlot(){
+        return this[Random.Range(0, size.x), Random.Range(0, size.y)];
     }
 }

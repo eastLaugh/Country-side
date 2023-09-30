@@ -1,23 +1,26 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine;
 
-public class PersonSystem
+public partial class Person
 {
-
-    [JsonProperty]
-    Person[] persons;
-    
-    public PersonSystem()
+    public class PersonSystem
     {
-        Debug.Log("PersonSystem Created");
-        persons = new Person[]{
-            new Person("张三"),
-            new Person("李四"),
-            new Person("赵明"),
-        };
-    }
-    
 
+        [JsonProperty]
+        public readonly List<Person> persons = new();
+        public event Action<Person> OnPersonBirth;
+        public PersonSystem()
+        {
+
+        }
+
+        public void GiveBirthTo(Person p)
+        {
+            persons.Add(p);
+            OnPersonBirth?.Invoke(p);
+        }
+    }
 }

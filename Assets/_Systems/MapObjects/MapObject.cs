@@ -207,7 +207,7 @@ partial class Slot
         {
             if (prefab != null)
             {
-                father.DestroyAllChild();
+                father.DestroyAllChildren();
                 GameObject obj = MonoBehaviour.Instantiate(prefab, father);
                 obj.transform.DOScale(Vector3.zero, Settings.建筑时物体缓动持续时间).From().SetEase(Ease.OutBack);
 
