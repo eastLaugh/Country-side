@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using static MapObjects;
 using System.Linq;
 using static Person;
+using System.Runtime.Serialization;
 
 public class Map
 {
@@ -93,7 +94,7 @@ public class Map
     }
 
 
-    [System.Runtime.Serialization.OnDeserialized]
+    [OnDeserialized]
     void OnDeserializedMethod(System.Runtime.Serialization.StreamingContext context)
     {
         //反序列化完成回调

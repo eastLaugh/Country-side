@@ -9,7 +9,7 @@ public partial class Person
     public readonly string name;
 
     [JsonProperty]
-    public Vector3 worldPosition { get; private set; }
+    public Vector3 worldPosition { get; set; }
     [JsonProperty]
     public Slot destination { get; set; }
 

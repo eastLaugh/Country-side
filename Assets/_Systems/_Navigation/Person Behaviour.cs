@@ -43,8 +43,9 @@ public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     private void Update()
     {
-
+        person.worldPosition = transform.position;
         {
+            Debug.Log(agent.remainingDistance);
             if (agent.remainingDistance < 0.2f)
             {
                 if (person.PathPoints.Count > 0)

@@ -61,6 +61,7 @@ public class PersonManager : MonoBehaviour
     public Transform Father;
     private void OnPersonBirth(Person person)
     {
+        Debug.Log($"Person {person.name} Birth");
         Type type = person.GetType();
         if (PersonDatabase.ContainsKey(new TypeKey { _ = type.Name }))
         {
