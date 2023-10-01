@@ -120,5 +120,8 @@ public abstract partial class Slot
         }
     }
 
-
+    internal IEnumerable<T> GetMapObjects<T>() where T : class
+    {
+        return mapObjects.Select(mapObject => mapObject is T) as IEnumerable<T>;
+    }
 }

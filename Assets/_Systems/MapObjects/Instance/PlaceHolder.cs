@@ -16,6 +16,12 @@ partial class MapObjects
         public PlaceHolder(MapObject mapObject)
         {
             this.mapObject = mapObject;
+            mapObject.PlaceHolders.Add(this);
+        }
+
+        [JsonConstructor]
+        public PlaceHolder(){
+
         }
 
         public override bool CanBeUnjected => true;

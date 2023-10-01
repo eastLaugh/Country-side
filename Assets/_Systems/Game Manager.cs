@@ -6,6 +6,8 @@ using Cinemachine;
 using Unity.AI.Navigation;
 using NaughtyAttributes;
 using System.Collections;
+using Unity.VisualScripting;
+
 
 
 
@@ -340,20 +342,24 @@ public class GameManager : MonoBehaviour
         RefreshNavMesh();
     }
 
+    Coroutine RefreshNavMeshCoroutine;
     [Button]
     public void RefreshNavMesh()
     {
-        StartCoroutine(WaitOneTick());
-        IEnumerator WaitOneTick()
+        if (RefreshNavMeshCoroutine == null)
         {
-            yield return null;
-            NavMeshSurface navMeshSurface = PlaneIndicator.GetComponent<NavMeshSurface>();
-            if (navMeshSurface)
+            RefreshNavMeshCoroutine = StartCoroutine(WaitOneTick());
+            IEnumerator WaitOneTick()
             {
-                navMeshSurface.RemoveData();
-                navMeshSurface.BuildNavMesh();
+                yield return null;
+                NavMeshSurface navMeshSurface = PlaneIndicator.GetComponent<NavMeshSurface>();
+                if (navMeshSurface)
+                {
+                    navMeshSurface.RemoveData();
+                    navMeshSurface.BuildNavMesh();
+                }
 
-                Debug.Log("NavMesh Refreshed");
+                RefreshNavMeshCoroutine = null;
             }
         }
     }

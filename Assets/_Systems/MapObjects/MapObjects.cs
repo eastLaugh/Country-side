@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http.Headers;
 using Ink.Runtime;
 using Newtonsoft.Json;
@@ -401,23 +402,37 @@ public abstract class RippleEffectBuilding<Eff> : MapObject where Eff : MapObjec
     protected readonly List<Eff> Effects = new();
     protected override void OnCreated()
     {
-        for (int i = -RippleRadius; i <= RippleRadius; i++)
+        DoCircle(RippleRadius, slot.position);
+        foreach (MapObject placeHolder in PlaceHolders)
         {
-            for (int j = -RippleRadius; j <= RippleRadius; j++)
+            DoCircle(RippleRadius, placeHolder.slot.position);
+        }
+        void DoCircle(int RippleRadius, Vector2 center)
+        {
+
+            for (int i = -RippleRadius; i <= RippleRadius; i++)
             {
-                if (i * i + j * j <= RippleRadius * RippleRadius)
+                for (int j = -RippleRadius; j <= RippleRadius; j++)
                 {
-                    Slot s = map[slot.position + new Vector2(i, j)];
-                    if (s != null)
+                    if (i * i + j * j <= RippleRadius * RippleRadius)
                     {
-                        var eff = new Eff();
-                        if (eff.Inject(s))
+                        Slot s = map[center + new Vector2(i, j)];
+                        if (s != null)
                         {
-                            Effects.Add(eff);
+                            IEnumerable<Eff> existed = s.GetMapObjects<Eff>();
+                            if (existed == null || !existed.Any(eff => Effects.Contains(eff)))
+                            {
+                                var eff = new Eff();
+                                if (eff.Inject(s))
+                                {
+                                    Effects.Add(eff);
+                                }
+                            }
                         }
                     }
                 }
             }
+
         }
     }
 

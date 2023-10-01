@@ -21,6 +21,9 @@ partial class Slot
         public static event Action<MapObject, bool> OnInjected;
         public static event Action<MapObject> OnUnjected;
 
+        [JsonProperty]
+        public HashSet<MapObject> PlaceHolders { get;private set; } = new();
+
         public event Action<MapObject> OnMapObjectUnjected;
 
         [JsonIgnore]
@@ -217,11 +220,11 @@ partial class Slot
                 }
 
                 //这里为了尽可能不用对原项目进行修改，所以进行了容错处理：
-                if (!obj.GetComponentInChildren<NavMeshModifier>() && !obj.GetComponentInChildren<NavMeshModifierVolume>())
-                {
-                    var navMeshModifier = obj.AddComponent<NavMeshModifier>(); navMeshModifier.overrideArea = true;
-                    navMeshModifier.area = NavMesh.GetAreaFromName("Not Walkable");
-                }
+                // if (!obj.GetComponentInChildren<NavMeshModifier>() && !obj.GetComponentInChildren<NavMeshModifierVolume>())
+                // {
+                //     var navMeshModifier = obj.AddComponent<NavMeshModifier>(); navMeshModifier.overrideArea = true;
+                //     navMeshModifier.area = NavMesh.GetAreaFromName("Not Walkable");
+                // }
 
                 GameManager.current?.RefreshNavMesh();
             }
