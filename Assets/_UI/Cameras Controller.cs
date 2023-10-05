@@ -112,4 +112,8 @@ public class CamerasController : MonoBehaviour
         //    }
         //}
     }
+
+    private void Update() {
+        Debug.Log(fsm.CurrentState);
+    }
 }
