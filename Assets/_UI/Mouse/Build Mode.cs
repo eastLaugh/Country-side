@@ -48,9 +48,9 @@ public class BuildMode : StateMachineBehaviour
             if (canBuild)
             {
                 Slot.MapObject mapObject = Activator.CreateInstance(selectedType) as Slot.MapObject;
+                ApplyTo?.Invoke(mapObject);
                 mapObject.Inject(render.slot, direction: BuildingWindow.selectedDirection);
                 //render.Refresh();
-                ApplyTo?.Invoke(mapObject);
                 EventHandler.CallInitSoundEffect(SoundName.Costruct);
             }
             else

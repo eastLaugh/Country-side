@@ -132,6 +132,11 @@ public static partial class MapObjects
             base.OnCreated();
             m_profit = new SolidMiddleware<Float>(new Float(0.012f));
             map.Farms.Add(this);
+
+            foreach(var holder in PlaceHolders)
+            {
+                holder.slot.GetMapObject<VegeFarm>().Unject();
+            }
             slot.GetMapObject<VegeFarm>().Unject();
         }
         protected override void OnDisable()

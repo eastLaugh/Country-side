@@ -258,7 +258,10 @@ public class GameManager : MonoBehaviour
         {
             UnLoad();
         }
-
+        if (GUILayout.Button("金手指", buttonLayout))
+        {
+            map.MainData.Money = float.MaxValue;
+        }
         // if (map != null)
         // {
         //     //显示一些经济参数
@@ -355,8 +358,8 @@ public class GameManager : MonoBehaviour
                 NavMeshSurface navMeshSurface = PlaneIndicator.GetComponent<NavMeshSurface>();
                 if (navMeshSurface)
                 {
-                    navMeshSurface.RemoveData();
-                    navMeshSurface.BuildNavMesh();
+                    //navMeshSurface.RemoveData();
+                    //navMeshSurface.BuildNavMesh();
                 }
 
                 RefreshNavMeshCoroutine = null;

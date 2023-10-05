@@ -41,14 +41,14 @@ MonoBehaviour:
         Prefab: {fileID: 9027700337902997372, guid: 45088f809ccbaa14db1f37408e533be9,
           type: 3}
         Prefabs: []
-        Size: {x: 1, y: 1}
+        Size: {x: 2, y: 3}
     - Key:
         _: intelGreenHouse
       Value:
         Prefab: {fileID: 7569635914832788990, guid: 685f1fb122cc26a46a9679dd2910e6a7,
           type: 3}
         Prefabs: []
-        Size: {x: 1, y: 1}
+        Size: {x: 2, y: 3}
     - Key:
         _: FiveGArea
       Value:
