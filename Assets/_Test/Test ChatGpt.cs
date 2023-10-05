@@ -6,7 +6,6 @@ using UnityEngine;
 public class TestChatGpt : MonoBehaviour
 {
 
-    public ChatGPTWrapper.ChatGPTConversation chatGPTConversation;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +23,5 @@ public class TestChatGpt : MonoBehaviour
     public string sth;
     [NaughtyAttributes.Button]
     void SaySth(){
-        chatGPTConversation.SendToChatGPT(sth);
     }
 }

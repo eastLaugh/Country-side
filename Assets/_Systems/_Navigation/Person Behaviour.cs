@@ -16,7 +16,6 @@ public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public Color SelectedColor;
     public static PersonBehaviour SelectedPerson { get; private set; }
 
-    public ChatGPTWrapper.ChatGPTConversation ChatGPTConversationIfHave;
 
     public NavMeshAgent agent;
     private void Awake()
