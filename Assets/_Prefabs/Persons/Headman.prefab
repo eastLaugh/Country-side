@@ -63,17 +63,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2259826138383379176, guid: 762bd1d520574f2468353e0841a3310a,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2781410738928257789, guid: d08f016d90a6f954ca89ec8257d4f885,
-        type: 3}
     - target: {fileID: 2920445099715459725, guid: 762bd1d520574f2468353e0841a3310a,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2781410738928257789, guid: bdcb2ac7a5606f64ebe0401bc2a91644,
+      objectReference: {fileID: 2781410738928257789, guid: 65e576b0f14c89443bdec3ae734e1756,
         type: 3}
     - target: {fileID: 7592220721589306176, guid: 762bd1d520574f2468353e0841a3310a,
         type: 3}
@@ -83,38 +77,5 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7592220721589306176, guid: 762bd1d520574f2468353e0841a3310a,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2144766575623260762}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 762bd1d520574f2468353e0841a3310a, type: 3}
---- !u!1 &3747732465905612737 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7592220721589306176, guid: 762bd1d520574f2468353e0841a3310a,
-    type: 3}
-  m_PrefabInstance: {fileID: 6727923019562382465}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2144766575623260762
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3747732465905612737}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd863684a93292844b47a08ec0809828, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _useProxy: 0
-  _proxyUri: 
-  _apiKey: 
-  _model: 0
-  _maxTokens: 500
-  _temperature: 0.5
-  _chatbotName: ChatGPT
-  _initialPrompt: You are ChatGPT, a large language model trained by OpenAI.
-  chatGPTResponse:
-    m_PersistentCalls:
-      m_Calls: []

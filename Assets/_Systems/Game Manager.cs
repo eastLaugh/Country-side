@@ -359,7 +359,7 @@ public class GameManager : MonoBehaviour
                 if (navMeshSurface)
                 {
                     //navMeshSurface.RemoveData();
-                    //navMeshSurface.BuildNavMesh();
+                    navMeshSurface.BuildNavMesh();
                 }
 
                 RefreshNavMeshCoroutine = null;
