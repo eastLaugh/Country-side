@@ -38,7 +38,7 @@ public class ChatWindow : MonoBehaviour
             // inputField.ActivateInputField();
             Push(t0, true);
 
-
+            Reset();
             gpt.SendToChatGPT(t0);
             inputField.interactable = false;
 
@@ -46,13 +46,9 @@ public class ChatWindow : MonoBehaviour
 
         if (person != null)
         {
-            var initial = person.GetInitialPrompt();
+            // if (GameManager.DebugMode)
+            //     Push(initial, true);
 
-            if (GameManager.DebugMode)
-                Push(initial, true);
-
-            // gpt.ResetChat(initial);
-            gpt._initialPrompt = initial;
             gpt.enabled = true;
             gpt.chatGPTResponse.AddListener(res =>
             {
@@ -62,12 +58,13 @@ public class ChatWindow : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    void Reset()
     {
+        string initial2 = person.GetInitialPrompt();
+        gpt.ResetChat(initial2);
+        Debug.Log(initial2);
 
     }
-
     void Push(string text, bool player = false)
     {
         var prefab = Instantiate(chatMessagePrefab, Content);

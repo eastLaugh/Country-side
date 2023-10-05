@@ -36,7 +36,7 @@ public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExit
     {
         person.worldPosition = transform.position;
 
-        if (agent.isActiveAndEnabled)
+        if (agent.isActiveAndEnabled && agent.isOnNavMesh)
         {
             if (agent.remainingDistance < 0.2f)
             {
@@ -121,12 +121,12 @@ public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExit
                         SlotRender.OnAnySlotClicked -= OnAnySlotClicked;
                         isRecording = false;
                     }
-                    if (GUILayout.Button("清除路径点"))
+                    if (!isRecording && GUILayout.Button("清除所有已经录入的路径点"))
                     {
-
+                        person.PathPoints.Clear();
                     }
 
-
+                    GUILayout.Label("如要修改Person的属性，请使用VS的调试功能，监视变量，直接修改Person的属性");
                     GUILayout.EndArea();
                 }
                 else
