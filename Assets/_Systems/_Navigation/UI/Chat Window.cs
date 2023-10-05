@@ -47,11 +47,13 @@ public class ChatWindow : MonoBehaviour
         if (person != null)
         {
             var initial = person.GetInitialPrompt();
-            
-            if(GameManager.DebugMode)
+
+            if (GameManager.DebugMode)
                 Push(initial, true);
 
-            gpt.ResetChat(initial);
+            // gpt.ResetChat(initial);
+            gpt._initialPrompt = initial;
+            gpt.enabled = true;
             gpt.chatGPTResponse.AddListener(res =>
             {
                 Push(res);

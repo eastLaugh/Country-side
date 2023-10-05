@@ -35,6 +35,8 @@ public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExit
     private void Update()
     {
         person.worldPosition = transform.position;
+
+        if (agent.isActiveAndEnabled)
         {
             if (agent.remainingDistance < 0.2f)
             {
@@ -178,7 +180,7 @@ public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExit
         }
         else
         {
-            
+
         }
         ChatWindow.Close(person);
     }
