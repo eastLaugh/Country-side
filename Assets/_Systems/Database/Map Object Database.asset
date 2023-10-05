@@ -57,6 +57,13 @@ MonoBehaviour:
         Prefabs: []
         Size: {x: 1, y: 1}
     - Key:
+        _: PVPS
+      Value:
+        Prefab: {fileID: 6349964554226485413, guid: 4df57835308aac64e834ba44050c5c30,
+          type: 3}
+        Prefabs: []
+        Size: {x: 3, y: 2}
+    - Key:
         _: Station5G
       Value:
         Prefab: {fileID: 8917210137871555974, guid: 3bc117b39010cba49bed7e0be1d40e20,

@@ -15,8 +15,8 @@ public class MapObjectAccumlator : MonoBehaviour
     {
         if (!force) //由于读档时也会把每一个已存在的MapObject重新强制自注入，这份强制不是我们想要的，我们只需要统计玩家的操作，故舍去
         {
-
-            string typename = mapObject.GetType().Name;
+            if (!typeof(IConstruction).IsAssignableFrom(mapObject.GetType())) return;
+            var typename = mapObject.GetType();
             Map map = mapObject.map; //获取地图
             if (map.BuildingsNum.ContainsKey(typename))
             {
@@ -33,9 +33,9 @@ public class MapObjectAccumlator : MonoBehaviour
     }
     private void OnUnjected(Slot.MapObject mapObject)
     {
-        if (mapObject.GetType() == typeof(MapObjects.DeletingFlag)) return;
+        if (mapObject.GetType() == typeof(MapObjects.DeletingFlag) || !typeof(IConstruction).IsAssignableFrom(mapObject.GetType())) return;
         Map map = mapObject.map;
-        map.BuildingsNum[mapObject.GetType().Name] -= 1;
+        map.BuildingsNum[mapObject.GetType()] -= 1;
         Debug.Log(mapObject.GetType().Name + "-1");
     }
     

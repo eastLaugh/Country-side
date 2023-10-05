@@ -122,9 +122,8 @@ public class BuildingWindow : MonoBehaviour
             {
                 //Debug.Log("entered");
                 var ins = Activator.CreateInstance(mapObjectType) as IConstruction;
-                if(ins.constructType == constructType )
-                {
-                    
+                if(ins.constructType == constructType && ins is not MapObjects.Administration)
+                {                 
 
                     Button button = NewOption(ins.Name, ins.Cost,ins.phase, button =>
                     {
@@ -133,6 +132,18 @@ public class BuildingWindow : MonoBehaviour
                     });
                     OptionButtons.Add(new BuildingBtn { btn = button,phase = ins.phase});
                 }
+#if UNITY_EDITOR
+                if(ins.constructType == constructType && ins is MapObjects.Administration)
+                {
+
+                    Button button = NewOption(ins.Name, ins.Cost, ins.phase, button =>
+                    {
+                        EventHandler.CallInitSoundEffect(SoundName.BtnClick);
+                        OnButtonClick(mapObjectType, button);
+                    });
+                    OptionButtons.Add(new BuildingBtn { btn = button, phase = ins.phase });
+                }
+#endif
             }
 
         }

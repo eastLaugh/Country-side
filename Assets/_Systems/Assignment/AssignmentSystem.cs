@@ -143,7 +143,7 @@ public class AssignmentSystem : MonoBehaviour
             "无",
             () =>
             {
-                if (map.GetBuildingNum("HomeStay") >= 5)
+                if (map.GetBuildingNum(typeof(MapObjects.Homestay)) >= 5)
                 {
                     return true;
                 }
@@ -169,7 +169,7 @@ public class AssignmentSystem : MonoBehaviour
             "金钱+120万",
             () =>
             {
-                if (map.GetBuildingNum("intelGreenHouse") >= 5)
+                if (map.GetBuildingNum(typeof(MapObjects.intelGreenHouse)) >= 5)
                 {
                     return true;
                 }
@@ -194,7 +194,7 @@ public class AssignmentSystem : MonoBehaviour
             "无",
             () =>
             {
-                if (map.GetBuildingNum("ECommerceServiceCenter") >= 1)
+                if (map.GetBuildingNum(typeof(MapObjects.ECommerceServiceCenter)) >= 1)
                 {
                     return true;
                 }
@@ -207,7 +207,7 @@ public class AssignmentSystem : MonoBehaviour
             "金钱+70万",
             () =>
             {
-                if (map.GetBuildingNum("LogisticsCenter") >= 1)
+                if (map.GetBuildingNum(typeof(MapObjects.DigitalCenter)) >= 1)
                 {
                     return true;
                 }
@@ -253,7 +253,7 @@ public class AssignmentSystem : MonoBehaviour
              "幸福度+10",
              () =>
              {
-                 if (map.GetBuildingNum("PitchRoad") >= 30)
+                 if (map.GetBuildingNum(typeof(MapObjects.PitchRoad)) >= 30)
                  {
                      return true;
                  }
@@ -280,7 +280,7 @@ public class AssignmentSystem : MonoBehaviour
             "金钱30万",
             () =>
             {
-                if (map.GetBuildingNum("GreenHouse") >= 5)
+                if (map.GetBuildingNum(typeof(MapObjects.GreenHouse)) >= 5)
                 {
                     return true;
                 }
@@ -316,7 +316,7 @@ public class AssignmentSystem : MonoBehaviour
             "幸福度+3",
             () =>
             {
-                if (map.GetBuildingNum("PV") >= 3)
+                if (map.GetBuildingNum(typeof(MapObjects.PV)) >= 3)
                 {
                     return true;
                 }
@@ -337,7 +337,7 @@ public class AssignmentSystem : MonoBehaviour
             () =>
             {
                 //Debug.Log(map.GetBuildingNum("AdobeHouse"));
-                if(map.GetBuildingNum("CementHouse") >= 3)
+                if(map.GetBuildingNum(typeof(MapObjects.CementHouse)) >= 3)
                 {
                     return true;
                 }
@@ -354,7 +354,7 @@ public class AssignmentSystem : MonoBehaviour
            () =>
            {
                //Debug.Log(map.GetBuildingNum("AdobeHouse"));
-               if (map.GetBuildingNum("CementRoad") >= 10)
+               if (map.GetBuildingNum(typeof(MapObjects.CementRoad)) >= 10)
                {
                    return true;
                }

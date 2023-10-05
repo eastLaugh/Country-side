@@ -19,6 +19,8 @@ public static partial class MapObjects
 
         public int phase => 2;
 
+        public int energyConsumption => 2;
+
         protected override int RippleRadius => 5;
 
         protected override void OnCreated()

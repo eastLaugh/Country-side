@@ -30,16 +30,20 @@ public class Map
     [JsonProperty]
     public List<string> UnlockedAssignments = new List<string>();
     [JsonProperty]
-    public Dictionary<string, int> BuildingsNum = new Dictionary<string, int>();
+    public Dictionary<Type, int> BuildingsNum = new Dictionary<Type, int>();
     [JsonProperty]
     public List<House> Houses = new List<House>();
     [JsonProperty]
     public List<Farm> Farms = new List<Farm>();
     [JsonProperty]
+    public List<IOtherProfit> OtherProfits = new List<IOtherProfit>();
+    [JsonProperty]
+    public List<IPowerSupply> PowerSupplies = new List<IPowerSupply>();
+    [JsonProperty]
     public SolidMiddleware<Float> FarmProfitTotal = new SolidMiddleware<Float>(new Float(0f));
     [JsonProperty]
     public SolidMiddleware<Int> HappinessTotal = new SolidMiddleware<Int>(new Int(0));
-
+   
     [JsonProperty]
     public PersonSystem PersonSystem = new PersonSystem();
     [JsonProperty]
@@ -112,7 +116,7 @@ public class Map
     }
 
 
-    public int GetBuildingNum(string name)
+    public int GetBuildingNum(Type name)
     {
         if (BuildingsNum.ContainsKey(name))
         {

@@ -69,7 +69,9 @@ PrefabInstance:
       value: solar_panel_asset Variant
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8934777400606672865, guid: 0ee258137d80a544a9337b6fc35dca2f, type: 3}
+    - {fileID: 65702495048144492, guid: 0ee258137d80a544a9337b6fc35dca2f, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ee258137d80a544a9337b6fc35dca2f, type: 3}

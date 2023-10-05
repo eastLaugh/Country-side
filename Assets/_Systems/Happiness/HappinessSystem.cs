@@ -8,6 +8,8 @@ public class HappinessSystem : MonoBehaviour
     public bool isMaploaded = false;
     [SerializeField]
     HappinessEffectUI happinessEffectUI;
+    [SerializeField]
+    PowerSystem powerSystem;
     private void OnEnable()
     {
         GameManager.OnMapLoaded += OnMapLoaded;
@@ -20,6 +22,7 @@ public class HappinessSystem : MonoBehaviour
     {
         if (!isMaploaded) return;
         CheckHomeless();
+        CheckGreenPower();
         map.HappinessTotal.UpdateValue(new Int(map.MainData.Happiness));
         happinessEffectUI.Refresh(map.HappinessTotal);
         
@@ -64,5 +67,13 @@ public class HappinessSystem : MonoBehaviour
         {
             map.HappinessTotal.RemoveCPU(CPU);
         }
+    }
+    private void CheckGreenPower()
+    {
+        var CPU = map.HappinessTotal.CPUs.Find((cpu) => { return cpu.name == "绿色能源"; });
+        if (Mathf.Abs(powerSystem.greenPowerRatio - 1f) < 0.01f && CPU.name == null)
+            map.HappinessTotal.AddCPU(new SolidMiddleware<Int>.CPU { name = "绿色能源", Addition = new Int(15) });
+        else if(Mathf.Abs(powerSystem.greenPowerRatio - 1f) >= 0.01f && CPU.name != null)
+            map.HappinessTotal.RemoveCPU(CPU);
     }
 }

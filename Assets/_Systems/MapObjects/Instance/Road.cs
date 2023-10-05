@@ -16,6 +16,8 @@ public static partial class MapObjects
 
         public abstract int phase { get; }
 
+        public int energyConsumption => 0;
+
         protected override void OnEnable()
         {
             //foreach (var dir in Slot.上右下左)
