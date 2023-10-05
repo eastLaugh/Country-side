@@ -3,6 +3,7 @@ using TMPro;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using static MapObjects;
 
 public class SlotWindow : MonoBehaviour
 {
@@ -31,7 +32,7 @@ public class SlotWindow : MonoBehaviour
             {
                 if (mapObject is MapObjects.House house)
                 {
-                    nameText.text = house.Name;
+                    
                     content.text = "ÈÝÔØÈË¿Ú£º" + house.Capacity.ToString();
                     warining.text = house.Warning;
                     return;
@@ -39,7 +40,7 @@ public class SlotWindow : MonoBehaviour
                 else if (mapObject is MapObjects.Farm farm)
                 {
 
-                    nameText.text = farm.Name;
+                    
                     var profitTotal = GameManager.current.map.FarmProfitTotal;
                     profitTotal.UpdateValue(new Float(farm.Profit));
                     var profit = profitTotal.currentValue.m_value;
@@ -47,9 +48,9 @@ public class SlotWindow : MonoBehaviour
                     warining.text = "";
                     return;
                 }
-                else if(mapObject is MapObjects.Administration administration)
+                else if(mapObject is IConstruction construction)
                 {
-                    nameText.text = administration.Name;
+                    nameText.text = construction.Name;
                 }
             }
             var cfg = SlotDatabase.main[render.slot.GetType()];
