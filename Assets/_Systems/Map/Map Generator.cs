@@ -50,3 +50,17 @@ public class WaterAndPlain : MapGenerator
         }
     }
 }
+
+[RegisterAsMapLayer]
+public class PersonsLayer : MapGenerator
+{
+    
+    public override void Generate(Map map, Vector2Int size, Slot[] slots)
+    {
+        Debug.Log("生成人物中...");
+        Person headman = new Persons.Headman("吴哲浩", map.GetRandomSlot().worldPosition);
+        map.PersonSystem.GiveBirthTo(headman);
+
+
+    }
+}

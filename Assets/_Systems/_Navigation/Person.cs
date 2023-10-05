@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine;
 
-public partial class Person
+public abstract partial class Person
 {
     public readonly string name;
 
@@ -28,5 +28,6 @@ public partial class Person
         OnDataUpdate?.Invoke();
     }
 
-
+    protected abstract void OnCreated();
+    protected abstract void OnEnable();
 }

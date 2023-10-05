@@ -12,7 +12,6 @@ public partial class Person
 
         [JsonProperty]
         public readonly List<Person> persons = new();
-        public event Action<Person> OnPersonBirth;
         public PersonSystem()
         {
 
@@ -21,23 +20,24 @@ public partial class Person
         public void GiveBirthTo(Person p)
         {
             persons.Add(p);
-            OnPersonBirth?.Invoke(p);
+            p.OnCreated();
+            EnablePerson(p);
+        }
+
+        void EnablePerson(Person p)
+        {
+            PersonManager.current.OnPersonBirth(p);
+            p.OnEnable();
         }
 
         [OnDeserialized]
         void OnDeserializedMethod(System.Runtime.Serialization.StreamingContext context)
         {
             //反序列化完成回调
-            GameManager.OnMapLoaded += OnMapLoaded;
-        }
-
-        private void OnMapLoaded(Map map)
-        {
             foreach (var p in persons)
             {
-                OnPersonBirth?.Invoke(p);
+                EnablePerson(p);
             }
-            GameManager.OnMapLoaded -= OnMapLoaded;
         }
     }
 }

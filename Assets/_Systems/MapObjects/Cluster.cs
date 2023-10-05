@@ -57,7 +57,14 @@ public class Cluster
     void OnDeserializedMethod(System.Runtime.Serialization.StreamingContext context)
     {
         //反序列化完成回调
+        GameManager.OnMapLoaded += OnMapLoaded;
+
+    }
+
+    private void OnMapLoaded(Map map)
+    {
         Recalculate();
+        GameManager.OnMapLoaded -= OnMapLoaded;
     }
 
     public void Recalculate()

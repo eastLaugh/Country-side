@@ -310,7 +310,7 @@ public static partial class MapObjects
 
         protected override void OnCreated()
         {
-
+            Persons.Headman.instance.AddPathPoint(slot);
         }
 
         protected override void OnDisable()

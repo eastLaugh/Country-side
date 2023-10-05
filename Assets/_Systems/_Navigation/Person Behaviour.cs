@@ -16,6 +16,8 @@ public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public Color SelectedColor;
     public static PersonBehaviour SelectedPerson { get; private set; }
 
+    public ChatGPTWrapper.ChatGPTConversation ChatGPTConversationIfHave;
+
     public NavMeshAgent agent;
     private void Awake()
     {
@@ -23,29 +25,18 @@ public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExit
     }
     private void OnEnable()
     {
-        person.OnDataUpdate += OnDataUpdate;
     }
 
 
     private void OnDisable()
     {
-        person.OnDataUpdate -= OnDataUpdate;
     }
 
-    private void OnDataUpdate()
-    {
-        if (person.PathPoints.Count > 0)
-        {
-            // person.destination = person.PathPoints[0];
-            // agent.SetDestination(person.PathPoints[0].worldPosition);
-        }
-    }
 
     private void Update()
     {
         person.worldPosition = transform.position;
         {
-            Debug.Log(agent.remainingDistance);
             if (agent.remainingDistance < 0.2f)
             {
                 if (person.PathPoints.Count > 0)

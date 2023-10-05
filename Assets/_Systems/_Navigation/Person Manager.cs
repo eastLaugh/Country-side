@@ -24,7 +24,7 @@ public class PersonManager : MonoBehaviour
         public GameObject Prefab;
     }
 
-    public PersonManager current { get; private set; }
+    public static PersonManager current { get; private set; }
     private void Awake()
     {
         current = this;
@@ -48,7 +48,6 @@ public class PersonManager : MonoBehaviour
     {
         this.map = map;
         personSystem = map.PersonSystem;
-        personSystem.OnPersonBirth += OnPersonBirth;
     }
 
     private void OnMapUnloaded()
@@ -59,7 +58,7 @@ public class PersonManager : MonoBehaviour
     }
 
     public Transform Father;
-    private void OnPersonBirth(Person person)
+    public void OnPersonBirth(Person person)
     {
         Debug.Log($"Person {person.name} Birth");
         Type type = person.GetType();
@@ -91,7 +90,7 @@ public class PersonManager : MonoBehaviour
 
                 personSystem.GiveBirthTo(p);
                 //Constructor Tip
-                new Persons.OrdinaryVillager("Person", Vector3.zero);
+                //new Persons.OrdinaryVillager("Person", Vector3.zero);
             }
             GUILayout.EndArea();
         }

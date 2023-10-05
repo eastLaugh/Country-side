@@ -18,7 +18,6 @@ using UnityEditor;
 public class GameManager : MonoBehaviour
 {
     public static event Action<Map> OnMapLoaded;
-    public static event Action<Map> BeforeMapLoaded;
     public static GameManager current;
     public Grid grid;
 
