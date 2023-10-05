@@ -8,7 +8,7 @@ using UnityEngine;
 public abstract partial class Person
 {
 
-    [JsonProperty]
+    [JsonIgnore]
     public readonly List<IPromptProvider> promptProviders = new();
 
     public interface IPromptProvider
