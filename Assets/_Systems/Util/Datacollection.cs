@@ -25,11 +25,11 @@ public class GlobalData
     [JsonProperty]
     public HashSet<string> GameSaveFiles = new();
     [JsonProperty]
-    public float MasterVolume = 10;
+    public float MasterVolume = 45;
     [JsonProperty]
-    public float MusicVolume = 10;
+    public float MusicVolume = 35;
     [JsonProperty]
-    public float EffectVolume = 10;
+    public float EffectVolume = 35;
     [JsonProperty]
     public bool GridOn = true;
 

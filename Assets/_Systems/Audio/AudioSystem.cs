@@ -18,11 +18,11 @@ public class AudioSystem : MonoBehaviour
     }
     private void Start()
     {
-        audioMixer.SetFloat("MasterVolume", Settings.MasterVolume - 10);
-        audioMixer.SetFloat("MusicVolume", Settings.MusicVolume - 20);
-        audioMixer.SetFloat("EffectVolume", Settings.MasterVolume - 20);
+        audioMixer.SetFloat("MasterVolume", Settings.MasterVolume *2 - 80);
+        audioMixer.SetFloat("MusicVolume", Settings.MusicVolume * 2 - 80);
+        audioMixer.SetFloat("EffectVolume", Settings.EffectVolume * 2 - 80);
         SetMusic(SoundName.MenuMusic);
-        musicPlayer.Play();
+        //musicPlayer.Play();
     }
     public void SwitchMusic(SoundName soundName)
     {

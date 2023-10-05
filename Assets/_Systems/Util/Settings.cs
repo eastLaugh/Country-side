@@ -10,9 +10,9 @@ public static class Settings
 
     public static readonly bool 开启浮动效果;
 
-    public static float MasterVolume;
-    public static float MusicVolume;
-    public static float EffectVolume;
+    public static float MasterVolume = 45;
+    public static float MusicVolume = 35;
+    public static float EffectVolume = 35;
     static Settings()
     {
         开启浮动效果 = false;

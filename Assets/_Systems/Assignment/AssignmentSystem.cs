@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AssignmentSystem : MonoBehaviour
+public class AssignmentSystem : MonoBehaviour , Person.IPromptProvider
 {
 
     Map map;
@@ -31,6 +31,8 @@ public class AssignmentSystem : MonoBehaviour
         this.map = map;
         AssignmentInit();
         isMapLoaded=true;
+
+        Persons.Headman.instance.promptProviders.Add(this);
     }
     private void Update()
     {
@@ -399,7 +401,15 @@ public class AssignmentSystem : MonoBehaviour
         }       
     }
 
-    
+    public string GetPrompt()
+    {
+        string list = "玩家还有任务没有完成：";
+        foreach (var ele in displayList)
+        {
+            list += ele.name;
+        }
+        return list+"如果玩家问起，顺便解释一下这些任务的意义。";
+    }
 }
 public static class AssignmentExtensions
 {

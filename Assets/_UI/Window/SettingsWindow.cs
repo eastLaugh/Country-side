@@ -30,11 +30,11 @@ public class SettingsWindow : MonoBehaviour
         });
         MusicVolumeSlider.onValueChanged.AddListener((float newValue) => {
             Settings.MusicVolume = newValue;
-            audioMixer.SetFloat("MusicVolume", newValue - 20);
+            audioMixer.SetFloat("MusicVolume", newValue * 2 - 80);
         });
         EffectVolumeSlider.onValueChanged.AddListener((float newValue) => {
             Settings.EffectVolume = newValue;
-            audioMixer.SetFloat("EffectVolume", newValue - 20);
+            audioMixer.SetFloat("EffectVolume", newValue * 2 - 80);
         });
     }
     public void Refresh()

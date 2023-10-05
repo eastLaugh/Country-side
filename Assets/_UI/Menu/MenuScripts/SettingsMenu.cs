@@ -17,15 +17,15 @@ public class SettingsMenu : MonoBehaviour
         EffectVolumeSlider.value = Settings.EffectVolume;
         MasterVolumeSlider.onValueChanged.AddListener((float newValue) => {
             Settings.MasterVolume = newValue;
-            audioMixer.SetFloat("MasterVolume", newValue - 10);
+            audioMixer.SetFloat("MasterVolume", newValue * 2 - 80 );
         });
         MusicVolumeSlider.onValueChanged.AddListener((float newValue) => {
             Settings.MusicVolume = newValue;
-            audioMixer.SetFloat("MusicVolume", newValue - 20);
+            audioMixer.SetFloat("MusicVolume", newValue * 2 - 80);
         });
         EffectVolumeSlider.onValueChanged.AddListener((float newValue) => {
             Settings.EffectVolume = newValue;
-            audioMixer.SetFloat("EffectVolume", newValue - 20);
+            audioMixer.SetFloat("EffectVolume", newValue * 2 - 80);
         });
     }
     private void OnDisable()
