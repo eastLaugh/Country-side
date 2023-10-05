@@ -33,3 +33,23 @@ MonoBehaviour:
     soundPitchMin: 1
     soundPitchMax: 1
     soundVolume: 0.1
+  - soundName: 5
+    soundClip: {fileID: 8300000, guid: f5c2accd255e9ee4f8db873e8a001ac8, type: 3}
+    soundPitchMin: 1
+    soundPitchMax: 1
+    soundVolume: 0.1
+  - soundName: 4
+    soundClip: {fileID: 8300000, guid: de70a4ac6a950424ba3d448d269be4af, type: 3}
+    soundPitchMin: 1
+    soundPitchMax: 1
+    soundVolume: 0.1
+  - soundName: 3
+    soundClip: {fileID: 8300000, guid: 6217b6b57fc09a94ab2f85f4fb36dda4, type: 3}
+    soundPitchMin: 1.2
+    soundPitchMax: 1.2
+    soundVolume: 0.4
+  - soundName: 3
+    soundClip: {fileID: 8300000, guid: 6217b6b57fc09a94ab2f85f4fb36dda4, type: 3}
+    soundPitchMin: 1.5
+    soundPitchMax: 1.2
+    soundVolume: 0.4

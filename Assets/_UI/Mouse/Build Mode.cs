@@ -51,10 +51,12 @@ public class BuildMode : StateMachineBehaviour
                 mapObject.Inject(render.slot, direction: BuildingWindow.selectedDirection);
                 //render.Refresh();
                 ApplyTo?.Invoke(mapObject);
+                EventHandler.CallInitSoundEffect(SoundName.Costruct);
             }
             else
             {
                 Debug.LogWarning("占位符不能在此处创建");
+                EventHandler.CallInitSoundEffect(SoundName.WrongPlace);
             }
         }
     }

@@ -31,7 +31,7 @@ public class CamerasController : MonoBehaviour
             SlotRender.OnAnySlotClickedInBuildMode += RefreshTubeState;
             // SlotRender.OnAnySlotClickedInBuildMode += _ => InfoWindow.Create("OnAnySlotClickedInBuildMode");
 
-            MapObjects.WaterArea.SetTubeAreaHighlight?.Invoke(true);
+            MapObjects.FiveGArea.Set5GAreaHighlight?.Invoke(true);
         }).OnExit(() =>
         {
             Cameras["Tube Camera"].enabled = false;
@@ -40,7 +40,7 @@ public class CamerasController : MonoBehaviour
             SlotRender.OnAnySlotClickedInBuildMode -= RefreshTubeState;
 
             ResetLayer?.Invoke();
-            MapObjects.WaterArea.SetTubeAreaHighlight?.Invoke(false);
+            MapObjects.FiveGArea.Set5GAreaHighlight?.Invoke(false);
         });
 
         fsm.ChangeState(CameraState.Default);
@@ -70,7 +70,7 @@ public class CamerasController : MonoBehaviour
 
     private void OnBuildingWindowUpdate(Type type)
     {
-        if (type == typeof(MapObjects.Well))
+        if (type == typeof(MapObjects.Station5G))
         {
             fsm.ChangeState(CameraState.Tube);
         }
@@ -83,7 +83,7 @@ public class CamerasController : MonoBehaviour
     Action ResetLayer = null;
     void RefreshTubeState(SlotRender slotRender)
     {
-        MapObjects.WaterArea.SetTubeAreaHighlight?.Invoke(true);
+        MapObjects.FiveGArea.Set5GAreaHighlight?.Invoke(true);
 
         ResetLayer?.Invoke();
         ResetLayer = null;

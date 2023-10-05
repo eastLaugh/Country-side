@@ -14,7 +14,7 @@ public static partial class MapObjects
         public abstract string Name { get; }
         public ConstructType constructType => ConstructType.Road;
 
-
+        public abstract int phase { get; }
 
         protected override void OnEnable()
         {
@@ -69,16 +69,20 @@ public static partial class MapObjects
 
 
     }
-    public class DirtRoad : Road
-    {
-        public override float Cost => 0.05f;
-
-        public override string Name => "泥土路";
-    }
     public class CementRoad : Road
     {
-        public override float Cost => 0.3f;
+        public override float Cost => 0.35f;
 
         public override string Name => "水泥路";
+
+        public override int phase => 1;
+    }
+    public class PitchRoad : Road
+    {
+        public override float Cost => 0.9f;
+
+        public override string Name => "沥青路";
+
+        public override int phase => 2;
     }
 }

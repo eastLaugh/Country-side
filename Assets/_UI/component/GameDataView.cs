@@ -13,6 +13,7 @@ public class GameDataView : MonoBehaviour
     [SerializeField] TextMeshProUGUI Money;
     [SerializeField] TextMeshProUGUI People;
     [SerializeField] TextMeshProUGUI Happiness;
+    [SerializeField] TextMeshProUGUI MoneyDelta;
     float MoneyCache = 0f;
     int PeopleCache = 0;
     public bool isMapLoaded = false;
@@ -115,7 +116,7 @@ public class GameDataView : MonoBehaviour
             Happiness.color = Color.green;
         }
 
-
+        MoneyDelta.text = "+"+map.FarmProfitTotal.currentValue.m_value.ToString("F2");
         Happiness.text = totalHappiness.ToString();
     }
 }

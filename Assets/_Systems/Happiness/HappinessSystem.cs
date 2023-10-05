@@ -6,6 +6,8 @@ public class HappinessSystem : MonoBehaviour
 {
     Map map;
     public bool isMaploaded = false;
+    [SerializeField]
+    HappinessEffectUI happinessEffectUI;
     private void OnEnable()
     {
         GameManager.OnMapLoaded += OnMapLoaded;
@@ -19,6 +21,7 @@ public class HappinessSystem : MonoBehaviour
         if (!isMaploaded) return;
         CheckHomeless();
         map.HappinessTotal.UpdateValue(new Int(map.MainData.Happiness));
+        happinessEffectUI.Refresh(map.HappinessTotal);
         
     }
     private void OnDisable()

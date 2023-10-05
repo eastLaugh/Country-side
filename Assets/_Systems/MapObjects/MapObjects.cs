@@ -9,17 +9,18 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using static Slot;
+using static UnityEditor.Experimental.GraphView.Port;
 
 public static partial class MapObjects
 {
-    #region 工业设施
+    #region 能源&工业设施
     public class Factory
     {
 
     }
     #endregion
     #region 农业设施
-    public abstract class Farm : MapObject, IConstruction, MustNotExist<IConstruction>
+    public abstract class Farm : MapObject, IConstruction
     {
         public override bool CanBeUnjected => true;
         public abstract float Cost { get; }
@@ -27,6 +28,8 @@ public static partial class MapObjects
         public float Profit => m_profit.currentValue.m_value;
 
         public ConstructType constructType => ConstructType.Farm;
+
+        public abstract int phase { get; }
 
         [JsonProperty]
         protected SolidMiddleware<Float> m_profit;
@@ -45,28 +48,13 @@ public static partial class MapObjects
 
         }
     }
-    public class WheatFarm : Farm
-    {
-        public override float Cost => 5f;
-
-        public override string Name => "小麦田";
-
-        protected override void OnCreated()
-        {
-            base.OnCreated();
-            m_profit = new SolidMiddleware<Float>(new Float(0.03f));
-            map.Farms.Add(this);
-        }
-        protected override void OnDisable()
-        {
-            map.Farms.Remove(this);
-        }
-    }
-    public class RiceFarm : Farm
+    public class RiceFarm : Farm, MustNotExist<IConstruction>
     {
         public override float Cost => 6f;
 
         public override string Name => "水稻田";
+
+        public override int phase => 1;
 
         protected override void OnCreated()
         {
@@ -80,31 +68,89 @@ public static partial class MapObjects
         }
 
     }
-    //public class CuttonFarm : Farm
-    //{
-    //    public override float Cost => 10f;
-    //
-    //    public override string Name => "棉花田";
-    //
-    //    protected override void OnCreated()
-    //    {
-    //        base.OnCreated();
-    //        m_profit = new SolidMiddleware<Float>(new Float(1.2f));
-    //        map.Farms.Add(this);
-    //    }
-    //    protected override void OnDisable()
-    //    {
-    //        map.Farms.Remove(this);
-    //    }
-    //
-    //}
+    public class VegeFarm : Farm, MustNotExist<IConstruction>
+    {
+        public override float Cost => 10f;
+
+        public override string Name => "菜田";
+        public override int phase => 1;
+
+        protected override void OnCreated()
+        {
+            base.OnCreated();
+            m_profit = new SolidMiddleware<Float>(new Float(0.01f));
+            map.Farms.Add(this);
+        }
+        protected override void OnDisable()
+        {
+            map.Farms.Remove(this);
+        }
+
+    }
+    public class GreenHouse : Farm, MustExist<VegeFarm>
+    {
+        public override float Cost => 18f;
+
+        public override string Name => "温室大棚";
+        public override int phase => 2;
+
+        protected override void OnCreated()
+        {
+            base.OnCreated();
+            m_profit = new SolidMiddleware<Float>(new Float(0.012f));
+            map.Farms.Add(this);
+            slot.GetMapObject<VegeFarm>().Unject();
+        }
+        protected override void OnDisable()
+        {
+            map.Farms.Remove(this);
+        }
+
+    }
+    public class intelGreenHouse : Farm, MustExist<GreenHouse>
+    {
+        public override float Cost => 20f;
+
+        public override string Name => "智慧大棚";
+        public override int phase => 3;
+
+        protected override void OnCreated()
+        {
+            base.OnCreated();
+            m_profit = new SolidMiddleware<Float>(new Float(0.016f));
+            map.Farms.Add(this);
+            slot.GetMapObject<GreenHouse>().Unject();
+        }
+        protected override void OnDisable()
+        {
+            map.Farms.Remove(this);
+        }
+
+    }
+    public class FarmDrone : Farm, MustExist<RiceFarm>
+    {
+        public override float Cost => 10f;
+
+        public override string Name => "农业无人机";
+        public override int phase => 3;
+        protected override void OnCreated()
+        {
+            base.OnCreated();
+            m_profit = new SolidMiddleware<Float>(new Float(0.016f));
+            map.Farms.Add(this);
+        }
+        protected override void OnDisable()
+        {
+            map.Farms.Remove(this);
+        }
+    }
     #endregion
 
     #region 住宅楼
     /// <summary>
     /// 住宅基类
     /// </summary>
-    public abstract class House : MapObject, IConstruction, MustNotExist<IConstruction>, IInfoProvider
+    public abstract class House : MapObject, IConstruction
     {
         //人口容量
         [JsonProperty] protected SolidMiddleware<Int> m_capacity;
@@ -115,6 +161,8 @@ public static partial class MapObjects
         public abstract string Name { get; }
         public string Warning;
         public ConstructType constructType => ConstructType.House;
+
+        public abstract int phase { get; }
 
         public void CheckConnection()
         {
@@ -160,6 +208,10 @@ public static partial class MapObjects
             EventHandler.DayPass += CheckConnection;
             GameManager.OnMapUnloaded += OnMapUnloaded;
         }
+        protected override void OnDisable()
+        {
+            EventHandler.DayPass -= CheckConnection;
+        }
         private void OnMapUnloaded()
         {
             GameManager.OnMapUnloaded -= OnMapUnloaded;
@@ -168,124 +220,132 @@ public static partial class MapObjects
 
         public override void OnClick()
         {
-            if (MapObjectDatabase.main[GetType()].Size == Vector2Int.one)
-            {
-                //转变朝向
-                Direction = (Direction + 1) % 4;
-                slot.slotRender.Refresh();
-            }
-            else
-            {
-                //暂不支持多格建筑物转向
-            }
+            //if (MapObjectDatabase.main[GetType()].Size == Vector2Int.one)
+            //{
+            //    //转变朝向
+            //    Direction = (Direction + 1) % 4;
+            //    slot.slotRender.Refresh();
+            //}
+            //else
+            //{
+            //    //暂不支持多格建筑物转向
+            //}
         }
 
-        public void ProvideInfo(Action<string> provide)
-        {
-            SlotRender.OnAnySlotExit += ResetArrow;
+        //public void ProvideInfo(Action<string> provide)
+        //{
+        //    SlotRender.OnAnySlotExit += ResetArrow;
 
-            void ResetArrow(SlotRender _)
-            {
-                for (int i = lastArrowRender.Count - 1; i >= 0; i--)
-                {
-                    MonoBehaviour.Destroy(lastArrowRender[i].gameObject);
-                }
-                lastArrowRender.Clear();
+        //    void ResetArrow(SlotRender _)
+        //    {
+        //        for (int i = lastArrowRender.Count - 1; i >= 0; i--)
+        //        {
+        //            MonoBehaviour.Destroy(lastArrowRender[i].gameObject);
+        //        }
+        //        lastArrowRender.Clear();
 
-                SlotRender.OnAnySlotExit -= ResetArrow;
-            }
+        //        SlotRender.OnAnySlotExit -= ResetArrow;
+        //    }
 
-            Road r = map[slot.position + 上右下左[Direction]]?.GetMapObject<Road>();
+        //    Road r = map[slot.position + 上右下左[Direction]]?.GetMapObject<Road>();
 
-            if (r != null)
-            {
-                provide("道路");
-                foreach (MapObject reachable in r.cluster.RechableMapObjects)
-                {
-                    if (reachable != this)
-                    {
-                        lastArrowRender.Add(ArrowRender.NewArrow(slot.worldPosition, reachable.slot.worldPosition));
-                    }
-                }
-            }
-        }
-        [JsonIgnore]
-        static List<ArrowRender> lastArrowRender = new();
+        //    if (r != null)
+        //    {
+        //        provide("道路");
+        //        foreach (MapObject reachable in r.cluster.RechableMapObjects)
+        //        {
+        //            if (reachable != this)
+        //            {
+        //                lastArrowRender.Add(ArrowRender.NewArrow(slot.worldPosition, reachable.slot.worldPosition));
+        //            }
+        //        }
+        //    }
+        //}
+        //[JsonIgnore]
+        //static List<ArrowRender> lastArrowRender = new();
     }
 
 
-    /// <summary>
-    /// 土坯房
-    /// </summary>
-    public class AdobeHouse : House
-    {
-        public override float Cost => 8;
 
-        public override string Name => "土坯房";
-
-        protected override void OnCreated()
-        {
-            base.OnCreated();
-
-            map.Houses.Add(this);
-        }
-
-        protected override void OnDisable()
-        {
-            map.Houses.Remove(this);
-        }
-
-        protected override void OnEnable()
-        {
-            m_capacity = new SolidMiddleware<Int>(new Int(100));
-            base.OnEnable();
-        }
-    }
-    /// <summary>
-    /// 砖瓦房
-    /// </summary>
-    public class TileHouse : House
-    {
-        public override float Cost => 25;
-
-        public override string Name => "砖瓦房";
-
-        protected override void OnCreated()
-        {
-            base.OnCreated();
-            m_capacity = new SolidMiddleware<Int>(new Int(30));
-            map.Houses.Add(this);
-        }
-
-        protected override void OnDisable()
-        {
-            map.Houses.Remove(this);
-        }
-
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-        }
-    }
     /// <summary>
     /// 水泥房
     /// </summary>
-    public class CementHouse : House
+    public class CementHouse : House, MustNotExist<IConstruction>
     {
         public override float Cost => 80;
 
         public override string Name => "水泥房";
+        public override int phase => 1;
 
         protected override void OnCreated()
         {
             base.OnCreated();
             m_capacity = new SolidMiddleware<Int>(new Int(60));
             map.Houses.Add(this);
+            
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            map.Houses.Remove(this);
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+        }
+    }
+    /// <summary>
+    /// 光伏（住宅）
+    /// </summary>
+    public class PV : House, MustExist<CementHouse>
+    {
+        public override float Cost => 15;
+
+        public override string Name => "光伏(住宅)";
+        public override int phase => 1;
+
+        protected override void OnCreated()
+        {
+            base.OnCreated();
+            m_capacity = new SolidMiddleware<Int>(new Int(60));
+            map.Houses.Add(this);
+            slot.GetMapObject<CementHouse>().Unject();
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            map.Houses.Remove(this);
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+        }
+    }
+    /// <summary>
+    /// 民宿
+    /// </summary>
+    public class Homestay : House,MustNotExist<IConstruction>
+    {
+        public override float Cost => 65;
+
+        public override string Name => "民宿";
+        public override int phase => 4;
+
+        protected override void OnCreated()
+        {
+            base.OnCreated();
+            m_capacity = new SolidMiddleware<Int>(new Int(25));
+            map.Houses.Add(this);
 
         }
 
         protected override void OnDisable()
         {
+            base.OnDisable();
             map.Houses.Remove(this);
         }
 
@@ -305,67 +365,91 @@ public static partial class MapObjects
 
         public string Name => "乡镇机关";
 
-        public ConstructType constructType => ConstructType.Govern;
+        public ConstructType constructType => ConstructType.Sevice;
 
-
+        public int phase => 1;
+        public override void OnClick()
+        {
+            EventHandler.CallToAdiminstration();
+        }
         protected override void OnCreated()
         {
-            Persons.Headman.instance.AddPathPoint(slot);
+
         }
 
         protected override void OnDisable()
         {
-
+           
         }
 
         protected override void OnEnable()
         {
-
+            
         }
     }
     #endregion
 
-    #region 污染源相关 测试Ripple系统
-    public class Pollution : MapObject, IInfoProvider  //MapObject.Virtual是一个虚拟的MapObject，不会被渲染，且尽量简单
+    #region 中心
+    public abstract class Center : IConstruction, MustNotExist<IConstruction>
     {
-        public override bool CanBeUnjected => throw new NotImplementedException();
+        public abstract float Cost { get; }
 
-        public void ProvideInfo(Action<string> provide)
-        {
-            provide("污染");
-        }
+        public abstract string Name { get; }
 
-        protected override void OnCreated()
-        {
-        }
+        public ConstructType constructType => ConstructType.Sevice;
 
-        protected override void OnDisable()
-        {
-        }
-
-        protected override void OnEnable()
-        {
-        }
+        public abstract int phase { get; }
     }
-
-    public class 污染源 : RippleEffectBuilding<Pollution>  //RippleEffectBuilding是一个泛型类，需要指定泛型参数，这个泛型参数代表Ripple的对象
+    public class DigitalCenter : Center
     {
+        public override float Cost => 300f;
+        public override int phase => 3;
+
+        public override string Name => "乡村数字中心";
+    }
+    public class ECommerceServiceCenter : Center
+    {
+        public override float Cost => 200f;
+        public override int phase => 3;
+
+        public override string Name => "电商服务中心";
+    }
+    public class LogisticsCenter : Center
+    {
+        public override float Cost => 200f;
+
+        public override string Name => "物流中心";
+        public override int phase => 3;
+    }
+    #endregion
+
+    public class ChargingStation : MapObject,IConstruction
+    {
+        public float Cost => 90;
+
+        public string Name => "新能源充电桩";
+
+        public ConstructType constructType => ConstructType.Sevice;
+
+        public int phase => 1;
+
         public override bool CanBeUnjected => true;
 
-        protected override int RippleRadius => 3;  //假设半径是3格
+        protected override void OnCreated()
+        {
+            
+        }
+
+        protected override void OnDisable()
+        {
+            
+        }
 
         protected override void OnEnable()
         {
-            IconPattern iconPattern = IconPattern.Create(father, Vector3.zero);
-            GameObject label = iconPattern.New("Label");
-            label.GetComponent<TMPro.TextMeshProUGUI>().SetText("污染源");
+            
         }
     }
-
-    #endregion
-
-
-
 
 }
 public class Resource<T> : MapObject, MustNotExist<T> where T : Resource<T>
@@ -450,11 +534,12 @@ public interface IConstruction
     public float Cost { get; }
     public string Name { get; }
     public ConstructType constructType { get; }
+    public int phase { get; }
 }
 
 public enum ConstructType
 {
-    House, Farm, Factory, Supply, Road, Govern
+    House, Farm, EAI, Sevice, Road, Govern
 }
 
 

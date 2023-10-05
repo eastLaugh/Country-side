@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EventHandler 
+public class EventHandler
 {
     public static event Action<string> illuBookUnlocked;
     public static void CallilluBookUnlocked(string name)
@@ -39,5 +39,20 @@ public class EventHandler
     public static void CallInitSoundEffect(SoundName soundName)
     {
         InitSoundEffect?.Invoke(soundName);
+    }
+    public static event Action<ConstructType> BuildingWindowUpdate;
+    public static void CallBuildingWindowUpdate(ConstructType constructType)
+    {
+        BuildingWindowUpdate?.Invoke(constructType);
+    }
+    public static event Action<int> PhaseUpdate;
+    public static void CallPhaseUpdate(int newValue)
+    {
+        PhaseUpdate?.Invoke(newValue);
+    }
+    public static event Action ToAdiminstration;
+    public static void CallToAdiminstration()
+    {
+        ToAdiminstration?.Invoke();
     }
 }

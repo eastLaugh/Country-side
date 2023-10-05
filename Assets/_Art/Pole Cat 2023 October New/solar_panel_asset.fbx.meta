@@ -3,7 +3,42 @@ guid: 0ee258137d80a544a9337b6fc35dca2f
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: aluminio
+    second: {fileID: 2100000, guid: 277ca28241b5f67418f63b63dd4c3c73, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: celula_solar
+    second: {fileID: 2100000, guid: 62dc5a403fd8e894baa15549e8e2bafe, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "\u6750\u8D28"
+    second: {fileID: 2100000, guid: 9f474a217a3ef3c49adbd07d1b021a01, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: SolarPanel-DIFF
+    second: {fileID: 2800000, guid: 236595464fd8d7c419d4c8156cc6414c, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: SolarPanel-NORM
+    second: {fileID: 2800000, guid: 9bb9c22b7f76f2f4eae2c582e1f67979, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: SolarPanel-SPEC
+    second: {fileID: 2800000, guid: 477a15a96c775894f9d111b1ef8749e5, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: aluminium-brushed-metal-texture
+    second: {fileID: 2800000, guid: 5dace28bdeff23d41b51b898a8248bab, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -32,7 +67,7 @@ ModelImporter:
     extraExposedTransformPaths: []
     extraUserProperties: []
     clipAnimations: []
-    isReadable: 0
+    isReadable: 1
   meshes:
     lODScreenPercentages: []
     globalScale: 1

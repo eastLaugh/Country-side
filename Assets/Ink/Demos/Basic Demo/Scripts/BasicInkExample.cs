@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class BasicInkExample : MonoBehaviour
 {
 	public static event Action<Story> OnCreateStory;
-
+	[SerializeField] private TextMeshProUGUI storyText;
 	bool LOCKED = false;
 	private void Awake()
 	{
@@ -23,21 +23,23 @@ public class BasicInkExample : MonoBehaviour
 
 		Story.BindExternalFunction("Check", (string text) =>
 		{
-			LOCK(true);
-			AssignmentSystem.Instance.assignmentLists.ForEach((BasicAssignment assignment) =>
+            bool finished = false;
+            AssignmentSystem.assignmentList.ForEach((BasicAssignment assignment) =>
 			{
 				if (assignment.name == text)
 				{
-					assignment.onAssignmentFinished += () => LOCK(false);
+					if (assignment.finished) finished = true;
+ 					assignment.onAssignmentFinished += () => LOCK(false);
 				}
 			});
-		});
+            LOCK(!finished);
+        });
 	}
 
 	void LOCK(bool state)
 	{
 		LOCKED = state;
-		foreach (Button btn in panel.GetComponentsInChildren<Button>())
+		foreach (Button btn in Btns.GetComponentsInChildren<Button>())
 		{
 			btn.interactable = !LOCKED;
 		}
@@ -71,9 +73,11 @@ public class BasicInkExample : MonoBehaviour
 			// Continue gets the next line of the story
 			string text = Story.Continue();
 			// This removes any white space from the text.
+			Debug.Log(text);
 			text = text.Trim();
 			// Display the text on screen!
-			CreateContentView(text);
+			if (text.Length > 0) 
+				CreateContentView(text);
 		}
 
 		// Display all the choices, if there are any!
@@ -87,6 +91,7 @@ public class BasicInkExample : MonoBehaviour
 				button.onClick.AddListener(delegate
 				{
 					OnClickChoiceButton(choice);
+					EventHandler.CallInitSoundEffect(SoundName.BtnClick);
 				});
 			}
 		}
@@ -98,7 +103,7 @@ public class BasicInkExample : MonoBehaviour
 			// {
 			// 	StartStory();
 			// });
-			panel.SetActive(false);
+			//panel.SetActive(false);
 		}
 	}
 
@@ -112,10 +117,7 @@ public class BasicInkExample : MonoBehaviour
 	// Creates a textbox showing the the line of text
 	void CreateContentView(string text)
 	{
-		TextMeshProUGUI storyText = Instantiate(textPrefab).GetComponent<TextMeshProUGUI>();
 		storyText.text = text;
-		storyText.transform.SetParent(panel.transform, false);
-		storyText.gameObject.SetActive(true);
 	}
 
 	// Creates a button showing the choice text
@@ -123,7 +125,7 @@ public class BasicInkExample : MonoBehaviour
 	{
 		// Creates the button from a prefab
 		Button choice = Instantiate(buttonPrefab).GetComponent<Button>();
-		choice.transform.SetParent(panel.transform, false);
+		choice.transform.SetParent(Btns.transform, false);
 		choice.interactable = !LOCKED;
 
 		// Gets the text from the button prefab
@@ -141,10 +143,10 @@ public class BasicInkExample : MonoBehaviour
 	// Destroys all the children of this gameobject (all the UI)
 	void RemoveChildren()
 	{
-		int childCount = panel.transform.childCount;
+		int childCount = Btns.transform.childCount;
 		for (int i = childCount - 1; i >= 0; --i)
 		{
-			Destroy(panel.transform.GetChild(i).gameObject);
+			Destroy(Btns.transform.GetChild(i).gameObject);
 		}
 	}
 
@@ -153,7 +155,7 @@ public class BasicInkExample : MonoBehaviour
 	public static Story Story { get; private set; }
 
 	[SerializeField]
-	private GameObject panel = null;
+	private GameObject Btns = null;
 
 	// UI Prefabs
 	[SerializeField]

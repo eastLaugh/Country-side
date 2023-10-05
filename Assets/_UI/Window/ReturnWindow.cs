@@ -24,7 +24,7 @@ public class ReturnWindow : MonoBehaviour
         BtnNo.onClick.AddListener(() =>
         {
             timeController.Continue();
-            gameObject.SetActive(false);
+            window.SetActive(false);
         });
     }
 

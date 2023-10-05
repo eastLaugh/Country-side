@@ -24,7 +24,7 @@ public class Map
     [JsonProperty]
     public Vector2Int size { get; private set; }
     [JsonProperty]
-    public DateTime dateTime = Convert.ToDateTime("2015/01/01");
+    public DateTime dateTime = Convert.ToDateTime("2020/01/01");
     [JsonProperty]
     public List<string> FinishedAssignments = new List<string>();
     [JsonProperty]
@@ -36,12 +36,14 @@ public class Map
     [JsonProperty]
     public List<Farm> Farms = new List<Farm>();
     [JsonProperty]
-    public SolidMiddleware<Float> FarmProfitTotal = new SolidMiddleware<Float>(new Float(1f));
+    public SolidMiddleware<Float> FarmProfitTotal = new SolidMiddleware<Float>(new Float(0f));
     [JsonProperty]
     public SolidMiddleware<Int> HappinessTotal = new SolidMiddleware<Int>(new Int(0));
 
     [JsonProperty]
     public PersonSystem PersonSystem = new PersonSystem();
+    [JsonProperty]
+    public int Phase = 4;
 
     public Map(Vector2Int size, Slot[] Slots, int RandomSeed, GameDataVector mainData)
     {
@@ -81,7 +83,7 @@ public class Map
 
 
         //创建地图
-        Map map = new Map(size, slots, seed,new GameDataVector(831, 300, 0, 0));
+        Map map = new Map(size, slots, seed,new GameDataVector(831, 2000, 0, 0));
 
         //去中心化
         foreach (MapGenerator generator in InitAllGenerators())

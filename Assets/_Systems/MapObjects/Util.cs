@@ -17,11 +17,11 @@ public static class TypeUtil
 
     public static bool Accessible(this IEnumerable set, Type type)
     {
-        foreach (var element in set)
-        {
-            if (typeof(MustNotExist<>).MakeGenericType(type).IsAssignableFrom(FindTypeIfPlaceHolder(element)))
-                return false;
-        }
+        //foreach (var element in set)
+        //{
+        //    if (typeof(MustNotExist<>).MakeGenericType(type).IsAssignableFrom(FindTypeIfPlaceHolder(element)))
+        //        return false;
+        //}
 
         foreach (Type interf in type.GetInterfaces().Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(MustNotExist<>)))
         {

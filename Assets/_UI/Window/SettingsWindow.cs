@@ -14,7 +14,7 @@ public class SettingsWindow : MonoBehaviour
     [SerializeField] Toggle gridOn;
     [SerializeField] GameObject Grid;
     [SerializeField] AudioMixer audioMixer;
-    void OnEnable()
+    void Start()
     {
         gridOn.isOn = Settings.GridOn;
         MusicVolumeSlider.value = Settings.MusicVolume;
@@ -37,6 +37,13 @@ public class SettingsWindow : MonoBehaviour
             audioMixer.SetFloat("EffectVolume", newValue - 20);
         });
     }
+    public void Refresh()
+    {
+        gridOn.isOn = Settings.GridOn;
+        MusicVolumeSlider.value = Settings.MusicVolume;
+        EffectVolumeSlider.value = Settings.EffectVolume;
+    }
+    
     private void OnDisable()
     {
         BtnClose.onClick.RemoveAllListeners();

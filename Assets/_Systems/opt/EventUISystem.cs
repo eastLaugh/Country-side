@@ -49,8 +49,8 @@ public class EventUISystem : MonoBehaviour
     }
     private void RandomEvent()
     {
-        int random = UnityEngine.Random.Range(0, 30);
-        if (random == 1)
+        int random = UnityEngine.Random.Range(0, 60);
+        if (random == 1 && !EventUI.activeInHierarchy)
         {
             GenerateEvent();
         }

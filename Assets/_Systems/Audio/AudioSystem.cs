@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AudioSystem : MonoBehaviour
 {
@@ -9,9 +10,17 @@ public class AudioSystem : MonoBehaviour
     public SoundDetailsList_SO SoundDetailsList_SO;
     public static AudioSystem current;
     [SerializeField] AudioSource musicPlayer;
+    public AudioMixer audioMixer;
     private void Awake()
     {
         current = this;
+        
+    }
+    private void Start()
+    {
+        audioMixer.SetFloat("MasterVolume", Settings.MasterVolume - 10);
+        audioMixer.SetFloat("MusicVolume", Settings.MusicVolume - 20);
+        audioMixer.SetFloat("EffectVolume", Settings.MasterVolume - 20);
         SetMusic(SoundName.MenuMusic);
         musicPlayer.Play();
     }
@@ -41,5 +50,5 @@ public class AudioSystem : MonoBehaviour
 public enum SoundName
 {
     MenuMusic,GameMusic,
-    BtnClick,MissionFinish,Costruct,WrongPlace,SlotClick
+    BtnClick,MissionFinish,Costruct,WrongPlace,SlotClick,Demolish
 }

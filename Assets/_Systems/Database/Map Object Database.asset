@@ -15,40 +15,54 @@ MonoBehaviour:
   Dict:
     _serializedList:
     - Key:
-        _: WheatFarm
+        _: PitchRoad
       Value:
-        Prefab: {fileID: 4934836390079979911, guid: 70a819b3681068b4a9a125aee0738165,
+        Prefab: {fileID: 3305943240753798436, guid: 0f8273fdf02a20e4b81a732b627dad85,
           type: 3}
         Prefabs: []
         Size: {x: 1, y: 1}
     - Key:
-        _: AdobeHouse
+        _: VegeFarm
       Value:
-        Prefab: {fileID: 7239331957558054306, guid: 6865d750fd05a5c448a404c286c7f8d9,
+        Prefab: {fileID: 5548319181378054883, guid: 2ee32772c28365c4badc52d1baf3ed36,
           type: 3}
         Prefabs: []
         Size: {x: 1, y: 1}
     - Key:
-        _: WaterArea
+        _: Homestay
+      Value:
+        Prefab: {fileID: 5896173636876415482, guid: 4653387e18d89b44f8225ed0931d466f,
+          type: 3}
+        Prefabs: []
+        Size: {x: 1, y: 1}
+    - Key:
+        _: GreenHouse
+      Value:
+        Prefab: {fileID: 9027700337902997372, guid: 45088f809ccbaa14db1f37408e533be9,
+          type: 3}
+        Prefabs: []
+        Size: {x: 1, y: 1}
+    - Key:
+        _: intelGreenHouse
+      Value:
+        Prefab: {fileID: 7569635914832788990, guid: 685f1fb122cc26a46a9679dd2910e6a7,
+          type: 3}
+        Prefabs: []
+        Size: {x: 1, y: 1}
+    - Key:
+        _: FiveGArea
       Value:
         Prefab: {fileID: 4106138064997208481, guid: 13bf4b7afda86844e99dc7bb45d407bf,
           type: 3}
         Prefabs: []
         Size: {x: 1, y: 1}
     - Key:
-        _: Well
+        _: Station5G
       Value:
-        Prefab: {fileID: 4559752107709957308, guid: 78c4f1abbb95e8748baabdd638793597,
+        Prefab: {fileID: 8917210137871555974, guid: 3bc117b39010cba49bed7e0be1d40e20,
           type: 3}
         Prefabs: []
         Size: {x: 1, y: 1}
-    - Key:
-        _: TileHouse
-      Value:
-        Prefab: {fileID: 1812805813641912064, guid: 3b8d6b75408d1c04a80526a866c7d4e7,
-          type: 3}
-        Prefabs: []
-        Size: {x: 2, y: 1}
     - Key:
         _: CementHouse
       Value:
@@ -57,16 +71,16 @@ MonoBehaviour:
         Prefabs: []
         Size: {x: 1, y: 1}
     - Key:
-        _: Administration
+        _: PV
       Value:
-        Prefab: {fileID: 919132149155446097, guid: 22bef38faeb0a384e9697a6975d3c964,
+        Prefab: {fileID: 5986377068519697553, guid: 0eab5b352d9c99e46abccc2866b94a59,
           type: 3}
         Prefabs: []
         Size: {x: 1, y: 1}
     - Key:
-        _: DirtRoad
+        _: Administration
       Value:
-        Prefab: {fileID: 6651914639496876876, guid: 75ff4152e5c7e734897fdf52a35d2d21,
+        Prefab: {fileID: 919132149155446097, guid: 22bef38faeb0a384e9697a6975d3c964,
           type: 3}
         Prefabs: []
         Size: {x: 1, y: 1}
