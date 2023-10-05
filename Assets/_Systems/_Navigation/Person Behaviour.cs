@@ -87,42 +87,51 @@ public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExit
     bool isRecording = false;
     private void OnGUI()
     {
-        if (GameManager.DebugMode)
+        if (true)
         {
 
             if (SelectedPerson == this)
             {
-                Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
-                var rect = new Rect(screenPos.x, Screen.height - screenPos.y, 200, 200);
-                // GUI.Box(rect, "Person");
-                GUILayout.BeginArea(rect, GUI.skin.box);
-
+                if (GameManager.DebugMode)
                 {
-                    GUILayout.BeginHorizontal();
-                    GUILayout.Label(person.name);
-                    if (GUILayout.Button("X"))
+
+                    Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
+                    var rect = new Rect(screenPos.x, Screen.height - screenPos.y, 200, 200);
+                    // GUI.Box(rect, "Person");
+                    GUILayout.BeginArea(rect, GUI.skin.box);
+
                     {
-                        DeSelect();
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Label(person.name);
+                        if (GUILayout.Button("X"))
+                        {
+                            DeSelect();
+                        }
+                        GUILayout.EndHorizontal();
                     }
-                    GUILayout.EndHorizontal();
+                    if (!isRecording && GUILayout.Button("录入路径点"))
+                    {
+                        SlotRender.OnAnySlotClicked += OnAnySlotClicked;
+                        isRecording = true;
+                    }
+                    if (isRecording && GUILayout.Button("结束录入"))
+                    {
+                        SlotRender.OnAnySlotClicked -= OnAnySlotClicked;
+                        isRecording = false;
+                    }
+                    if (GUILayout.Button("清除路径点"))
+                    {
+
+                    }
+
+
+                    GUILayout.EndArea();
                 }
-                if (!isRecording && GUILayout.Button("录入路径点"))
-                {
-                    SlotRender.OnAnySlotClicked += OnAnySlotClicked;
-                    isRecording = true;
-                }
-                if (isRecording && GUILayout.Button("结束录入"))
-                {
-                    SlotRender.OnAnySlotClicked -= OnAnySlotClicked;
-                    isRecording = false;
-                }
-                if (GUILayout.Button("清除路径点"))
+                else
                 {
 
                 }
 
-
-                GUILayout.EndArea();
             }
         }
     }
@@ -146,6 +155,15 @@ public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     void OnSelect()
     {
+        if (GameManager.DebugMode)
+        {
+
+        }
+        else
+        {
+
+        }
+        ChatWindow.OpenOrCreate(person);
     }
 
     void DeSelect()
@@ -153,6 +171,16 @@ public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExit
         if (SelectedPerson == this)
             SelectedPerson = null;
         outline.enabled = false;
+
+        if (GameManager.DebugMode)
+        {
+
+        }
+        else
+        {
+            
+        }
+        ChatWindow.Close(person);
     }
 
     private void OnAnySlotClicked(SlotRender render)

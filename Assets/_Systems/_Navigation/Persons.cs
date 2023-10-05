@@ -17,7 +17,7 @@ internal class Persons
         }
     }
 
-    public class Headman : Person
+    public class Headman : Person, Person.IPromptProvider
     {
         public static Headman instance { get; private set; }
         public Headman(string name, Vector3 worldPosition) : base(name, worldPosition)
@@ -32,5 +32,11 @@ internal class Persons
         {
             instance = this;
         }
+
+        public string GetPrompt()
+        {
+            return $"你是村长，名为{name}。";
+        }
     }
 }
+

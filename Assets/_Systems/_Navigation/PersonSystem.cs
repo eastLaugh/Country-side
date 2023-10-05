@@ -10,6 +10,8 @@ public partial class Person
     public class PersonSystem
     {
 
+
+
         [JsonProperty]
         public readonly List<Person> persons = new();
         public PersonSystem()
@@ -39,5 +41,9 @@ public partial class Person
                 EnablePerson(p);
             }
         }
+
+
+
     }
 }
+
