@@ -36,8 +36,10 @@ partial class Slot
 
         public readonly static Vector2[] DirectionToVector2 = new Vector2[] { Vector2.up, Vector2.right, Vector2.down, Vector2.left };
 
+        [JsonIgnore]
         protected Transform father { get; private set; }
-        protected GameObject gameObject => father.gameObject;
+        [JsonIgnore]
+        public GameObject gameObject => father.gameObject;
 
         public static bool CanBeInjected(Slot slot, Type detectedType) => slot.mapObjects.Accessible(detectedType);
 

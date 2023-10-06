@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Slot;
 
@@ -56,12 +58,36 @@ public static partial class MapObjects
                 {
                     if (mapObject is Road road)
                     {
-                        //road.slot.slotRender.Shake();
-
+                        road.slot.slotRender.Shake();
                     }
                     else
                     {
                         InfoWindow.Create("Cluster模块 出错了");
+                    }
+                }
+                foreach (MapObject reachable in cluster.ReachableMapObjects)
+                {
+                    MapObject obj;
+                    if(reachable is PlaceHolder p){
+                        obj = p.mapObject;
+                    }else{
+                        obj = reachable;
+                    }
+                    var outline = obj.gameObject.GetComponent<Outline>();
+                    if (outline == null)
+                    {
+                        outline = obj.gameObject.AddComponent<Outline>();
+                        outline.OutlineColor = Color.red;
+                    }
+                    GameManager.current.StartCoroutine(Wait());
+
+                    IEnumerator Wait()
+                    {
+                        yield return new WaitForSeconds(0.5f);
+                        if (outline)
+                        {
+                            GameManager.Destroy(outline);
+                        }
                     }
                 }
             }

@@ -13,10 +13,12 @@ partial class MapObjects
         [JsonProperty]
         public readonly MapObject mapObject;
 
+
         public PlaceHolder(MapObject mapObject)
         {
             this.mapObject = mapObject;
             mapObject.PlaceHolders.Add(this);
+            Direction = mapObject.Direction; //注意这个语句实际不奏效，因为PlaceHolder在被注入前，主MapObject尚未被注入，主MapObject不在地图上，尚未存在方向(0)
         }
 
         [JsonConstructor]
@@ -30,6 +32,7 @@ partial class MapObjects
         public void ProvideInfo(Action<string> provide)
         {
             provide(mapObject.GetType() + " 占位符");
+            provide("朝向: " + Direction);
         }
 
         protected override void OnCreated()

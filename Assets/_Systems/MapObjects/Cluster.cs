@@ -41,8 +41,6 @@ public class Cluster
     [JsonProperty]
     public HashSet<MapObject> mapObjects { get; private set; } = new();
 
-    [JsonProperty]
-    public HashSet<MapObject> RechableMapObjects { get; private set; } = new();
     public void Push(Slot.MapObject targetMapObject)
     {
         if (targetMapObject.GetType() != MapObjectType)
@@ -105,7 +103,7 @@ public class Cluster
         {
             if (!ReachableMapObjects.Contains(mapObject))
             {
-                RechableMapObjects.Add(mapObject);
+                ReachableMapObjects.Add(mapObject);
                 OnReach?.Invoke(mapObject);
             }
         }

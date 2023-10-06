@@ -35,7 +35,7 @@ public class BuildMode : StateMachineBehaviour
                     {
                         ApplyTo += host =>
                         {
-                            new MapObjects.PlaceHolder(host).Inject(render.slot.map[x, y]);
+                            new MapObjects.PlaceHolder(host).Inject(render.slot.map[x, y], direction: BuildingWindow.selectedDirection);
                         };
                     }
                 }
