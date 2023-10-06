@@ -20,11 +20,12 @@ partial class MapObjects
         }
 
         [JsonConstructor]
-        public PlaceHolder(){
+        public PlaceHolder()
+        {
 
         }
 
-        public override bool CanBeUnjected => true;
+        public override bool CanBeUnjected => mapObject.CanBeUnjected;
 
         public void ProvideInfo(Action<string> provide)
         {
@@ -37,10 +38,6 @@ partial class MapObjects
 
         protected override void OnDisable()
         {
-            if (!mapObject.CanBeUnjected)
-            {
-                Inject(mapObject.slot);
-            }
         }
 
         protected override void OnEnable()

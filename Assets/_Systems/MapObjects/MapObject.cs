@@ -22,7 +22,7 @@ partial class Slot
         public static event Action<MapObject> OnUnjected;
 
         [JsonProperty]
-        public HashSet<MapObject> PlaceHolders { get;private set; } = new();
+        public HashSet<MapObject> PlaceHolders { get; private set; } = new();
 
         public event Action<MapObject> OnMapObjectUnjected;
 
@@ -184,23 +184,40 @@ partial class Slot
         {
             if (this.slot != null && this.slot.mapObjects.Contains(this))
             {
-                if (CanBeUnjected || force)
+                if (this is PlaceHolder placeHolder)
                 {
-                    slot.mapObjects.Remove(this);
-                    slot.slotRender.OnRender -= UniqueRenderInvoke;
-                    slot.slotRender.OnSlotClicked -= _ => OnClick();
-                    slot.map.OnCreated -= _ => OnCreated();
-
-                    UnityEngine.Object.Destroy(father.gameObject);
-                    slot.OnSlotUpdate?.Invoke();
-
-                    OnDisable();
-                    OnUnjected?.Invoke(this);
-                    OnMapObjectUnjected?.Invoke(this);
-                    this.cluster = null;
-                    this.slot = null;
+                    Debug.Assert(placeHolder.mapObject != null);
+                    placeHolder.mapObject.Unject(force);
+                }
+                else
+                {
+                    if (CanBeUnjected || force)
+                    {
+                        UnjectSingle();
+                        foreach (PlaceHolder p in PlaceHolders)
+                        {
+                            p.UnjectSingle();
+                        }
+                    }
                 }
             }
+        }
+
+        void UnjectSingle()
+        {
+            slot.mapObjects.Remove(this);
+            slot.slotRender.OnRender -= UniqueRenderInvoke;
+            slot.slotRender.OnSlotClicked -= _ => OnClick();
+            slot.map.OnCreated -= _ => OnCreated();
+
+            UnityEngine.Object.Destroy(father.gameObject);
+            slot.OnSlotUpdate?.Invoke();
+
+            OnDisable();
+            OnUnjected?.Invoke(this);
+            OnMapObjectUnjected?.Invoke(this);
+            this.cluster = null;
+            this.slot = null;
         }
 
         public virtual void OnClick()

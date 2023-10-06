@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine;
 using System.Linq;
+using UnityEditor.Experimental.GraphView;
 
 //[JsonConverter(typeof(SlotConvertor))]
 public abstract partial class Slot
@@ -88,7 +89,20 @@ public abstract partial class Slot
 
     public T GetMapObject<T>() /*where T : MapObject*/ where T : class
     {
-        return mapObjects.FirstOrDefault(mapObject => mapObject is T || (mapObject is MapObjects.PlaceHolder && (mapObject as MapObjects.PlaceHolder).mapObject is T)) as T;
+        return mapObjects.FirstOrDefault(mapObject => mapObject is T) as T;
+    }
+
+    public IEnumerable<T> GetMapObjectsIfPlaceHolder<T>()
+    {
+        return mapObjects.SelectMany(m =>
+        {
+            if (m is T t)
+                return new T[] { t };
+            else if (m is MapObjects.PlaceHolder p && p.mapObject is T t2)
+                return new T[] { t2 };
+            else
+                return new T[] { };
+        });
     }
 
     public MapObject GetMapObject(Type type)
@@ -122,6 +136,6 @@ public abstract partial class Slot
 
     internal IEnumerable<T> GetMapObjects<T>() where T : class
     {
-        return mapObjects.Select(mapObject => mapObject is T) as IEnumerable<T>;
+        return mapObjects.Where(mapObject => mapObject is T) as IEnumerable<T>;
     }
 }
