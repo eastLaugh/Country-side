@@ -18,11 +18,6 @@ MonoBehaviour:
     soundPitchMin: 1.014
     soundPitchMax: 1.041
     soundVolume: 0.2
-  - soundName: 6
-    soundClip: {fileID: 8300000, guid: f1e0972bad6dbf84e811de83b152db90, type: 3}
-    soundPitchMin: 1.334
-    soundPitchMax: 1.389
-    soundVolume: 0.1
   - soundName: 0
     soundClip: {fileID: 8300000, guid: 6d67d49ea1f44b94f870cdcc43dc582a, type: 3}
     soundPitchMin: 1
@@ -33,23 +28,33 @@ MonoBehaviour:
     soundPitchMin: 1
     soundPitchMax: 1
     soundVolume: 0.1
-  - soundName: 5
+  - soundName: 7
     soundClip: {fileID: 8300000, guid: f5c2accd255e9ee4f8db873e8a001ac8, type: 3}
     soundPitchMin: 1
     soundPitchMax: 1
     soundVolume: 0.1
-  - soundName: 4
+  - soundName: 6
     soundClip: {fileID: 8300000, guid: de70a4ac6a950424ba3d448d269be4af, type: 3}
     soundPitchMin: 1
     soundPitchMax: 1
     soundVolume: 0.1
-  - soundName: 3
+  - soundName: 5
     soundClip: {fileID: 8300000, guid: 6217b6b57fc09a94ab2f85f4fb36dda4, type: 3}
     soundPitchMin: 1.2
     soundPitchMax: 1.2
     soundVolume: 0.4
   - soundName: 3
-    soundClip: {fileID: 8300000, guid: 6217b6b57fc09a94ab2f85f4fb36dda4, type: 3}
-    soundPitchMin: 1.5
-    soundPitchMax: 1.2
+    soundClip: {fileID: 8300000, guid: 32d4b1811dda14a6cb9e059ee8ad17d2, type: 3}
+    soundPitchMin: 0.6
+    soundPitchMax: 0.6
     soundVolume: 0.4
+  - soundName: 4
+    soundClip: {fileID: 8300000, guid: 19f89c6e740e7447f9e12a8310d3e973, type: 3}
+    soundPitchMin: 1
+    soundPitchMax: 1
+    soundVolume: 0.1
+  - soundName: 8
+    soundClip: {fileID: 8300000, guid: 19f89c6e740e7447f9e12a8310d3e973, type: 3}
+    soundPitchMin: 1
+    soundPitchMax: 1
+    soundVolume: 0.1

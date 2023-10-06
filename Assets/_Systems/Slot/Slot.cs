@@ -88,7 +88,7 @@ public abstract partial class Slot
 
     public T GetMapObject<T>() /*where T : MapObject*/ where T : class
     {
-        return mapObjects.FirstOrDefault(mapObject => mapObject is T) as T;
+        return mapObjects.FirstOrDefault(mapObject => mapObject is T || (mapObject is MapObjects.PlaceHolder && (mapObject as MapObjects.PlaceHolder).mapObject is T)) as T;
     }
 
     public MapObject GetMapObject(Type type)

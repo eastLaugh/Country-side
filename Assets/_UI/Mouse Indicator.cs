@@ -11,6 +11,7 @@ public class MouseIndicator : MonoBehaviour
     public Renderer MainIndicator;
     public Transform PlaneIndicator;
     public Material DefaultMaterial;
+    [SerializeField] GameObject Arrow;
 
     Color defaultColor;
     private void Awake()
@@ -45,12 +46,14 @@ public class MouseIndicator : MonoBehaviour
         SlotRender.OnAnySlotEnter -= RefreshInBuildMode;
         SlotRender.OnAnySlotClicked -= RefreshInBuildMode;
         SetColor(defaultColor);
+        Arrow.SetActive(false);
     }
 
     private void OnBuildModeEnter()
     {
         SlotRender.OnAnySlotEnter += RefreshInBuildMode;
         SlotRender.OnAnySlotClicked += RefreshInBuildMode;
+        Arrow.SetActive(true);
     }
 
 

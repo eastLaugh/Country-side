@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class BuildingWindow : MonoBehaviour
 {
+    Map map;
+    public bool isMaploaded = false;
     public static event Action<Type> OnUpdate;
     public RectTransform Content;
     public GameObject ButtonPattern;
@@ -20,21 +22,32 @@ public class BuildingWindow : MonoBehaviour
 
     private void OnEnable()
     {
+        GameManager.OnMapLoaded += OnMapLoaded;
+        GameManager.OnMapUnloaded += OnMapUnloaded;
         SlotRender.OnAnySlotEnter += OnAnySlotEnter;
-        EventHandler.MoneyUpdate += CheckCost;
-        EventHandler.BuildingWindowUpdate += UpdateWindow;
-        EventHandler.PhaseUpdate += CheckPhase;
     }
 
     private void OnDisable()
     {
         Debug.Log("disable");
         SlotRender.OnAnySlotEnter -= OnAnySlotEnter;
+        GameManager.OnMapUnloaded -= OnMapUnloaded;
+    }
+    private void OnMapUnloaded()
+    {
+        isMaploaded = false;
         EventHandler.MoneyUpdate -= CheckCost;
         EventHandler.BuildingWindowUpdate -= UpdateWindow;
         EventHandler.PhaseUpdate -= CheckPhase;
     }
-
+    private void OnMapLoaded(Map map)
+    {
+        this.map = map;
+        isMaploaded = true;
+        EventHandler.MoneyUpdate += CheckCost;
+        EventHandler.BuildingWindowUpdate += UpdateWindow;
+        EventHandler.PhaseUpdate += CheckPhase;
+    }
     SlotRender enteredSlotRender;
     private void OnAnySlotEnter(SlotRender render)
     {
@@ -127,7 +140,7 @@ public class BuildingWindow : MonoBehaviour
 
                     Button button = NewOption(ins.Name, ins.Cost,ins.phase, button =>
                     {
-                        EventHandler.CallInitSoundEffect(SoundName.BtnClick);
+                        EventHandler.CallInitSoundEffect(SoundName.BtnClick1);
                         OnButtonClick(mapObjectType, button);
                     });
                     OptionButtons.Add(new BuildingBtn { btn = button,phase = ins.phase});
@@ -138,7 +151,7 @@ public class BuildingWindow : MonoBehaviour
 
                     Button button = NewOption(ins.Name, ins.Cost, ins.phase, button =>
                     {
-                        EventHandler.CallInitSoundEffect(SoundName.BtnClick);
+                        EventHandler.CallInitSoundEffect(SoundName.BtnClick1);
                         OnButtonClick(mapObjectType, button);
                     });
                     OptionButtons.Add(new BuildingBtn { btn = button, phase = ins.phase });

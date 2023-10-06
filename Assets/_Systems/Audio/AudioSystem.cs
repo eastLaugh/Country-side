@@ -50,5 +50,5 @@ public class AudioSystem : MonoBehaviour
 public enum SoundName
 {
     MenuMusic,GameMusic,
-    BtnClick,MissionFinish,Costruct,WrongPlace,SlotClick,Demolish
+    BtnClick1,BtnClick2,BtnClick3,MissionFinish,Costruct,WrongPlace,SlotClick,Demolish
 }

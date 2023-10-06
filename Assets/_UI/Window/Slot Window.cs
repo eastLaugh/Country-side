@@ -28,35 +28,64 @@ public class SlotWindow : MonoBehaviour
         if (!BuildMode.hasEntered)
         {
             var mapObjects = render.slot.mapObjects;
-            foreach(var mapObject  in mapObjects)
+            if(mapObjects.Count > 0 )
             {
-                if (mapObject is MapObjects.House house)
+                foreach (var mapObject in mapObjects)
                 {
-                    
-                    content.text = "容载人口：" + house.Capacity.ToString();
-                    warining.text = house.Warning;
-                    return;
-                }
-                else if (mapObject is MapObjects.Farm farm)
-                {
+                    Slot.MapObject RMapObject;
+                    if(mapObject is PlaceHolder)
+                    {
+                        RMapObject = (mapObject as PlaceHolder).mapObject;
+                    }
+                    else
+                        RMapObject = mapObject;
+                    if (typeof(IConstruction).IsAssignableFrom(RMapObject.GetType()))
+                    {
+                        Debug.Log("construction");
+                        IConstruction construction = (IConstruction)RMapObject;
+                        nameText.text = construction.Name;
+                        if (construction.energyConsumption != 0)
+                            content.text = "能源消耗：" + construction.energyConsumption.ToString() + "\n";
+                        else
+                            content.text = "";
+                        warining.text = "";
+                    }
+                    else
+                    {
+                        var cfg = SlotDatabase.main[render.slot.GetType()];
+                        nameText.text = cfg.name;
+                        content.text = "";
+                        warining.text = "";
+                    }
+                    if (RMapObject is House house)
+                    {
+                        content.text += "容载人口：" + house.Capacity.ToString() + "\n";
+                        warining.text = house.Warning;
+                        
+                    }
+                    if (RMapObject is Farm farm)
+                    {
+                        var profitTotal = GameManager.current.map.FarmProfitTotal;
+                        profitTotal.UpdateValue(new Float(farm.Profit));
+                        var profit = profitTotal.currentValue.m_value;
+                        content.text += "产出：" + profit.ToString("F2") + "万" + "\n";
+                        warining.text = "";                     
+                    }
+                    if(RMapObject is IPowerSupply power)
+                    {
+                        content.text += "能源供给：" + power.Power.ToString() + "\n";
+                    }
 
-                    
-                    var profitTotal = GameManager.current.map.FarmProfitTotal;
-                    profitTotal.UpdateValue(new Float(farm.Profit));
-                    var profit = profitTotal.currentValue.m_value;
-                    content.text = "产出：" + profit.ToString() + "万";
-                    warining.text = "";
-                    return;
-                }
-                else if(mapObject is IConstruction construction)
-                {
-                    nameText.text = construction.Name;
                 }
             }
-            var cfg = SlotDatabase.main[render.slot.GetType()];
-            nameText.text = cfg.name;
-            content.text = "";
-            warining.text = "";
+            else
+            {
+                var cfg = SlotDatabase.main[render.slot.GetType()];
+                nameText.text = cfg.name;
+                content.text = "";
+                warining.text = "";
+            }
+            
             return;
         }
             

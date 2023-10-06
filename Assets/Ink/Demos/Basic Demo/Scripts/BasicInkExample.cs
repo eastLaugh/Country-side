@@ -5,13 +5,26 @@ using Ink.Runtime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.EventSystems;
 // This is a super bare bones example of how to play and display a ink story in Unity.
-public class BasicInkExample : MonoBehaviour
+public class BasicInkExample : MonoBehaviour, IPointerClickHandler
 {
-	public static event Action<Story> OnCreateStory;
+    Map map;
+    public bool isMaploaded = false;
+    public static event Action<Story> OnCreateStory;
 	[SerializeField] private TextMeshProUGUI storyText;
-	bool LOCKED = false;
+    [SerializeField]
+    private TextAsset inkJSONAsset = null;
+    public static Story Story { get; private set; }
+    [SerializeField]
+    private GameObject Btns = null;
+    // UI Prefabs
+    [SerializeField]
+    private GameObject textPrefab = null;
+    [SerializeField]
+    private GameObject buttonPrefab = null;
+    bool LOCKED = false;
+	bool isChoices;
 	private void Awake()
 	{
 		Story = new Story(inkJSONAsset.text);
@@ -44,12 +57,37 @@ public class BasicInkExample : MonoBehaviour
 			btn.interactable = !LOCKED;
 		}
 	}
+    private void OnEnable()
+    {
+        GameManager.OnMapLoaded += OnMapLoaded;
+        GameManager.OnMapUnloaded += OnMapUnloaded;
 
-	void Start()
+        // Debug.Log("OnEable");
+    }
+    private void OnDisable()
+    {
+        GameManager.OnMapUnloaded -= OnMapUnloaded;
+        //Debug.Log("Ondisable");
+    }
+    private void OnMapUnloaded()
+    {
+        isMaploaded = false;
+    }
+
+    private void OnMapLoaded(Map map)
+    {
+        this.map = map;
+        isMaploaded = true;
+		if(!map.isTurtorialDone) 
+		{
+            RemoveChildren();
+            StartStory();
+        }
+    }
+    void Start()
 	{
 		// Remove the default message
-		RemoveChildren();
-		StartStory();
+		
 	}
 
 	// Creates a new Story object with the compiled story which we can then play!
@@ -68,7 +106,7 @@ public class BasicInkExample : MonoBehaviour
 		RemoveChildren();
 
 		// Read all the content until we can't continue any more
-		while (Story.canContinue)
+		if(Story.canContinue)
 		{
 			// Continue gets the next line of the story
 			string text = Story.Continue();
@@ -83,6 +121,7 @@ public class BasicInkExample : MonoBehaviour
 		// Display all the choices, if there are any!
 		if (Story.currentChoices.Count > 0)
 		{
+			isChoices = true;
 			for (int i = 0; i < Story.currentChoices.Count; i++)
 			{
 				Choice choice = Story.currentChoices[i];
@@ -91,7 +130,7 @@ public class BasicInkExample : MonoBehaviour
 				button.onClick.AddListener(delegate
 				{
 					OnClickChoiceButton(choice);
-					EventHandler.CallInitSoundEffect(SoundName.BtnClick);
+					EventHandler.CallInitSoundEffect(SoundName.BtnClick1);
 				});
 			}
 		}
@@ -104,6 +143,10 @@ public class BasicInkExample : MonoBehaviour
 			// 	StartStory();
 			// });
 			//panel.SetActive(false);
+			if(!map.isTurtorialDone)
+			{
+				map.isTurtorialDone = true;
+			}
 		}
 	}
 
@@ -111,6 +154,7 @@ public class BasicInkExample : MonoBehaviour
 	void OnClickChoiceButton(Choice choice)
 	{
 		Story.ChooseChoiceIndex(choice.index);
+		isChoices = false;
 		RefreshView();
 	}
 
@@ -150,16 +194,13 @@ public class BasicInkExample : MonoBehaviour
 		}
 	}
 
-	[SerializeField]
-	private TextAsset inkJSONAsset = null;
-	public static Story Story { get; private set; }
-
-	[SerializeField]
-	private GameObject Btns = null;
-
-	// UI Prefabs
-	[SerializeField]
-	private GameObject textPrefab = null;
-	[SerializeField]
-	private GameObject buttonPrefab = null;
+    public void OnPointerClick(PointerEventData eventData)
+    {
+       if(!isChoices)
+	   {
+            RefreshView();
+			EventHandler.CallInitSoundEffect(SoundName.BtnClick2);
+        }
+			
+    }
 }

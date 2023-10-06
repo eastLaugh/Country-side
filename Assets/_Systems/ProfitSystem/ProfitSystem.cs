@@ -28,7 +28,13 @@ public class ProfitSystem : MonoBehaviour
         }
         //Debug.Log(map.Farms.Count);
         map.FarmProfitTotal.UpdateValue(new Float(profit));
-        map.MainData.Money += map.FarmProfitTotal.currentValue.m_value;
+        float OtherProfit = 0;
+        foreach(var ele in map.OtherProfits)
+        {
+            OtherProfit += ele.Profit;
+        }
+        map.MainData.Money += map.FarmProfitTotal.currentValue.m_value + OtherProfit;
+        
     }
     private void OnDisable()
     {

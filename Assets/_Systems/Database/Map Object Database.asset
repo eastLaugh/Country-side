@@ -87,10 +87,10 @@ MonoBehaviour:
     - Key:
         _: Administration
       Value:
-        Prefab: {fileID: 919132149155446097, guid: 22bef38faeb0a384e9697a6975d3c964,
+        Prefab: {fileID: 4180746334803348499, guid: 8fb3f343dd05d7747926893a40ae1f60,
           type: 3}
         Prefabs: []
-        Size: {x: 1, y: 1}
+        Size: {x: 3, y: 2}
     - Key:
         _: RiceFarm
       Value:

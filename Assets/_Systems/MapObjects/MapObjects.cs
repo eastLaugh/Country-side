@@ -201,7 +201,8 @@ public static partial class MapObjects
         public ConstructType constructType => ConstructType.House;
 
         public abstract int phase { get; }
-
+        IconPattern iconPattern;
+        GameObject WarningIcon;
         public abstract int energyConsumption { get; }
 
         public void CheckConnection()
@@ -221,17 +222,33 @@ public static partial class MapObjects
             }
 
             var ConnectCPU = m_capacity.CPUs.Find((cpu) => { return cpu.name == "未连通"; });
-            if (!Connected && ConnectCPU.name == null)
+            if (!Connected)
             {
-                m_capacity.AddCPU(new SolidMiddleware<Int>.CPU
-                { name = "未连通", Addition = new Int(0), Multipliable = true, Multiplication = new Int(0) });
-                Warning = "未连通";
-
+                if(ConnectCPU.name == null)
+                {
+                    m_capacity.AddCPU(new SolidMiddleware<Int>.CPU
+                    { name = "未连通", Addition = new Int(0), Multipliable = true, Multiplication = new Int(0) });
+                    Warning = "未连通";
+                }             
+                if(WarningIcon!=null)
+                {
+                    WarningIcon.SetActive(true);
+                    //Debug.Log("IconSetActive");
+                }
+                
             }
-            else if (Connected && ConnectCPU.name != null)
+            else if (Connected)
             {
-                m_capacity.RemoveCPU(ConnectCPU);
-                Warning = null;
+                if(ConnectCPU.name != null)
+                {
+                    m_capacity.RemoveCPU(ConnectCPU);
+                    Warning = null;
+                }               
+                if (WarningIcon != null)
+                {
+                    WarningIcon.SetActive(false);
+                }
+                
             }
         }
 
@@ -242,8 +259,6 @@ public static partial class MapObjects
         }
         protected override void OnEnable()
         {
-
-
             CheckConnection();
             EventHandler.DayPass += CheckConnection;
             GameManager.OnMapUnloaded += OnMapUnloaded;
@@ -260,49 +275,16 @@ public static partial class MapObjects
 
         public override void OnClick()
         {
-            //if (MapObjectDatabase.main[GetType()].Size == Vector2Int.one)
-            //{
-            //    //转变朝向
-            //    Direction = (Direction + 1) % 4;
-            //    slot.slotRender.Refresh();
-            //}
-            //else
-            //{
-            //    //暂不支持多格建筑物转向
-            //}
+        }
+        protected override void Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
+        {
+            base.Render(prefab, prefabs, slotRender);
+            iconPattern = IconPattern.Create(father, Vector3.up);
+            WarningIcon = iconPattern.New("!");
+            WarningIcon.SetActive(false);
         }
 
-        //public void ProvideInfo(Action<string> provide)
-        //{
-        //    SlotRender.OnAnySlotExit += ResetArrow;
 
-        //    void ResetArrow(SlotRender _)
-        //    {
-        //        for (int i = lastArrowRender.Count - 1; i >= 0; i--)
-        //        {
-        //            MonoBehaviour.Destroy(lastArrowRender[i].gameObject);
-        //        }
-        //        lastArrowRender.Clear();
-
-        //        SlotRender.OnAnySlotExit -= ResetArrow;
-        //    }
-
-        //    Road r = map[slot.position + 上右下左[Direction]]?.GetMapObject<Road>();
-
-        //    if (r != null)
-        //    {
-        //        provide("道路");
-        //        foreach (MapObject reachable in r.cluster.RechableMapObjects)
-        //        {
-        //            if (reachable != this)
-        //            {
-        //                lastArrowRender.Add(ArrowRender.NewArrow(slot.worldPosition, reachable.slot.worldPosition));
-        //            }
-        //        }
-        //    }
-        //}
-        //[JsonIgnore]
-        //static List<ArrowRender> lastArrowRender = new();
     }
 
 
@@ -375,19 +357,22 @@ public static partial class MapObjects
     /// <summary>
     /// 民宿
     /// </summary>
-    public class Homestay : House,MustNotExist<IConstruction>
+    public class Homestay : House, MustNotExist<IConstruction>, IOtherProfit
     {
         public override float Cost => 65;
 
         public override string Name => "民宿";
         public override int phase => 4;
         public override int energyConsumption => 1;
+
+        public float Profit => 0.05f;
+
         protected override void OnCreated()
         {
             base.OnCreated();
             m_capacity = new SolidMiddleware<Int>(new Int(25));
             map.Houses.Add(this);
-
+            map.OtherProfits.Add(this);
         }
 
         protected override void OnDisable()
@@ -597,7 +582,7 @@ public abstract class RippleEffectBuilding<Eff> : MapObject where Eff : MapObjec
     }
 
 }
-public interface IConstruction
+public interface IConstruction: MustNotExist<MapObjects.Tree>, MustNotExist<MapObjects.Lake>
 {
     public float Cost { get; }
     public string Name { get; }

@@ -23,31 +23,31 @@ public class BuildingButton : MonoBehaviour
         {
             OnBtnClick(BtnHouse);
             EventHandler.CallBuildingWindowUpdate(ConstructType.House);
-            EventHandler.CallInitSoundEffect(SoundName.BtnClick);
+            EventHandler.CallInitSoundEffect(SoundName.BtnClick1);
         });
         BtnFarm.onClick.AddListener(() =>
         {
             OnBtnClick(BtnFarm);
             EventHandler.CallBuildingWindowUpdate(ConstructType.Farm);
-            EventHandler.CallInitSoundEffect(SoundName.BtnClick);
+            EventHandler.CallInitSoundEffect(SoundName.BtnClick1);
         });
         BtnEAI.onClick.AddListener(() =>
         {
             OnBtnClick(BtnEAI);
             EventHandler.CallBuildingWindowUpdate(ConstructType.EAI);
-            EventHandler.CallInitSoundEffect(SoundName.BtnClick);
+            EventHandler.CallInitSoundEffect(SoundName.BtnClick1);
         });
         BtnSevice.onClick.AddListener(() =>
         {
             OnBtnClick(BtnSevice);
             EventHandler.CallBuildingWindowUpdate(ConstructType.Sevice);
-            EventHandler.CallInitSoundEffect(SoundName.BtnClick);
+            EventHandler.CallInitSoundEffect(SoundName.BtnClick1);
         });
         BtnRoad.onClick.AddListener(() =>
         {
             OnBtnClick(BtnRoad);
             EventHandler.CallBuildingWindowUpdate(ConstructType.Road);
-            EventHandler.CallInitSoundEffect(SoundName.BtnClick);
+            EventHandler.CallInitSoundEffect(SoundName.BtnClick1);
         });
         //BtnHouse.onClick?.Invoke();
     }

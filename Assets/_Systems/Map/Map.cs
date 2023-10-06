@@ -43,7 +43,10 @@ public class Map
     public SolidMiddleware<Float> FarmProfitTotal = new SolidMiddleware<Float>(new Float(0f));
     [JsonProperty]
     public SolidMiddleware<Int> HappinessTotal = new SolidMiddleware<Int>(new Int(0));
-   
+    [JsonProperty]
+    public bool isTurtorialDone = false;
+    [JsonProperty]
+    public bool isPrefaceDone = false;
     [JsonProperty]
     public PersonSystem PersonSystem = new PersonSystem();
     [JsonProperty]
@@ -87,7 +90,7 @@ public class Map
 
 
         //创建地图
-        Map map = new Map(size, slots, seed,new GameDataVector(831, 2000, 0, 0));
+        Map map = new Map(size, slots, seed,new GameDataVector(831, 2000, 0, 50));
 
         //去中心化
         foreach (MapGenerator generator in InitAllGenerators())

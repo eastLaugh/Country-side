@@ -97,26 +97,30 @@ public class GameDataView : MonoBehaviour
     {
         if(!isMapLoaded) { return; }
         m_data = map.MainData;
-        var totalHappiness = map.HappinessTotal.currentValue.m_value;
+        var totalHappiness = Mathf.Clamp(map.HappinessTotal.currentValue.m_value,0,100);
         
-        if(totalHappiness < 20)
+        if(totalHappiness < 30)
         {
             Happiness.color = Color.red;
         }
-        else if (totalHappiness >= 20 && totalHappiness < 50)
+        else if (totalHappiness >= 30 && totalHappiness < 60)
         { 
             Happiness.color = Color.yellow;
         }
-        else if (totalHappiness >= 50 && totalHappiness < 80)
+        else if (totalHappiness >= 50 && totalHappiness < 85)
         {
             Happiness.color = Color.blue;
         }
-        else if (m_data.Happiness > 80)
+        else if (m_data.Happiness > 85)
         {
             Happiness.color = Color.green;
         }
-
-        MoneyDelta.text = "+"+map.FarmProfitTotal.currentValue.m_value.ToString("F2");
+        float OtherProfit = 0;
+        foreach (var ele in map.OtherProfits)
+        {
+            OtherProfit += ele.Profit;
+        }
+        MoneyDelta.text = "+"+(map.FarmProfitTotal.currentValue.m_value + OtherProfit).ToString("F2");
         Happiness.text = totalHappiness.ToString();
     }
 }

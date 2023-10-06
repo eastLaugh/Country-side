@@ -4,7 +4,7 @@ using static Slot;
 
 public static partial class MapObjects
 {
-    public abstract class Road : MapObject, MustNotExist<Road>, IInfoProvider, IConstruction
+    public abstract class Road : MapObject, MustNotExist<IConstruction>, IInfoProvider, IConstruction
     {
         public override bool CanBeUnjected => true;
 

@@ -62,6 +62,7 @@ public class BarUI : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, I
     public void OnPointerDown(PointerEventData eventData)
     {
         if (!BuildingDetails.unclock) return;
+        EventHandler.CallInitSoundEffect(SoundName.BtnClick2);
         Selected = true;
         var color = image.color;
         color.a = 0.5f;                     //设置image的透明度设置为50%

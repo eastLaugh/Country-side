@@ -11,7 +11,7 @@ public class TourGuideUI : MonoBehaviour
     {
         BtnClose.onClick.AddListener(() =>
         {
-            EventHandler.CallInitSoundEffect(SoundName.BtnClick);
+            EventHandler.CallInitSoundEffect(SoundName.BtnClick1);
             Window.SetActive(false);
         });
         EventHandler.ToAdiminstration += CallVillageHead;
