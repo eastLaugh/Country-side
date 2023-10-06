@@ -11968,7 +11968,6 @@ PrefabInstance:
       objectReference: {fileID: 384933819}
     - target: {fileID: 3524114797859359092, guid: 3b16acb8317837b418bcc726fb62dca4,
         type: 3}
-<<<<<<< Updated upstream
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_BoolArgument
       value: 0
       objectReference: {fileID: 0}
@@ -12006,10 +12005,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Color.r
       value: 0.8207547
-=======
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_StringArgument
-      value: BtnClick1
->>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 5236422651675888073, guid: 3b16acb8317837b418bcc726fb62dca4,
         type: 3}
