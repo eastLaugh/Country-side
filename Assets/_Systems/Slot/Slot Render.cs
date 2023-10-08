@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 using System;
+using NaughtyAttributes;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -40,16 +42,20 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             }
             else
             {
-                OnAnySlotClicked?.Invoke(this); //全局
+                OnAnySlotClicked?.Invoke(this); //全局(不包含建造模式)
                 OnSlotClicked?.Invoke(this);
                 slot.InvokeOnSlotUpdate();
             }
         }
 
-
+        //double click detect
+        if (eventData.clickCount == 2)
+        {
 #if UNITY_EDITOR
-        Selection.SetActiveObjectWithContext(gameObject, null);
+            Selection.SetActiveObjectWithContext(gameObject, null);
 #endif
+        }
+
     }
 
 
@@ -131,5 +137,11 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         StopAllFloat = null;
 
+    }
+
+    [Button]
+    void Focus()
+    {
+        CamerasController.Focus(gameObject);
     }
 }

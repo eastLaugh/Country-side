@@ -2,10 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
+using Cinemachine;
 using UnityEngine;
+using DG.Tweening;
 
 public class CamerasController : MonoBehaviour
 {
+    private static CamerasController m;
+    public CinemachineVirtualCamera MacroVC;
     public SerializedDictionary<string, Camera> Cameras;
 
     public UnityEngine.Rendering.Volume SaturationVolume;
@@ -18,6 +22,8 @@ public class CamerasController : MonoBehaviour
 
     private void Awake()
     {
+        m = this;
+
         fsm.State(CameraState.Default).OnEnter(() =>
         {
             SlotRender.StopAllFloat?.Invoke();
@@ -50,17 +56,32 @@ public class CamerasController : MonoBehaviour
     {
         BuildingWindow.OnUpdate += OnBuildingWindowUpdate;
         GameManager.OnMapLoaded += OnMapLoaded;
+        GameManager.OnMapUnloaded += OnMapUnloaded;
+
+    }
+
+    private void OnMapUnloaded()
+    {
+        Slot.MapObject.OnInjected -= OnInjected;
+
     }
 
     private void OnMapLoaded(Map map)
     {
         ResetLayer = null;
+        Slot.MapObject.OnInjected += OnInjected;
+    }
+
+    private void OnInjected(Slot.MapObject @object, bool arg2)
+    {
+        Focus(@object.gameObject);
     }
 
     private void OnDisable()
     {
         BuildingWindow.OnUpdate -= OnBuildingWindowUpdate;
         GameManager.OnMapLoaded -= OnMapLoaded;
+        GameManager.OnMapUnloaded -= OnMapUnloaded;
     }
 
     private void Start()
@@ -113,7 +134,36 @@ public class CamerasController : MonoBehaviour
         //}
     }
 
-    private void Update() {
+    private void Update()
+    {
         Debug.Log(fsm.CurrentState);
+    }
+
+    public static void Focus(GameObject target)
+    {
+        m.MacroVC.enabled = true;
+        m.MacroVC.Follow = target.transform;
+        m.MacroVC.LookAt = target.transform;
+
+
+
+    }
+
+    Tween lastTween;
+    public void OnMacroVCLive()
+    {
+        var transposer = m.MacroVC.GetCinemachineComponent<CinemachineOrbitalTransposer>();
+        // Tween tween = DOTween.To(() => transposer.m_XAxis.Value, f => transposer.m_XAxis.Value = f, 180f, 4f).From(0f);
+        if (lastTween.IsActive())
+        {
+            lastTween.Kill();
+        }
+
+        lastTween = DOTween.To(() => transposer.m_Heading.m_Bias - 180f, f => transposer.m_Heading.m_Bias = f + 180f, 180f, 4f).From(-180f).SetEase(Ease.InOutCubic);
+
+        lastTween.OnComplete(() =>
+        {
+            m.MacroVC.enabled = false;
+        });
     }
 }

@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
 
     #region 调试 debug
     SlotRender debugSlotRender = null;
-    string debugSlotInfo = "此处显示你点击方块的调试信息。";
+    string debugSlotInfo = "此处显示你鼠标所在方块的调试信息。";
     void OnAnySlotClickedInAllMode(SlotRender slotRender)
     {
         if (debugSlotRender != null)
@@ -120,6 +120,7 @@ public class GameManager : MonoBehaviour
         {
             globalData = new GlobalData();
             SaveGlobalData();
+
         }
         Settings.GetSettings();
 
@@ -180,7 +181,10 @@ public class GameManager : MonoBehaviour
 
         if (GUILayout.Button("创建", buttonLayout))
         {
-            UnLoad();
+            if (this.map != null)
+            {
+                UnLoad();
+            }
             var map = Map.Generate(size, seed);
             LoadMap(map);
             SaveCurrentMap(Path.Combine(SaveDirectory, fileName + ".dat"));
@@ -222,7 +226,7 @@ public class GameManager : MonoBehaviour
 
         if (map == null)
         {
-            GUILayout.Label("地图未创建。点击R自动填入随机地图名称和种子。点击-1讲种子设置为-1.", GUILayout.Width(200f));
+            GUILayout.Label("地图未创建。", GUILayout.Width(200f));
         }
         else
         {

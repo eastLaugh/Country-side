@@ -225,7 +225,7 @@ public class BuildingWindow : MonoBehaviour
     }
     private void OnGUI()
     {
-        GUI.Label(new Rect(0, 0, 100, 100), selectedDirection.ToString());
+        //GUI.Label(new Rect(0, 0, 100, 100), selectedDirection.ToString());
     }
 
     public static void Foreach(Vector2 center, Vector2 size, Action<int, int> action)
