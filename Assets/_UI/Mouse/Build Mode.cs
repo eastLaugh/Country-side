@@ -10,6 +10,8 @@ public class BuildMode : StateMachineBehaviour
     public static bool hasEntered { get; private set; }
     public static event Action OnBuildModeEnter;
     public static event Action OnBuildModeExit;
+
+    public static event Action<Slot.MapObject> OnPlayerBuild;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -50,6 +52,7 @@ public class BuildMode : StateMachineBehaviour
                 Slot.MapObject mapObject = Activator.CreateInstance(selectedType) as Slot.MapObject;
                 ApplyTo?.Invoke(mapObject);
                 mapObject.Inject(render.slot, direction: BuildingWindow.selectedDirection);
+                OnPlayerBuild?.Invoke(mapObject);
                 //render.Refresh();
                 EventHandler.CallInitSoundEffect(SoundName.Costruct);
             }

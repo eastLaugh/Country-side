@@ -1094,10 +1094,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0.044281006
-      value: 9.026978
-      inSlope: 10.266936
-      outSlope: 10.266936
+      time: 0.25180054
+      value: -0.0440979
+      inSlope: 13.499685
+      outSlope: 13.499685
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
@@ -1121,50 +1121,14 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 1
     - serializedVersion: 3
-      time: 10.482536
-      value: 57.22645
-      inSlope: -0.009992177
-      outSlope: -0.009992177
+      time: 21.794943
+      value: 66.02176
+      inSlope: 0.7251093
+      outSlope: 0.7251093
       tangentMode: 0
       weightedMode: 0
-      inWeight: 1
+      inWeight: 0.34209052
       outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 20.226662
-      value: 46.56877
-      inSlope: -7.6887093
-      outSlope: -7.6887093
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.26025134
-      outWeight: 1
-    - serializedVersion: 3
-      time: 20.56594
-      value: 33.26606
-      inSlope: -49.425026
-      outSlope: -49.425026
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.96594715
-    - serializedVersion: 3
-      time: 20.675627
-      value: 22.335041
-      inSlope: -32.16731
-      outSlope: -32.16731
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 20.712791
-      value: -3.6544495
-      inSlope: -699.306
-      outSlope: -699.306
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -11048,6 +11012,12 @@ MonoBehaviour:
     - Key: Tube Camera
       Value: {fileID: 611427859}
   SaturationVolume: {fileID: 963194232}
+  OnFocusEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  OnFocusExit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!224 &1807659573 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8634349085513134118, guid: 872cc891aa3c0fa48bfaa6e31b5515ec,

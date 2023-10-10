@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine;
 using System.Linq;
-using UnityEditor.Experimental.GraphView;
 
 //[JsonConverter(typeof(SlotConvertor))]
 public abstract partial class Slot

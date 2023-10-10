@@ -5,6 +5,7 @@ using AYellowpaper.SerializedCollections;
 using Cinemachine;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.Events;
 
 public class CamerasController : MonoBehaviour
 {
@@ -62,19 +63,26 @@ public class CamerasController : MonoBehaviour
 
     private void OnMapUnloaded()
     {
-        Slot.MapObject.OnInjected -= OnInjected;
-
+        BuildMode.OnPlayerBuild -= OnPlayerBuild;
     }
 
     private void OnMapLoaded(Map map)
     {
         ResetLayer = null;
-        Slot.MapObject.OnInjected += OnInjected;
+        BuildMode.OnPlayerBuild += OnPlayerBuild;
     }
 
-    private void OnInjected(Slot.MapObject @object, bool arg2)
+    private void OnPlayerBuild(Slot.MapObject mapObject)
     {
-        Focus(@object.gameObject);
+        if (mapObject.PlaceHolders.Count > 0)
+        {
+            Focus(mapObject.PlaceHolders[(mapObject.PlaceHolders.Count) / 2].gameObject);
+        }
+        else
+        {
+            Focus(mapObject.gameObject);
+        }
+        OnFocusMapObject?.Invoke(mapObject);
     }
 
     private void OnDisable()
@@ -108,30 +116,6 @@ public class CamerasController : MonoBehaviour
 
         ResetLayer?.Invoke();
         ResetLayer = null;
-        //for (int i = -MapObjects.Well.TubeRippleRadius; i <= MapObjects.Well.TubeRippleRadius; i++)
-        //{
-        //    for (int j = -MapObjects.Well.TubeRippleRadius; j <= MapObjects.Well.TubeRippleRadius; j++)
-        //    {
-        //        if (i * i + j * j <= MapObjects.Well.TubeRippleRadius * MapObjects.Well.TubeRippleRadius)
-        //        {
-        //            var slot = slotRender.slot.map[slotRender.slot.position + new Vector2(i, j)];
-        //            if (slot != null)
-        //            {
-        //                int originLayer = slot.slotRender.SetLayer(LayerMask.NameToLayer("Highlight"));
-        //                if (originLayer == LayerMask.NameToLayer("Highlight"))
-        //                {
-        //                    //说明这个slot原本就是高亮的,不需要恢复
-        //                }
-        //                else
-        //                {
-        //                    ResetLayer += () => slot.slotRender.SetLayer(originLayer);
-        //
-        //                }
-        //            }
-        //
-        //        }
-        //    }
-        //}
     }
 
     private void Update()
@@ -139,14 +123,17 @@ public class CamerasController : MonoBehaviour
         Debug.Log(fsm.CurrentState);
     }
 
+    public static Action<Slot.MapObject> OnFocusMapObject;
+    public static Action UnFocus;
+
+    [SerializeField] private UnityEvent OnFocusEnter;
+    [SerializeField] private UnityEvent OnFocusExit;
     public static void Focus(GameObject target)
     {
+        m.OnFocusEnter?.Invoke();
         m.MacroVC.enabled = true;
         m.MacroVC.Follow = target.transform;
         m.MacroVC.LookAt = target.transform;
-
-
-
     }
 
     Tween lastTween;
@@ -164,6 +151,8 @@ public class CamerasController : MonoBehaviour
         lastTween.OnComplete(() =>
         {
             m.MacroVC.enabled = false;
+            UnFocus?.Invoke();
+            OnFocusExit?.Invoke();
         });
     }
 }

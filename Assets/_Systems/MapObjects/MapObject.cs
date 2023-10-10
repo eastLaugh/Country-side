@@ -22,7 +22,7 @@ partial class Slot
         public static event Action<MapObject> OnUnjected;
 
         [JsonProperty]
-        public HashSet<MapObject> PlaceHolders { get; private set; } = new();
+        public List<MapObject> PlaceHolders { get; private set; } = new();
 
         public event Action<MapObject> OnMapObjectUnjected;
 

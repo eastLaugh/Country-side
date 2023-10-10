@@ -16,10 +16,6 @@ public class InputForCamera : MonoBehaviour
     private EventSystem eventSystem;
     private PointerEventData eventData;
     public static event Action<CinemachineVirtualCamera> OnCameraInput;
-    enum CameraState
-    {
-        Overlook, Focus
-    };
     public PlayerInput playerInput;
     public CinemachineVirtualCamera virtualCamera;
     public float DragRatio = 0.01f;
@@ -32,7 +28,7 @@ public class InputForCamera : MonoBehaviour
     private void Start()
     {
         OnZoom(null);
-        
+
 
     }
     public void OnDrag()
@@ -84,23 +80,26 @@ public class InputForCamera : MonoBehaviour
     Sequence seq;
     public void OnZoom(InputValue value)
     {
-        if(IsOnUIElement()) { return; }
+        if (IsOnUIElement()) { return; }
         float time = 0.02f;
 
         float delta = (value?.Get<float>() ?? 0f) * ZoomRatio;
 
         seq?.Kill();
         seq = DOTween.Sequence();
-        if (virtualCamera.transform.position.y < 10f)
+        if (virtualCamera.transform.position.y < 9999f)
         {
-            seq.Append(virtualCamera.transform.DOMove(virtualCamera.transform.position + virtualCamera.transform.forward * delta, time));
+            var des = virtualCamera.transform.position + virtualCamera.transform.forward * delta;
+            des.y = Mathf.Clamp(des.y, 0.1f, 9999f);
+            seq.Append(virtualCamera.transform.DOMove(des, time));
         }
         else
         {
-            seq.Append(virtualCamera.transform.DOMoveY(virtualCamera.transform.position.y - delta, time));
+            //seq.Append(virtualCamera.transform.DOMoveY(virtualCamera.transform.position.y - delta, time));
         }
 
         float PicthAngle = HeightToPicthAngleCurve.Evaluate(virtualCamera.transform.position.y);
+        PicthAngle = Mathf.Clamp(PicthAngle, 5f, 90f);
 
         seq.Join(virtualCamera.transform.DORotate(new Vector3(PicthAngle, virtualCamera.transform.rotation.eulerAngles.y, virtualCamera.transform.rotation.eulerAngles.z), time));
 
@@ -109,4 +108,5 @@ public class InputForCamera : MonoBehaviour
 
         OnCameraInput?.Invoke(virtualCamera);
     }
+
 }
