@@ -106,7 +106,7 @@ public abstract partial class Slot
 
     public MapObject GetMapObject(Type type)
     {
-        return mapObjects.FirstOrDefault(mapObject => mapObject.GetType() == type);
+        return mapObjects.FirstOrDefault(mapObject => type.IsAssignableFrom(mapObject.GetType()));
     }
 
 

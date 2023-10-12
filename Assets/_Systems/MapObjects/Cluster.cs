@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Unity.VisualScripting;
 using UnityEngine;
 using static Slot;
 
@@ -12,21 +11,6 @@ public class Cluster
 
     [JsonProperty]
     readonly Type MapObjectType;
-
-    [Obsolete("高能耗的")]
-    public HashSet<MapObject> GetReachableMapObject()
-    {
-        HashSet<MapObject> tmp = new();
-        foreach (var mapObject in mapObjects)
-        {
-            foreach (var reachable in mapObject.slot.GetReachableMapObject())
-            {
-                tmp.Add(reachable);
-            }
-        }
-        return tmp;
-    }
-
 
     public Cluster(Type mapObjectType)
     {
@@ -43,12 +27,15 @@ public class Cluster
 
     public void Push(Slot.MapObject targetMapObject)
     {
-        if (targetMapObject.GetType() != MapObjectType)
+        if (!MapObjectType.IsAssignableFrom(targetMapObject.GetType()))
         {
             throw new Exception("类型不匹配");
         }
-        mapObjects.Add(targetMapObject);
-        targetMapObject.OnMapObjectUnjected += OnMapObjectUnjected;
+        else
+        {
+            mapObjects.Add(targetMapObject);
+            targetMapObject.OnMapObjectUnjected += OnMapObjectUnjected;
+        }
     }
 
     [System.Runtime.Serialization.OnDeserialized]

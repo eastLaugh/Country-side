@@ -24,18 +24,7 @@ public static partial class MapObjects
         public abstract float HeightOffset { get; }
         protected override void OnEnable()
         {
-            //foreach (var dir in Slot.上右下左)
-            //{
-            //    var target = slot.map[slot.position + dir];
-            //    if (target != null)
-            //    {
-            //        var road = target.GetMapObject<Road>();
-            //        if (road != null)
-            //        {
-            //            RoadRenderer.Instance.Connect(this, road);
-            //        }
-            //    }
-            //}
+            
         }
 
         protected override void OnDisable()
@@ -70,9 +59,12 @@ public static partial class MapObjects
                 foreach (MapObject reachable in cluster.ReachableMapObjects)
                 {
                     MapObject obj;
-                    if(reachable is PlaceHolder p){
+                    if (reachable is PlaceHolder p)
+                    {
                         obj = p.mapObject;
-                    }else{
+                    }
+                    else
+                    {
                         obj = reachable;
                     }
                     var outline = obj.gameObject.GetComponent<Outline>();
@@ -109,6 +101,8 @@ public static partial class MapObjects
         public override string Requiments => "";
 
         public override float HeightOffset => 1f;
+
+        protected override Type ClusterType => typeof(Road);
     }
     public class PitchRoad : Road
     {
@@ -120,5 +114,8 @@ public static partial class MapObjects
         public override string Requiments => "";
 
         public override float HeightOffset => 1f;
+
+        protected override Type ClusterType => typeof(Road);
+
     }
 }

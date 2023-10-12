@@ -119,6 +119,8 @@ partial class Slot
             FetchCluster();
         }
 
+
+        protected virtual Type ClusterType => GetType();
         /// <summary>
         /// 重新计算集群
         /// </summary>
@@ -156,7 +158,7 @@ partial class Slot
                             Slot nextSlot = map[node.slot.position + dir];
                             if (nextSlot != null)
                             {
-                                MapObject nextNode = nextSlot.GetMapObject(GetType());
+                                MapObject nextNode = nextSlot.GetMapObject(ClusterType);
                                 if (nextNode != null && !visited.Contains(nextNode))
                                 {
                                     DFS(nextNode);
@@ -166,7 +168,7 @@ partial class Slot
                     }
                     if (foundCluster == null || deprecated)
                     {
-                        foundCluster = new Cluster(GetType());
+                        foundCluster = new Cluster(ClusterType);
                     }
                     ApplyTo?.Invoke(foundCluster);
                     foundCluster.Recalculate();
