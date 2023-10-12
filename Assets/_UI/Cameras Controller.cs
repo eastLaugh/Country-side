@@ -76,10 +76,14 @@ public class CamerasController : MonoBehaviour
 
     private void OnPlayerBuild(Slot.MapObject mapObject)
     {
-        if (!GameManager.current.illuBookData.illuBookList.Find((item) => { return item.name == mapObject.GetType().Name; }).unclock)
+        var item = GameManager.current.illuBookData.illuBookList.Find((item) => { return item.name == mapObject.GetType().Name; });
+        if (item!=null)
         {
-            EventHandler.CallilluBookUnlocked(mapObject.GetType().Name);
-            Focus(mapObject);
+            if(!item.unclock)
+            {
+                EventHandler.CallilluBookUnlocked(mapObject.GetType().Name);
+                Focus(mapObject);
+            }            
         }
         
     }

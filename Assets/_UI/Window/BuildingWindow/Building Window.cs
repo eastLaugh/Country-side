@@ -52,7 +52,7 @@ public class BuildingWindow : MonoBehaviour
     // Start is called before the first frame update
     void CheckCost(float money)
     {
-        if(SelectedType!=null)
+        if(SelectedType!=null && SelectedType != typeof(MapObjects.DeletingFlag))
         {
             var ins = Activator.CreateInstance(SelectedType) as IConstruction;
             if (ins.Cost > money && BuildMode.hasEntered)

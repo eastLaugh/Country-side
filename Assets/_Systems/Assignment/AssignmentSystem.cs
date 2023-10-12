@@ -112,7 +112,7 @@ public class AssignmentSystem : MonoBehaviour , Person.IPromptProvider
             "幸福度+8",
             () =>
             {
-                if (map.GetBuildingNum(typeof(MapObjects.ChargingStation)) >= 5)
+                if (map.GetBuildingNum(typeof(MapObjects.ChargingStation)) >= 2)
                 {
                     return true;
                 }
@@ -213,10 +213,10 @@ public class AssignmentSystem : MonoBehaviour , Person.IPromptProvider
             },
             () =>
             {
-                map.MainData.Happiness += 10;
+                map.MainData.Happiness += 15;
                 CheckToPhase3();
             }).AddTolist();
-        var A2_4 = new BasicAssignment("日产值大于5万", "日产值要超过5万，也许升级菜田成为温室大棚是个不错的方法",
+        var A2_4 = new BasicAssignment("日产值大于5万", "日产值要超过5万，也许升级菜田成为温室大棚是个不错的方法。",
              "金钱+200万",
              () =>
              {
@@ -264,7 +264,7 @@ public class AssignmentSystem : MonoBehaviour , Person.IPromptProvider
 
              }).AddTolist();
         var A2_1 = new BasicAssignment("建造5个温室大棚", 
-            "目前我们村菜田的产出还是不怎么高，所以在菜田上建几个温室大棚吧，这样不仅能保护作物，还能够使在淡季生产，获得高的市场价格。",
+            "目前我们村菜田的产出还是不怎么高，所以在菜田上建几个温室大棚吧，这样不仅能保护作物，还能够在淡季生产，获得高的市场价格。",
             "金钱30万",
             () =>
             {
@@ -306,7 +306,7 @@ public class AssignmentSystem : MonoBehaviour , Person.IPromptProvider
             () =>
             {
                 //Debug.Log(map.GetBuildingNum("AdobeHouse"));
-                if(map.GetBuildingNum(typeof(MapObjects.CementHouse)) >= 20)
+                if(map.GetBuildingNum(typeof(MapObjects.CementHouse)) >= 22)
                 {
                     return true;
                 }
@@ -323,7 +323,7 @@ public class AssignmentSystem : MonoBehaviour , Person.IPromptProvider
            () =>
            {
                //Debug.Log(map.GetBuildingNum("AdobeHouse"));
-               if (map.GetBuildingNum(typeof(MapObjects.CementRoad)) >= 40)
+               if (map.GetBuildingNum(typeof(MapObjects.CementRoad)) >= 43)
                {
                    return true;
                }

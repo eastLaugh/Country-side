@@ -127,7 +127,7 @@ public static partial class MapObjects
         public override int energyConsumption => 1;
         public override string Requiments => "";
 
-        public override float HeightOffset => 1f;
+        public override float HeightOffset => 0.75f;
         public override void HouseParaInit()
         {
             m_capacity = new SolidMiddleware<Int>(new Int(35));
@@ -162,7 +162,7 @@ public static partial class MapObjects
         public override int energyConsumption => 1;
         public override string Requiments => "需建在水泥房上";
 
-        public override float HeightOffset => 1f;
+        public override float HeightOffset => 0.75f;
         public float Power => 1;
 
         public string Lore => "图鉴已解锁：" + Name;
@@ -204,7 +204,7 @@ public static partial class MapObjects
         public override int energyConsumption => 1;
         public override string Requiments => "";
 
-        public override float HeightOffset => 0.7f;
+        public override float HeightOffset => 0.5f;
         public float Profit => 0.07f;
 
         public string Lore => "图鉴已解锁：" + Name;

@@ -59,7 +59,8 @@ public class GameDataView : MonoBehaviour
     }
     private void OnPeopleChange(int newValue)
     {
-        StartCoroutine(ReachValueP(PeopleCache, newValue));
+        //StartCoroutine(ReachValueP(PeopleCache, newValue));
+        //People.text = newValue + "/" + map.MainData.totalCapacity;   
         PeopleCache = newValue;
     }
     IEnumerator ReachValueM(float startValue,float endValue)
@@ -96,7 +97,7 @@ public class GameDataView : MonoBehaviour
         //float sign = Mathf.Sign(endValue - startValue);
         //if(sign < 0) 
         //Money.color = Color.red;
-        while (Mathf.Abs(endValue - startValue) > 1f)
+        while (Mathf.Abs(endValue - startValue) > 2f)
         {
             startValue = (int)(Mathf.Lerp(startValue, endValue, 0.3f));
             People.text = startValue.ToString() + "/" +map.MainData.totalCapacity;
@@ -133,7 +134,9 @@ public class GameDataView : MonoBehaviour
         {
             OtherProfit += ele.Profit;
         }
+        People.text = map.MainData.People + "/" + map.MainData.totalCapacity;
         MoneyDelta.text = "日产值："+(map.FarmProfitTotal.currentValue.m_value + OtherProfit).ToString("F2")+"万";
         Happiness.text = totalHappiness.ToString();
+
     }
 }

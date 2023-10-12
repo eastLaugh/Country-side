@@ -95,7 +95,7 @@ public static partial class MapObjects
 
         public float Cost => 0f;
 
-        public string Name => "村委会(自然村)";
+        public string Name => "村民委员会";
         public string Requiments => "";
 
         public float HeightOffset => 1f;
@@ -273,7 +273,7 @@ public static partial class MapObjects
         public override int energyConsumption => 3;
         public override string Name => "电商服务中心";
         public override string Requiments => "";
-        public override float HeightOffset => 1f;
+        public override float HeightOffset => 0.75f;
         protected override void OnEnable()
         {
             base.OnEnable();

@@ -178,7 +178,7 @@ public static partial class MapObjects
         public override int phase => 2;
         public override string Requiments => "需建在菜田上";
 
-        public override float HeightOffset => 1.2f;
+        public override float HeightOffset => 0.7f;
 
         public string Lore => "图鉴已解锁：" + Name;
 
@@ -239,7 +239,7 @@ public static partial class MapObjects
         public override int phase => 3;
         public override string Requiments => "需建在温室大棚上";
 
-        public override float HeightOffset => 1f;
+        public override float HeightOffset => 0.7f;
 
         public string Lore => "图鉴已解锁：" + Name;
 
@@ -314,7 +314,7 @@ public static partial class MapObjects
         public override int phase => 3;
         public override string Requiments => "需建在水稻田上";
 
-        public override float HeightOffset => 1f;
+        public override float HeightOffset => 0.4f;
 
         public string Lore => "图鉴已解锁：" + Name;
 

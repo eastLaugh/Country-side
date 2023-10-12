@@ -92,7 +92,7 @@ public class Map
 
 
         //创建地图
-        Map map = new Map(size, slots, seed,new GameDataVector(831, 2000, 0, 50));
+        Map map = new Map(size, slots, seed,new GameDataVector(631, 8000, 0, 50));
 
         //去中心化
         foreach (MapGenerator generator in InitAllGenerators())
