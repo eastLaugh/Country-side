@@ -5,8 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static MapObjects;
 using static Slot;
-using Unity.VisualScripting;
-using UnityEngine.WSA;
+
 
 public static partial class MapObjects
 {

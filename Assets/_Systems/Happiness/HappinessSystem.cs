@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
 
 public class HappinessSystem : MonoBehaviour
@@ -64,11 +63,11 @@ public class HappinessSystem : MonoBehaviour
             temp += map.Houses[i].Capacity;
         }
         map.MainData.totalCapacity = temp;
-        var CPU = map.HappinessTotal.CPUs.Find((cpu) => { return cpu.name == "无家可归"; });
+        var CPU = map.HappinessTotal.CPUs.Find((cpu) => { return cpu.name == "锟睫家可癸拷"; });
 
         if (map.MainData.totalCapacity < map.MainData.People && CPU.name == null)
         {
-            map.HappinessTotal.AddCPU(new SolidMiddleware<Int>.CPU { name = "无家可归", Addition = new Int(-15) });
+            map.HappinessTotal.AddCPU(new SolidMiddleware<Int>.CPU { name = "锟睫家可癸拷", Addition = new Int(-15) });
         }
         else if (map.MainData.totalCapacity >= map.MainData.People && CPU.name != null)
         {
@@ -77,9 +76,9 @@ public class HappinessSystem : MonoBehaviour
     }
     private void CheckGreenPower()
     {
-        var CPU = map.HappinessTotal.CPUs.Find((cpu) => { return cpu.name == "绿色能源"; });
+        var CPU = map.HappinessTotal.CPUs.Find((cpu) => { return cpu.name == "锟斤拷色锟斤拷源"; });
         if (Mathf.Abs(PowerSystem.greenPowerRatio - 1f) < 0.01f && CPU.name == null)
-            map.HappinessTotal.AddCPU(new SolidMiddleware<Int>.CPU { name = "绿色能源", Addition = new Int(15) });
+            map.HappinessTotal.AddCPU(new SolidMiddleware<Int>.CPU { name = "锟斤拷色锟斤拷源", Addition = new Int(15) });
         else if(Mathf.Abs(PowerSystem.greenPowerRatio - 1f) >= 0.01f && CPU.name != null)
             map.HappinessTotal.RemoveCPU(CPU);
     }
@@ -90,9 +89,9 @@ public class HappinessSystem : MonoBehaviour
         {
             OtherProfit += ele.Profit;
         }
-        var CPU = map.HappinessTotal.CPUs.Find((cpu) => { return cpu.name == "富裕农村"; });
+        var CPU = map.HappinessTotal.CPUs.Find((cpu) => { return cpu.name == "锟斤拷裕农锟斤拷"; });
         if ((map.FarmProfitTotal.currentValue.m_value + OtherProfit) >= 25 && CPU.name == null)
-            map.HappinessTotal.AddCPU(new SolidMiddleware<Int>.CPU { name = "富裕农村", Addition = new Int(10) });
+            map.HappinessTotal.AddCPU(new SolidMiddleware<Int>.CPU { name = "锟斤拷裕农锟斤拷", Addition = new Int(10) });
         else if ((map.FarmProfitTotal.currentValue.m_value + OtherProfit) < 25 && CPU.name != null)
             map.HappinessTotal.RemoveCPU(CPU);
     }
