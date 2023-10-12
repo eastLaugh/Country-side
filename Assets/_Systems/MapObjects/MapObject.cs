@@ -8,6 +8,8 @@ using System.Linq;
 using static Slot;
 using DG.Tweening;
 using static MapObjects;
+using Unity.AI.Navigation;
+using UnityEngine.AI;
 
 partial class Slot
 {
@@ -237,11 +239,11 @@ partial class Slot
                 }
 
                 //这里为了尽可能不用对原项目进行修改，所以进行了容错处理：
-                // if (!obj.GetComponentInChildren<NavMeshModifier>() && !obj.GetComponentInChildren<NavMeshModifierVolume>())
-                // {
-                //     var navMeshModifier = obj.AddComponent<NavMeshModifier>(); navMeshModifier.overrideArea = true;
-                //     navMeshModifier.area = NavMesh.GetAreaFromName("Not Walkable");
-                // }
+                if (!obj.GetComponentInChildren<NavMeshModifier>() && !obj.GetComponentInChildren<NavMeshModifierVolume>())
+                {
+                    var navMeshModifier = obj.AddComponent<NavMeshModifier>();
+                    navMeshModifier.ignoreFromBuild = true;
+                }
 
                 GameManager.current?.RefreshNavMesh();
             }
@@ -249,7 +251,7 @@ partial class Slot
         protected abstract void OnEnable();
         private void Awake()
         {
-            
+
         }
         public abstract bool CanBeUnjected { get; }
         protected abstract void OnDisable();

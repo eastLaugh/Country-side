@@ -31,7 +31,6 @@ public class GameManager : MonoBehaviour
     public Transform PlaneIndicator;
     public static GlobalData globalData { get; private set; }
 
-
     public Vector2Int size;
     [Header("存储")]
 
@@ -104,7 +103,10 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.Slash))
+        {
+            RefreshNavMesh();
+        }
     }
 
     private void Awake()

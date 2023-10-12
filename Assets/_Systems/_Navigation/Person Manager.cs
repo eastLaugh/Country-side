@@ -83,12 +83,21 @@ public class PersonManager : MonoBehaviour
             GUILayout.BeginArea(new Rect(500, 0, 400, 600));
             if (GUILayout.Button("随机生成Person"))
             {
-                Type[] nested = typeof(Persons).GetNestedTypes();
-                Type type = nested[UnityEngine.Random.Range(0, nested.Length)];
+                if (false)
+                {
 
-                Person p = Activator.CreateInstance(type, UnityEngine.Random.Range(0, 9999).ToString(), map.GetRandomSlot().worldPosition) as Person;
+                    Type[] nested = typeof(Persons).GetNestedTypes();
+                    Type type = nested[UnityEngine.Random.Range(0, nested.Length)];
 
-                personSystem.GiveBirthTo(p);
+                    Person p = Activator.CreateInstance(type, UnityEngine.Random.Range(0, 9999).ToString(), map.GetRandomSlot().worldPosition) as Person;
+
+                    personSystem.GiveBirthTo(p);
+                }else{
+                    personSystem.GiveBirthTo(new Persons.OrdinaryVillager("村民",map.GetRandomSlot().worldPosition));
+                }
+
+
+
                 //Constructor Tip
                 //new Persons.OrdinaryVillager("Person", Vector3.zero);
             }

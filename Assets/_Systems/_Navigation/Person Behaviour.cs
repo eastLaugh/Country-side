@@ -126,7 +126,7 @@ public class PersonBehaviour : MonoBehaviour, IPointerEnterHandler, IPointerExit
                         person.PathPoints.Clear();
                     }
 
-                    GUILayout.Label("如要修改Person的属性，请使用VS的调试功能，监视变量，直接修改Person的属性");
+                    GUILayout.Label("");
                     GUILayout.EndArea();
                 }
                 else

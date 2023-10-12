@@ -2,10 +2,16 @@ using UnityEngine;
 
 internal class Persons
 {
-    public class OrdinaryVillager : Person
+    public class OrdinaryVillager : Person, Person.IPromptProvider
     {
         public OrdinaryVillager(string name, Vector3 worldPosition) : base(name, worldPosition)
         {
+        }
+
+        public string GetPrompt()
+        {
+            return $"本次模拟中，你是一名村民。";
+
         }
 
         protected override void OnCreated()
@@ -35,7 +41,7 @@ internal class Persons
 
         public string GetPrompt()
         {
-            return $"你是村长，名为{name}。";
+            return $"本次模拟中，你是村长，名为{name}。";
         }
     }
 }
