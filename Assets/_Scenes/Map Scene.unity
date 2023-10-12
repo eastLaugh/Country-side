@@ -99,7 +99,8 @@ LightmapSettings:
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 112000000, guid: 5c6f0de17418c6a4e92e76a48d035fbe,
     type: 2}
-  m_LightingSettings: {fileID: 0}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 98ee975b74776234986f4d35f14c4ccc,
+    type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -3376,6 +3377,7 @@ RectTransform:
   - {fileID: 61121922}
   - {fileID: 685424835}
   - {fileID: 1447094552}
+  - {fileID: 1802734076}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5807,7 +5809,6 @@ RectTransform:
   m_Children:
   - {fileID: 2119372481}
   - {fileID: 1897867170}
-  - {fileID: 1802734076}
   - {fileID: 5744348829691854208}
   - {fileID: 1807659573}
   - {fileID: 680949593}
@@ -10897,8 +10898,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 911.4188, y: 0}
+  m_SizeDelta: {x: 1822.8376, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &1732853947
 CanvasRenderer:
@@ -11406,13 +11407,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1802734075}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1610056451}
-  m_Father: {fileID: 897218109}
+  m_Father: {fileID: 496558040}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}

@@ -40,7 +40,7 @@ public class PhaseUI : MonoBehaviour
     public void PhaseUpdate(int Phase)
     {
         var Info = InfoWindow.Create("½øÈë" + Extension.Phase(Phase) + "½×¶Î£¡");
-        StartCoroutine(Extension.Wait(3f, new Action(Info.Unexpand)));
+        StartCoroutine(Extension.Wait(3f, Info.Unexpand));
        
     }
 }
