@@ -1,3 +1,5 @@
 EXTERNAL InfoWindowCreate(text)
-
 EXTERNAL Check(text)
+EXTERNAL SetName(text)
+EXTERNAL GiveAssignmentHint()
+EXTERNAL ShowAssignment()

@@ -7,7 +7,7 @@ partial class MapObjects
 {
 
     //虚拟MapObject，用于表示地块被删除
-    public class DeletingFlag : MapObject
+    public class DeletingFlag : MapObject,MustNotExist<Tree>,MustNotExist<Lake>,MustNotExist<Administration>
     {
         public override bool CanBeUnjected => true;
 

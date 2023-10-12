@@ -10,8 +10,11 @@ public class SettingsMenu : MonoBehaviour
     public Slider MusicVolumeSlider;
     public Slider EffectVolumeSlider;
     public AudioMixer audioMixer;
+    [SerializeField] private Toggle GridOn;
+    [SerializeField] GameObject Grid;
     private void OnEnable()
     {
+        GridOn.isOn = Settings.GridOn;
         MasterVolumeSlider.value = Settings.MasterVolume;
         MusicVolumeSlider.value = Settings.MusicVolume;
         EffectVolumeSlider.value = Settings.EffectVolume;
@@ -26,6 +29,11 @@ public class SettingsMenu : MonoBehaviour
         EffectVolumeSlider.onValueChanged.AddListener((float newValue) => {
             Settings.EffectVolume = newValue;
             audioMixer.SetFloat("EffectVolume", newValue * 2 - 80);
+        });
+        GridOn.onValueChanged.AddListener((value) =>
+        {
+            Settings.GridOn = value;
+            Grid.SetActive(value);
         });
     }
     private void OnDisable()

@@ -21,6 +21,8 @@ public class TimeController : MonoBehaviour
     private void OnMapUnloaded()
     {
         isMapLoaded = false;
+        Time.timeScale = 1.0f;
+        timeScaleCache = 0;
     }
     void Start()
     {
@@ -45,7 +47,12 @@ public class TimeController : MonoBehaviour
             //Debug.Log("DayPass");
             timeBuffer = 0;
         }
+        
         displayDate.text = map.dateTime.Date.ToString("yyyy/MM/dd");
+        if(map.dateTime > Convert.ToDateTime("2030/01/01"))
+        {
+            EventHandler.CallGameOver();
+        }
     }
     public void Play()
     {
@@ -57,7 +64,7 @@ public class TimeController : MonoBehaviour
     }
     public void FastForward()
     {
-        Time.timeScale = 2.0f;
+        Time.timeScale = 10.0f;
     }
     public void Pause()
     {

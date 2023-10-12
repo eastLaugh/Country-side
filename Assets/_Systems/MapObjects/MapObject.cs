@@ -8,10 +8,6 @@ using System.Linq;
 using static Slot;
 using DG.Tweening;
 using static MapObjects;
-using Unity.VisualScripting;
-using UnityEngine.UI;
-using Unity.AI.Navigation;
-using UnityEngine.AI;
 
 partial class Slot
 {
@@ -245,17 +241,22 @@ partial class Slot
                 //     navMeshModifier.area = NavMesh.GetAreaFromName("Not Walkable");
                 // }
 
-                GameManager.current?.RefreshNavMesh();
+                //GameManager.current?.RefreshNavMesh();
             }
         }
         protected abstract void OnEnable();
         private void Awake()
         {
-            EventHandler.CallilluBookUnlocked(GetType().Name);
+            
         }
         public abstract bool CanBeUnjected { get; }
         protected abstract void OnDisable();
         protected abstract void OnCreated();
+
+        public bool IsOrPlaceHolder<T>()
+        {
+            return this is T || (this is PlaceHolder p && p.mapObject is T);
+        }
     }
 
 }

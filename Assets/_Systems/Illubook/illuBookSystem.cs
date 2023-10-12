@@ -16,6 +16,7 @@ public class illuBookSystem : MonoBehaviour
     public GameObject illuBookPanel;
     private bool isOpen = false;
     [SerializeField] private TimeController timeController;
+    [SerializeField] private GameObject illuBookHint;
     public Button btnClose;
     public Button btnOpen;
     private List<BuildingDetails> illuBookList => GameManager.current.illuBookData.illuBookList;
@@ -52,6 +53,7 @@ public class illuBookSystem : MonoBehaviour
         btnOpen.onClick.AddListener(() =>
         {
             OpenilluBookUI();
+            illuBookHint.SetActive(false);
         });
         //EventHandler.illuBookUnlocked += Unlock;
     }
@@ -62,6 +64,7 @@ public class illuBookSystem : MonoBehaviour
         GameManager.SaveGlobalData();
         var detail = GetBuildingDetails(name);
         detail.unclock = true;
+        illuBookHint.SetActive(true);
         
     }
     private void Start()
@@ -78,7 +81,7 @@ public class illuBookSystem : MonoBehaviour
     {
         if (GetBuildingDetails(name) == null) { return; }
         if (GetBuildingDetails(name).unclock) return;
-                Unlock(name);
+        Unlock(name);
         if (RuleItemRoot.childCount > 0)
         {
             for (int i = 0; i < RuleItemRoot.childCount; i++)

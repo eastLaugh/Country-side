@@ -91,9 +91,9 @@ partial class MapObjects
         GameObject ChoppingIcon;
         public override void OnClick()
         {
-            base.OnClick();
-            isChopping = !isChopping;
-            RefreshChoppingState();
+            //base.OnClick();
+            //isChopping = !isChopping;
+            //RefreshChoppingState();
 
         }
 

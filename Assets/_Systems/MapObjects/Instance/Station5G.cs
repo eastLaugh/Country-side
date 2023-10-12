@@ -11,10 +11,13 @@ public static partial class MapObjects
 
         public override bool CanBeUnjected => true;
 
-        public float Cost => 0.05f;
+        public float Cost => 50f;
 
         public string Name => "5G基站";
 
+        public string Requiments => "";
+
+        public float HeightOffset => 1f;
         public ConstructType constructType => ConstructType.Sevice;
 
         public int phase => 2;

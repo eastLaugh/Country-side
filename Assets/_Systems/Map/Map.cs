@@ -36,6 +36,8 @@ public class Map
     [JsonProperty]
     public List<Farm> Farms = new List<Farm>();
     [JsonProperty]
+    public List<Center> Centers = new List<Center>();
+    [JsonProperty]
     public List<IOtherProfit> OtherProfits = new List<IOtherProfit>();
     [JsonProperty]
     public List<IPowerSupply> PowerSupplies = new List<IPowerSupply>();
@@ -50,7 +52,7 @@ public class Map
     [JsonProperty]
     public PersonSystem PersonSystem = new PersonSystem();
     [JsonProperty]
-    public int Phase = 4;
+    public int Phase = 1;
 
     public Map(Vector2Int size, Slot[] Slots, int RandomSeed, GameDataVector mainData)
     {

@@ -6,6 +6,8 @@ using Cinemachine;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.Events;
+using static Slot;
+using UnityEngine.UIElements;
 
 public class CamerasController : MonoBehaviour
 {
@@ -74,6 +76,29 @@ public class CamerasController : MonoBehaviour
 
     private void OnPlayerBuild(Slot.MapObject mapObject)
     {
+        if (!GameManager.current.illuBookData.illuBookList.Find((item) => { return item.name == mapObject.GetType().Name; }).unclock)
+        {
+            EventHandler.CallilluBookUnlocked(mapObject.GetType().Name);
+            Focus(mapObject);
+        }
+        
+    }
+    InfoWindow wnd;
+    public void Focus(MapObject mapObject)
+    {
+        if(wnd != null)
+        {
+            wnd.Unexpand();
+        }
+        if(mapObject is IFocusable f)
+        {
+            wnd=InfoWindow.Create(f.Lore);
+        }
+        else
+        {
+            return;
+        }
+        
         if (mapObject.PlaceHolders.Count > 0)
         {
             Focus(mapObject.PlaceHolders[(mapObject.PlaceHolders.Count) / 2].gameObject);
@@ -84,7 +109,6 @@ public class CamerasController : MonoBehaviour
         }
         OnFocusMapObject?.Invoke(mapObject);
     }
-
     private void OnDisable()
     {
         BuildingWindow.OnUpdate -= OnBuildingWindowUpdate;
@@ -120,7 +144,6 @@ public class CamerasController : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(fsm.CurrentState);
     }
 
     public static Action<Slot.MapObject> OnFocusMapObject;
@@ -151,8 +174,15 @@ public class CamerasController : MonoBehaviour
         lastTween.OnComplete(() =>
         {
             m.MacroVC.enabled = false;
+            
             UnFocus?.Invoke();
             OnFocusExit?.Invoke();
+
+            if (wnd != null)
+            {
+                wnd.Unexpand();
+                wnd = null;
+            }
         });
     }
 }

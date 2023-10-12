@@ -11,11 +11,13 @@ public class BasicInkExample : MonoBehaviour, IPointerClickHandler
 {
     Map map;
     public bool isMaploaded = false;
-    public static event Action<Story> OnCreateStory;
-	[SerializeField] private TextMeshProUGUI storyText;
+    [SerializeField] private TextMeshProUGUI storyText;
+	[SerializeField] private TextMeshProUGUI nameText;
     [SerializeField]
-    private TextAsset inkJSONAsset = null;
-    public static Story Story { get; private set; }
+    private TextAsset Guide1JSON = null;
+    [SerializeField]
+    private TextAsset Guide2JSON = null;
+	[SerializeField] private TourGuideUI tourGuideUI;
     [SerializeField]
     private GameObject Btns = null;
     // UI Prefabs
@@ -23,32 +25,65 @@ public class BasicInkExample : MonoBehaviour, IPointerClickHandler
     private GameObject textPrefab = null;
     [SerializeField]
     private GameObject buttonPrefab = null;
+	[SerializeField]
+	private GameObject AssignmentWindow;
+    public static Story CurrentStory { get; private set; }
+	private Story Guide1;
+	private Story Guide2;
+    public static event Action<Story> OnCreateStory;
     bool LOCKED = false;
 	bool isChoices;
 	private void Awake()
 	{
-		Story = new Story(inkJSONAsset.text);
-		Story.BindExternalFunction("InfoWindowCreate", (string text) =>
-		{
-			InfoWindow.Create(text);
-			return null;
-		});
+		Guide1 = new Story(Guide1JSON.text);
+        Guide2 = new Story(Guide2JSON.text);
+		BindFunc(Guide1);
+		BindFunc(Guide2);
+    }
+	void BindFunc(Story story)
+	{
+        story.BindExternalFunction("InfoWindowCreate", (string text) =>
+        {
+            InfoWindow.Create(text);
+            return null;
+        });
 
-		Story.BindExternalFunction("Check", (string text) =>
-		{
+        story.BindExternalFunction("Check", (string text) =>
+        {
             bool finished = false;
             AssignmentSystem.assignmentList.ForEach((BasicAssignment assignment) =>
-			{
-				if (assignment.name == text)
-				{
-					if (assignment.finished) finished = true;
- 					assignment.onAssignmentFinished += () => LOCK(false);
-				}
-			});
+            {
+                if (assignment.name == text)
+                {
+                    if (assignment.finished) finished = true;
+                    assignment.onAssignmentFinished += () => LOCK(false);
+                }
+            });
             LOCK(!finished);
         });
-	}
+        story.BindExternalFunction("SetName", (string text) =>
+        {
+            nameText.text = text;
+        });
+		story.BindExternalFunction("GiveAssignmentHint", () =>
+		{
+			if(AssignmentSystem.displayList.Count > 0)
+			{
+                int index = UnityEngine.Random.Range(0, AssignmentSystem.displayList.Count);
+                storyText.text = AssignmentSystem.displayList[index].hint;
+            }
+			else
+			{
+				storyText.text = "感谢你，年轻人。";
 
+            }
+			
+		});
+		story.BindExternalFunction("ShowAssignment", () =>
+		{
+			AssignmentWindow.SetActive(true);
+		});
+    }
 	void LOCK(bool state)
 	{
 		LOCKED = state;
@@ -80,6 +115,13 @@ public class BasicInkExample : MonoBehaviour, IPointerClickHandler
         isMaploaded = true;
 		if(!map.isTurtorialDone) 
 		{
+            CurrentStory = Guide1;
+            RemoveChildren();
+            StartStory();
+        }
+		else
+		{
+			CurrentStory = Guide2;
             RemoveChildren();
             StartStory();
         }
@@ -93,7 +135,7 @@ public class BasicInkExample : MonoBehaviour, IPointerClickHandler
 	// Creates a new Story object with the compiled story which we can then play!
 	void StartStory()
 	{
-		OnCreateStory?.Invoke(Story);
+		OnCreateStory?.Invoke(CurrentStory);
 		RefreshView();
 	}
 
@@ -104,27 +146,54 @@ public class BasicInkExample : MonoBehaviour, IPointerClickHandler
 	{
 		// Remove all the UI on screen
 		RemoveChildren();
-
+		bool restart = false;
 		// Read all the content until we can't continue any more
-		if(Story.canContinue)
+		if(CurrentStory.canContinue)
 		{
 			// Continue gets the next line of the story
-			string text = Story.Continue();
+			string text = CurrentStory.Continue();
 			// This removes any white space from the text.
-			Debug.Log(text);
+			//Debug.Log(text);
 			text = text.Trim();
 			// Display the text on screen!
 			if (text.Length > 0) 
 				CreateContentView(text);
 		}
-
-		// Display all the choices, if there are any!
-		if (Story.currentChoices.Count > 0)
+        else
+        {
+            // Button choice = CreateChoiceView("End of story.\nRestart?");
+            // choice.onClick.AddListener(delegate
+            // {
+            // 	StartStory();
+            // });
+            //panel.SetActive(false);
+            if (!map.isTurtorialDone)
+            {
+                CurrentStory = Guide2;
+                RemoveChildren();
+                StartStory();
+                tourGuideUI.CloseWindow();
+                map.isTurtorialDone = true;
+                restart = true;
+                map.Phase = 2;
+                EventHandler.CallPhaseUpdate(2);
+            }
+			else
+			{
+                CurrentStory.ResetState();
+                RemoveChildren();
+                StartStory();
+				restart = true;
+                //tourGuideUI.CloseWindow();
+            }
+        }
+        // Display all the choices, if there are any!
+        if (CurrentStory.currentChoices.Count > 0 && !restart)
 		{
 			isChoices = true;
-			for (int i = 0; i < Story.currentChoices.Count; i++)
+			for (int i = 0; i < CurrentStory.currentChoices.Count; i++)
 			{
-				Choice choice = Story.currentChoices[i];
+				Choice choice = CurrentStory.currentChoices[i];
 				Button button = CreateChoiceView(choice.text.Trim());
 				// Tell the button what to do when we press it
 				button.onClick.AddListener(delegate
@@ -135,25 +204,13 @@ public class BasicInkExample : MonoBehaviour, IPointerClickHandler
 			}
 		}
 		// If we've read all the content and there's no choices, the story is finished!
-		else
-		{
-			// Button choice = CreateChoiceView("End of story.\nRestart?");
-			// choice.onClick.AddListener(delegate
-			// {
-			// 	StartStory();
-			// });
-			//panel.SetActive(false);
-			if(!map.isTurtorialDone)
-			{
-				map.isTurtorialDone = true;
-			}
-		}
+		
 	}
 
 	// When we click the choice button, tell the story to choose that choice!
 	void OnClickChoiceButton(Choice choice)
 	{
-		Story.ChooseChoiceIndex(choice.index);
+		CurrentStory.ChooseChoiceIndex(choice.index);
 		isChoices = false;
 		RefreshView();
 	}

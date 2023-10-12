@@ -87,10 +87,10 @@ public class InputForCamera : MonoBehaviour
 
         seq?.Kill();
         seq = DOTween.Sequence();
-        if (virtualCamera.transform.position.y < 9999f)
+        if (true|| virtualCamera.transform.position.y < Settings.相机高度限制)
         {
             var des = virtualCamera.transform.position + virtualCamera.transform.forward * delta;
-            des.y = Mathf.Clamp(des.y, 0.1f, 9999f);
+            des.y = Mathf.Clamp(des.y, 0.1f, Settings.相机高度限制);
             seq.Append(virtualCamera.transform.DOMove(des, time));
         }
         else

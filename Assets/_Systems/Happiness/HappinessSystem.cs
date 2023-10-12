@@ -8,8 +8,6 @@ public class HappinessSystem : MonoBehaviour
     public bool isMaploaded = false;
     [SerializeField]
     HappinessEffectUI happinessEffectUI;
-    [SerializeField]
-    PowerSystem powerSystem;
     private void OnEnable()
     {
         GameManager.OnMapLoaded += OnMapLoaded;
@@ -25,16 +23,22 @@ public class HappinessSystem : MonoBehaviour
         CheckGreenPower();
         map.HappinessTotal.UpdateValue(new Int(map.MainData.Happiness));
         happinessEffectUI.Refresh(map.HappinessTotal);
-        
+        if (map.HappinessTotal.currentValue.m_value <= 0)
+        {
+            EventHandler.CallGameOver();
+        }
+
     }
     private void OnDisable()
     {
         EventHandler.DayPass -= CalcDailyHappiness;
+        EventHandler.DayPass -= CheckGameWin;
         GameManager.OnMapUnloaded -= OnMapUnloaded;
         //Debug.Log("Ondisable");
     }
     private void OnMapUnloaded()
     {
+        EventHandler.DayPass -= CheckGameWin;
         EventHandler.DayPass -= CalcDailyHappiness;
         isMaploaded = false;
     }
@@ -48,6 +52,7 @@ public class HappinessSystem : MonoBehaviour
         this.map = map;
         isMaploaded = true;
         EventHandler.DayPass += CalcDailyHappiness;
+        EventHandler.DayPass += CheckGameWin;
     }
     private void CheckHomeless()
     {
@@ -71,9 +76,14 @@ public class HappinessSystem : MonoBehaviour
     private void CheckGreenPower()
     {
         var CPU = map.HappinessTotal.CPUs.Find((cpu) => { return cpu.name == "绿色能源"; });
-        if (Mathf.Abs(powerSystem.greenPowerRatio - 1f) < 0.01f && CPU.name == null)
+        if (Mathf.Abs(PowerSystem.greenPowerRatio - 1f) < 0.01f && CPU.name == null)
             map.HappinessTotal.AddCPU(new SolidMiddleware<Int>.CPU { name = "绿色能源", Addition = new Int(15) });
-        else if(Mathf.Abs(powerSystem.greenPowerRatio - 1f) >= 0.01f && CPU.name != null)
+        else if(Mathf.Abs(PowerSystem.greenPowerRatio - 1f) >= 0.01f && CPU.name != null)
             map.HappinessTotal.RemoveCPU(CPU);
+    }
+    private void CheckGameWin()
+    {
+        if (map.Phase == 4 && map.HappinessTotal.currentValue.m_value >= 100 && AssignmentSystem.displayList.Count == 0)
+            EventHandler.CallGameWin();
     }
 }

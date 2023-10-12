@@ -33,6 +33,7 @@ public class SlotWindow : MonoBehaviour
                 foreach (var mapObject in mapObjects)
                 {
                     Slot.MapObject RMapObject;
+                    if (mapObject is FiveGArea) continue;
                     if(mapObject is PlaceHolder)
                     {
                         RMapObject = (mapObject as PlaceHolder).mapObject;
@@ -66,14 +67,27 @@ public class SlotWindow : MonoBehaviour
                     if (RMapObject is Farm farm)
                     {
                         var profitTotal = GameManager.current.map.FarmProfitTotal;
-                        profitTotal.UpdateValue(new Float(farm.Profit));
-                        var profit = profitTotal.currentValue.m_value;
+                        var profitTotal_c =  new SolidMiddleware<Float>(new Float(0));
+                        foreach (var ele in profitTotal.CPUs)
+                        {
+                            profitTotal_c.AddCPU(ele);
+                        }                            
+                        profitTotal_c.UpdateValue(new Float(farm.Profit));
+                        var profit = profitTotal_c.currentValue.m_value;
                         content.text += "产出：" + profit.ToString("F2") + "万" + "\n";
-                        warining.text = "";                     
+                        warining.text = farm.Warning;                     
+                    }
+                    if(RMapObject is Center center)
+                    {
+                        warining.text = center.Warning;
                     }
                     if(RMapObject is IPowerSupply power)
                     {
                         content.text += "能源供给：" + power.Power.ToString() + "\n";
+                    }
+                    if (RMapObject is IOtherProfit otherProfit)
+                    {
+                        content.text += "附加产出：" + otherProfit.Profit.ToString() + "万" + "\n";
                     }
 
                 }

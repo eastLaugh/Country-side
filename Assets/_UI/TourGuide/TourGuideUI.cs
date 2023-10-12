@@ -20,6 +20,10 @@ public class TourGuideUI : MonoBehaviour
     {
         Window.SetActive(true);
     }
+    public void CloseWindow()
+    {
+        Window.SetActive(false);
+    }
     // Update is called once per frame
     void Update()
     {

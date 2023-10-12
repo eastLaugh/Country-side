@@ -69,12 +69,26 @@ public class GameDataView : MonoBehaviour
         //Money.color = Color.red;
         while(Mathf.Abs(endValue - startValue) > 0.01f)
         {
-            startValue = Mathf.Lerp(startValue,endValue,0.3f);
-            Money.text = startValue.ToString("F2") + "万";
+            startValue = Mathf.Lerp(startValue,endValue,0.3f);          
+            if(startValue > 1E7)
+            {
+                Money.text = (startValue / 1E4).ToString("F2") + "亿";
+            }
+            else
+            {
+                Money.text = startValue.ToString("F2") + "万";
+            }
             yield return new WaitForSeconds(0.07f);
         }
         //Money.color = Color.white;
-        Money.text = m_data.Money.ToString("F2") + "万";
+        if (m_data.Money > 1E7)
+        {
+            Money.text = (m_data.Money / 1E4).ToString("F2") + "亿";
+        }
+        else
+        {
+            Money.text = m_data.Money.ToString("F2") + "万";
+        }
         yield break;
     }
     IEnumerator ReachValueP(int startValue, int endValue)
@@ -98,7 +112,6 @@ public class GameDataView : MonoBehaviour
         if(!isMapLoaded) { return; }
         m_data = map.MainData;
         var totalHappiness = Mathf.Clamp(map.HappinessTotal.currentValue.m_value,0,100);
-        
         if(totalHappiness < 30)
         {
             Happiness.color = Color.red;
@@ -120,7 +133,7 @@ public class GameDataView : MonoBehaviour
         {
             OtherProfit += ele.Profit;
         }
-        MoneyDelta.text = "+"+(map.FarmProfitTotal.currentValue.m_value + OtherProfit).ToString("F2");
+        MoneyDelta.text = "日产值："+(map.FarmProfitTotal.currentValue.m_value + OtherProfit).ToString("F2")+"万";
         Happiness.text = totalHappiness.ToString();
     }
 }

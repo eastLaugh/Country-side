@@ -9,7 +9,7 @@ public class PowerSystem : MonoBehaviour
     public bool isMaploaded = false;
     [SerializeField]
     PowerUI powerUI;
-    public float greenPowerRatio;
+    public static float greenPowerRatio;
     private void OnEnable()
     {
         GameManager.OnMapLoaded += OnMapLoaded;
@@ -57,6 +57,10 @@ public class PowerSystem : MonoBehaviour
             greenPowerRatio = 1;
         powerUI.Show(greenPowerRatio);
         //Debug.Log("consume" + consumePower.ToString() + "| Generate" + generatePower.ToString()); 
+    }
+    private void CalcBiomassPower()
+    {
+
     }
 
     void Start()

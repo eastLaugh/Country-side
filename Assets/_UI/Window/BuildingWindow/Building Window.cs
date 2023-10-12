@@ -12,11 +12,6 @@ public class BuildingWindow : MonoBehaviour
     public RectTransform Content;
     public GameObject ButtonPattern;
     [SerializeField] Button btnRemove;
-    private struct BuildingBtn
-    {
-        public Button btn;
-        public int phase;
-    }
     List<BuildingBtn> OptionButtons = new List<BuildingBtn>();
 
     private void OnEnable()
@@ -46,6 +41,7 @@ public class BuildingWindow : MonoBehaviour
         EventHandler.MoneyUpdate += CheckCost;
         EventHandler.BuildingWindowUpdate += UpdateWindow;
         EventHandler.PhaseUpdate += CheckPhase;
+        UpdateWindow(ConstructType.House);
     }
     SlotRender enteredSlotRender;
     private void OnAnySlotEnter(SlotRender render)
@@ -56,24 +52,23 @@ public class BuildingWindow : MonoBehaviour
     // Start is called before the first frame update
     void CheckCost(float money)
     {
+        if(SelectedType!=null)
+        {
+            var ins = Activator.CreateInstance(SelectedType) as IConstruction;
+            if (ins.Cost > money && BuildMode.hasEntered)
+            {
+                lastSelectedButton.GetComponent<Image>().color = Color.white;
+                MouseAnimator.SetTrigger("BuildEnd");
+                SelectedType = null;
+                OnUpdate?.Invoke(null);
+            }
+        }      
         for (int i = 0; i < OptionButtons.Count; i++)
         {
-            if (GameManager.current.map.Phase < OptionButtons[i].phase) continue;
-            var pricetext = OptionButtons[i].btn.GetComponentsInChildren<TMPro.TextMeshProUGUI>()[1];
-            if (money < float.Parse(pricetext.text.Split("万")[0]))
+            OptionButtons[i].SetCurrentData(money: money);
+            if (!OptionButtons[i].gameObject.activeSelf)
             {
-                if (OptionButtons[i].btn == lastSelectedButton)
-                {
-                    lastSelectedButton.onClick?.Invoke();
-                    lastSelectedButton = null;
-                }
-                pricetext.color = Color.red;
-                OptionButtons[i].btn.interactable = false;
-            }
-            else if (pricetext.color == Color.red)
-            {
-                pricetext.color = Color.black;
-                OptionButtons[i].btn.interactable = true;
+                OptionButtons[i].gameObject.SetActive(true);
             }
         }
     }
@@ -81,11 +76,8 @@ public class BuildingWindow : MonoBehaviour
     {
         for (int i = 0; i < OptionButtons.Count; i++)
         {
-            var pricetext = OptionButtons[i].btn.GetComponentsInChildren<TMPro.TextMeshProUGUI>()[1];
-            if (GameManager.current.map.Phase < OptionButtons[i].phase)
-                OptionButtons[i].btn.interactable = false;
-            else if(pricetext.color!=Color.red)
-                OptionButtons[i].btn.interactable = true;
+            OptionButtons[i].SetCurrentData(phase: phase);
+            
         }
     }
     void Start()
@@ -100,19 +92,6 @@ public class BuildingWindow : MonoBehaviour
 
         
     }
-    Button NewOption(string title, float cost,int phase, UnityAction<Button> callback)
-    {
-        GameObject buttonGameObject = Instantiate(ButtonPattern, Vector3.zero, Quaternion.identity, Content);
-        Button button = buttonGameObject.GetComponent<Button>();
-        TMPro.TextMeshProUGUI[] Texts = buttonGameObject.GetComponentsInChildren<TMPro.TextMeshProUGUI>();
-        Texts[0].text = title;
-        Texts[1].text = cost.ToString() + "万";
-        if (GameManager.current.map.Phase < phase)
-            button.interactable = false;
-        buttonGameObject.SetActive(true);
-        button.onClick.AddListener(() => callback(button));
-        return button;
-    }
     private void UpdateWindow(ConstructType constructType)
     {
         //TODO
@@ -121,11 +100,12 @@ public class BuildingWindow : MonoBehaviour
             MouseAnimator.SetTrigger("BuildEnd");
             SelectedType = null;
             OnUpdate?.Invoke(null);
+
         }
         lastSelectedButton = null;       
         for (int i = 0;i<OptionButtons.Count;i++)
         {
-            Destroy(OptionButtons[i].btn.gameObject);
+            Destroy(OptionButtons[i].gameObject);
         }
         OptionButtons.Clear();
         foreach (Type mapObjectType in typeof(MapObjects).GetNestedTypes())
@@ -133,34 +113,40 @@ public class BuildingWindow : MonoBehaviour
             if (!mapObjectType.IsAbstract && typeof(IConstruction).IsAssignableFrom(mapObjectType))
             {
                 //Debug.Log("entered");
-                var ins = Activator.CreateInstance(mapObjectType) as IConstruction;
-                if(ins.constructType == constructType && ins is not MapObjects.Administration)
+                var ins = Activator.CreateInstance(mapObjectType) as Slot.MapObject;
+                var insConstructInfo = ins as IConstruction;
+                if(insConstructInfo.constructType == constructType && ins is not MapObjects.Administration)
                 {                 
-
-                    Button button = NewOption(ins.Name, ins.Cost,ins.phase, button =>
+                    GameObject buttonGameObject = Instantiate(ButtonPattern, Vector3.zero, Quaternion.identity, Content);
+                    var buildingBtn = buttonGameObject.GetComponent<BuildingBtn>();
+                    buildingBtn.Initialize(ins, map.Phase, map.MainData.Money, (button) =>
                     {
                         EventHandler.CallInitSoundEffect(SoundName.BtnClick1);
                         OnButtonClick(mapObjectType, button);
                     });
-                    OptionButtons.Add(new BuildingBtn { btn = button,phase = ins.phase});
+                    OptionButtons.Add(buildingBtn);
+                  
                 }
 #if UNITY_EDITOR
-                if(ins.constructType == constructType && ins is MapObjects.Administration)
+                if(insConstructInfo.constructType == constructType && ins is MapObjects.Administration)
                 {
 
-                    Button button = NewOption(ins.Name, ins.Cost, ins.phase, button =>
+                    GameObject buttonGameObject = Instantiate(ButtonPattern, Vector3.zero, Quaternion.identity, Content);
+                    var buildingBtn = buttonGameObject.GetComponent<BuildingBtn>();
+                    buildingBtn.Initialize(ins, map.Phase, map.MainData.Money, (button) =>
                     {
                         EventHandler.CallInitSoundEffect(SoundName.BtnClick1);
                         OnButtonClick(mapObjectType, button);
                     });
-                    OptionButtons.Add(new BuildingBtn { btn = button, phase = ins.phase });
+                    OptionButtons.Add(buildingBtn);
+                    buttonGameObject.SetActive(true);
                 }
 #endif
             }
 
         }
-        //!!!!!!
-        CheckCost(GameManager.current.map.MainData.Money);
+        CheckPhase(map.Phase);
+        CheckCost(map.MainData.Money);    
     }
     public Animator MouseAnimator;
     static Type SelectedType { get; set; }

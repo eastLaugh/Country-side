@@ -22,6 +22,13 @@ MonoBehaviour:
         Prefabs: []
         Size: {x: 1, y: 1}
     - Key:
+        _: ChargingStation
+      Value:
+        Prefab: {fileID: 2737203524700389178, guid: 24df1879ba805b94b93ac79fd7be5eee,
+          type: 3}
+        Prefabs: []
+        Size: {x: 1, y: 1}
+    - Key:
         _: VegeFarm
       Value:
         Prefab: {fileID: 5548319181378054883, guid: 2ee32772c28365c4badc52d1baf3ed36,
@@ -78,6 +85,13 @@ MonoBehaviour:
         Prefabs: []
         Size: {x: 1, y: 1}
     - Key:
+        _: DigitalCenter
+      Value:
+        Prefab: {fileID: 4224031146581005938, guid: 90803a4d1db060e4aaf7f34c50e73df5,
+          type: 3}
+        Prefabs: []
+        Size: {x: 3, y: 2}
+    - Key:
         _: PV
       Value:
         Prefab: {fileID: 5986377068519697553, guid: 0eab5b352d9c99e46abccc2866b94a59,
@@ -93,6 +107,13 @@ MonoBehaviour:
         Size: {x: 3, y: 2}
     - Key:
         _: RiceFarm
+      Value:
+        Prefab: {fileID: 5350475810461655204, guid: d7e984932d5a94847b6df2cc7a42d19c,
+          type: 3}
+        Prefabs: []
+        Size: {x: 1, y: 1}
+    - Key:
+        _: FarmDrone
       Value:
         Prefab: {fileID: 5350475810461655204, guid: ea4482b2208c53a4a8db19f0fa6188ac,
           type: 3}

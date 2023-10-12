@@ -58,7 +58,7 @@ public class PersonsLayer : MapGenerator
     public override void Generate(Map map, Vector2Int size, Slot[] slots)
     {
         Debug.Log("生成人物中...");
-        Person headman = new Persons.Headman("吴哲浩", map.GetRandomSlot().worldPosition);
+        Person headman = new Persons.Headman("王村长", map.GetRandomSlot().worldPosition);
         map.PersonSystem.GiveBirthTo(headman);
 
 

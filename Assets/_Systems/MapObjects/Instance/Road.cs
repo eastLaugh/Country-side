@@ -19,7 +19,9 @@ public static partial class MapObjects
         public abstract int phase { get; }
 
         public int energyConsumption => 0;
+        public abstract string Requiments { get; }
 
+        public abstract float HeightOffset { get; }
         protected override void OnEnable()
         {
             //foreach (var dir in Slot.上右下左)
@@ -99,18 +101,24 @@ public static partial class MapObjects
     }
     public class CementRoad : Road
     {
-        public override float Cost => 0.35f;
+        public override float Cost => 8f;
 
         public override string Name => "水泥路";
 
         public override int phase => 1;
+        public override string Requiments => "";
+
+        public override float HeightOffset => 1f;
     }
     public class PitchRoad : Road
     {
-        public override float Cost => 0.9f;
+        public override float Cost => 15f;
 
         public override string Name => "沥青路";
 
         public override int phase => 2;
+        public override string Requiments => "";
+
+        public override float HeightOffset => 1f;
     }
 }

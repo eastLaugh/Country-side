@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using DG.Tweening;
 
 public class InfoWindow : MonoBehaviour
 {
@@ -14,8 +15,9 @@ public class InfoWindow : MonoBehaviour
             Ovary = this;
             gameObject.SetActive(false);
 
-            
+
         }
+        
     }
 
     public static InfoWindow Create(string text)
@@ -30,8 +32,27 @@ public class InfoWindow : MonoBehaviour
     public static InfoWindow Create(object obj) => Create(obj.ToString());
     // Start is called before the first frame update
 
+    public RectTransform rectTransform;
+
+    public RectTransform ScrollViewRectTransform;
+    Tween expand;
     void Start()
     {
+        expand = DOTween.To(() =>
+            ScrollViewRectTransform.anchorMax.x
+        , x =>
+            ScrollViewRectTransform.anchorMax = new Vector2(x, ScrollViewRectTransform.anchorMax.y)
+        , 1f, 0.5f).From(0).SetAutoKill(false) ;
+
+    }
+
+    public void Unexpand()
+    {
+        if (expand!=null)
+        {
+            expand.PlayBackwards();
+            expand.OnRewind(() => { Destroy(this.gameObject); });
+        }
     }
 
     // Update is called once per frame

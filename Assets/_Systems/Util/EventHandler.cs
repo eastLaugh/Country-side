@@ -55,4 +55,14 @@ public class EventHandler
     {
         ToAdiminstration?.Invoke();
     }
+    public static event Action GameWin;
+    public static void CallGameWin()
+    {
+        GameWin?.Invoke();
+    }
+    public static event Action GameOver;
+    public static void CallGameOver()
+    {
+        GameOver?.Invoke();
+    }
 }

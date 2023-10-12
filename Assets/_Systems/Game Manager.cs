@@ -7,6 +7,7 @@ using Unity.AI.Navigation;
 using NaughtyAttributes;
 using System.Collections;
 using Unity.VisualScripting;
+using UnityEngine.Events;
 
 
 
@@ -21,7 +22,11 @@ public class GameManager : MonoBehaviour
     public static GameManager current;
     public Grid grid;
 
+#if Unity_Editor
     public static bool DebugMode { get; private set; } = true;
+#else
+    public static bool DebugMode { get; private set; } = false;
+#endif
     public CinemachineVirtualCamera CinemachineVirtualCamera;
     public Transform PlaneIndicator;
     public static GlobalData globalData { get; private set; }
@@ -37,7 +42,9 @@ public class GameManager : MonoBehaviour
     public MapObjectDatabase MapObjectDatabase;
     public SlotDatabase SlotDatabase;
     public illuBookData_SO illuBookData;
-
+    [Header("游戏状态")]
+    public UnityEvent gameWin;
+    public UnityEvent gameOver;
     #region  For Json.Net
     public static readonly JsonSerializerSettings SerializeSettings = new JsonSerializerSettings
     {
@@ -59,7 +66,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-
+        EventHandler.GameWin += GameWin;
+        EventHandler.GameOver += GameOver;
     }
 
     #region 调试 debug
@@ -144,6 +152,8 @@ public class GameManager : MonoBehaviour
     readonly GUILayoutOption[] buttonLayout = new GUILayoutOption[] { GUILayout.Height(50) };
     private void OnGUI()
     {
+        if (!Application.isEditor)
+            return;
 
         GUI.skin.textField.fontSize = 25;
         GUI.skin.button.fontSize = 25;
@@ -265,6 +275,8 @@ public class GameManager : MonoBehaviour
         if (GUILayout.Button("金手指", buttonLayout))
         {
             map.MainData.Money = float.MaxValue;
+            map.Phase = 4;
+            EventHandler.CallPhaseUpdate(map.Phase);
         }
         // if (map != null)
         // {
@@ -385,6 +397,16 @@ public class GameManager : MonoBehaviour
         SaveCurrentMap(Path.Combine(SaveDirectory, fileName + ".dat"));
         UnLoad();
 
+    }
+    private void GameOver()
+    {
+        gameOver?.Invoke();
+        UnLoad();
+    }
+    private void GameWin()
+    {
+        gameWin?.Invoke();
+        UnLoad();
     }
 }
 
