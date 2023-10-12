@@ -25,6 +25,7 @@ public abstract partial class Slot
 
     public event Action OnSlotUpdate; //当Slot更新时触发:被单击、注入建筑物时（频繁被调用，仅用于替代表现层的一些Update消息。相关逻辑实现不要使用这个）
     public event Action<Slot, MapObject> OnInjected;
+    public event Action<Slot, MapObject> OnUnjected;
     internal void InvokeOnSlotUpdate()
     {
         OnSlotUpdate?.Invoke();

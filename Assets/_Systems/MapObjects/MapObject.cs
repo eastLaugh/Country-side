@@ -243,7 +243,7 @@ partial class Slot
                 //     navMeshModifier.area = NavMesh.GetAreaFromName("Not Walkable");
                 // }
 
-                //GameManager.current?.RefreshNavMesh();
+                GameManager.current?.RefreshNavMesh();
             }
         }
         protected abstract void OnEnable();

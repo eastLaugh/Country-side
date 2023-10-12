@@ -370,7 +370,7 @@ public class GameManager : MonoBehaviour
             RefreshNavMeshCoroutine = StartCoroutine(WaitOneTick());
             IEnumerator WaitOneTick()
             {
-                yield return null;
+                yield return new WaitForSecondsRealtime(0.1f);
                 NavMeshSurface navMeshSurface = PlaneIndicator.GetComponent<NavMeshSurface>();
                 if (navMeshSurface)
                 {

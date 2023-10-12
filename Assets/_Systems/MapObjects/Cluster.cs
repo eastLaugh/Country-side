@@ -91,8 +91,18 @@ public class Cluster
             if (!ReachableMapObjects.Contains(mapObject))
             {
                 ReachableMapObjects.Add(mapObject);
+                mapObject.OnMapObjectUnjected += OnReachableMapObjectUnjected;
                 OnReach?.Invoke(mapObject);
             }
+        }
+    }
+
+    private void OnReachableMapObjectUnjected(MapObject mapObject)
+    {
+        mapObject.OnMapObjectUnjected -= OnReachableMapObjectUnjected;
+        if (ReachableMapObjects.Contains(mapObject))
+        {
+            ReachableMapObjects.Remove(mapObject);
         }
     }
 
