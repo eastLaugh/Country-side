@@ -1,12 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using Newtonsoft.Json;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Slot;
 
 public class Cluster
 {
+    ~Cluster()
+    {
+        Debug.Log("Cluster被GC.");
+    }
     public event Action<MapObject> OnReach;
 
     [JsonProperty]
@@ -34,7 +40,13 @@ public class Cluster
         else
         {
             mapObjects.Add(targetMapObject);
-            targetMapObject.OnMapObjectUnjected += OnMapObjectUnjected;
+
+            if (!UnjectedEventRegistered.Contains(targetMapObject))
+            {
+                targetMapObject.OnMapObjectUnjected += OnMapObjectUnjected;
+                UnjectedEventRegistered.Add(targetMapObject);
+            }
+
         }
     }
 
@@ -51,12 +63,18 @@ public class Cluster
         Recalculate();
         GameManager.OnMapLoaded -= OnMapLoaded;
     }
-
+    [JsonIgnore]
+    HashSet<MapObject> UnjectedEventRegistered = new();
     public void Recalculate()
     {
         foreach (var mapObject in mapObjects)
         {
-            mapObject.OnMapObjectUnjected += OnMapObjectUnjected;
+            if (!UnjectedEventRegistered.Contains(mapObject))
+            {
+                mapObject.OnMapObjectUnjected += OnMapObjectUnjected;
+                UnjectedEventRegistered.Add(mapObject);
+            }
+
             foreach (var dir in Slot.上右下左)
             {
                 var target = mapObject.slot.map[mapObject.slot.position + dir];
@@ -80,7 +98,6 @@ public class Cluster
     public HashSet<MapObject> ReachableMapObjects = new();
     private void OnInjected(Slot slot, MapObject mapObject)
     {
-        //TODO:这里有问题，如果是集群边缘外一层的话
         if (slot.GetMapObject(MapObjectType) != null)
         {
             //如果是集群内部的话
@@ -88,6 +105,7 @@ public class Cluster
         }
         else if (slot.map[slot.position + Slot.上右下左[mapObject.Direction]].GetMapObject(MapObjectType) != null)
         {
+            //集群边缘外一层的话
             if (!ReachableMapObjects.Contains(mapObject))
             {
                 ReachableMapObjects.Add(mapObject);
@@ -109,6 +127,8 @@ public class Cluster
     private void OnMapObjectUnjected(MapObject mapObject)
     {
         mapObject.OnMapObjectUnjected -= OnMapObjectUnjected;
+        UnjectedEventRegistered.Remove(mapObject);
+
         if (mapObjects.Contains(mapObject))
         {
             mapObjects.Remove(mapObject);
@@ -125,5 +145,11 @@ public class Cluster
                 }
             }
         }
+    }
+
+    internal void Unbind(MapObject mapobject, Cluster oldCluster)
+    {
+        mapobject.OnMapObjectUnjected -= oldCluster.OnMapObjectUnjected;
+
     }
 }

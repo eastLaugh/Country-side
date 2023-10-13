@@ -13159,6 +13159,12 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5686363878953300741, guid: 3b16acb8317837b418bcc726fb62dca4,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: f6101fd2d203edf4cb3f38365662ec4a,
+        type: 3}
     - target: {fileID: 5744348829739443144, guid: 3b16acb8317837b418bcc726fb62dca4,
         type: 3}
       propertyPath: m_Pivot.x

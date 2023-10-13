@@ -145,7 +145,10 @@ partial class Slot
                         {
                             if (newCluster != node.cluster)
                             {
+                                if (node.cluster != null)
+                                    newCluster.Unbind(node, node.cluster);
                                 node.cluster = newCluster;
+
                                 newCluster.Push(node);
                             }
                         };
