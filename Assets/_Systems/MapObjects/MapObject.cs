@@ -239,13 +239,13 @@ partial class Slot
                 }
 
                 //这里为了尽可能不用对原项目进行修改，所以进行了容错处理：
-                if (!obj.GetComponentInChildren<NavMeshModifier>() && !obj.GetComponentInChildren<NavMeshModifierVolume>())
-                {
-                    var navMeshModifier = obj.AddComponent<NavMeshModifier>();
-                    navMeshModifier.ignoreFromBuild = true;
-                }
+                //if (!obj.GetComponentInChildren<NavMeshModifier>() && !obj.GetComponentInChildren<NavMeshModifierVolume>())
+                //{
+                //    var navMeshModifier = obj.AddComponent<NavMeshModifier>();
+                //    navMeshModifier.ignoreFromBuild = true;
+                //}
 
-                GameManager.current?.RefreshNavMesh();
+                //GameManager.current?.RefreshNavMesh();
             }
         }
         protected abstract void OnEnable();

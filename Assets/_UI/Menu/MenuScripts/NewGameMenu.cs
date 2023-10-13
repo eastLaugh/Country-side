@@ -17,7 +17,7 @@ public class NewGameMenu : MonoBehaviour
     {
         startBtn.onClick.AddListener(() =>
         {
-            if(saveNameInput.text != "" && nameInput.text != "")
+            if(saveNameInput.text != "")
             {
                 Overlay.SetActive(true);
                 StartCoroutine(Creat(saveNameInput.text));

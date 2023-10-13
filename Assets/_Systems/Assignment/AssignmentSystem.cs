@@ -246,8 +246,8 @@ public class AssignmentSystem : MonoBehaviour , Person.IPromptProvider
                  map.MainData.Happiness += 10;
                  CheckToPhase3();
              }).AddTolist();
-        var A2_2 = new BasicAssignment("建造1个秸秆处理厂", "我们村每年种植都会产生不少秸秆，处理秸秆可真是个难题。不过，听说我们市有将秸秆转化为氢能的工程计划。" +
-            "试着建造一座这样的秸秆处理厂吧。",
+        var A2_2 = new BasicAssignment("建造1个氢能发电站", "我们村每年种植都会产生不少秸秆，处理秸秆可真是个难题。不过，听说我们市有将秸秆转化为氢能的工程计划。" +
+            "试着建造一座这样的氢能发电站吧。",
              "金钱20万",
              () =>
              {

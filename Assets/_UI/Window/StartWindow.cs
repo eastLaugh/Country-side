@@ -34,8 +34,13 @@ public class StartWindow : MonoBehaviour
         if(!map.isPrefaceDone)
         {
             Panel.SetActive(true);
-            StartCoroutine(wait());
-        }        
+            timeController.Play();
+            timeController.Pause();
+        }
+        else
+        {
+            timeController.Play();
+        }
         BtnClose.onClick.AddListener(() =>
         {
             Panel.SetActive(false);
@@ -47,7 +52,7 @@ public class StartWindow : MonoBehaviour
     IEnumerator wait()
     {
         yield return new WaitForSeconds(0.1f);
-        timeController.Pause();
+        
     }
     void Start()
     {

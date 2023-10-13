@@ -19,6 +19,7 @@ public class SettingsWindow : MonoBehaviour
         gridOn.isOn = Settings.GridOn;
         MusicVolumeSlider.value = Settings.MusicVolume;
         EffectVolumeSlider.value = Settings.EffectVolume;
+        Grid.SetActive(Settings.GridOn);
         BtnClose.onClick.AddListener(()=>{
             timeController.Continue();
             window.SetActive(false);

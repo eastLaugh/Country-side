@@ -17,7 +17,7 @@ public class BuildingDetailUI : MonoBehaviour
     public void Display(BuildingDetails Building)
     {
         nameText.text = Building.chineseName;
-        MainText.text = "工程原理：" + Building.description + "\n\n" + "建造条件:" + Building.requirement + "\n\n" + "建筑功能：" + Building.function + "\n\n";
+        MainText.text = "介绍（工程原理）：" + Building.description + "\n\n" + "建造条件:" + Building.requirement + "\n\n" + "建筑功能：" + Building.function + "\n\n";
         //icon.sprite = Building.icon;
         
         //物品图标不存在时，隐藏该图标

@@ -54,6 +54,7 @@ public class Map
     [JsonProperty]
     public int Phase = 1;
 
+
     public Map(Vector2Int size, Slot[] Slots, int RandomSeed, GameDataVector mainData)
     {
         this.size = size;

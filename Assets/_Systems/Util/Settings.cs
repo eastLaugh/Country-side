@@ -10,7 +10,7 @@ public static class Settings
     public const float 相机高度限制 = 100f;
 
     public static readonly bool 开启浮动效果;
-    public static float BuildingBtnHoldTime = 1.0f;
+    public static float BuildingBtnHoldTime = 0.2f;
     public static float MasterVolume = 45;
     public static float MusicVolume = 35;
     public static float EffectVolume = 35;

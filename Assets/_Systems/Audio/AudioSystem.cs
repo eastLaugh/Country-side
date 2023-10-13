@@ -22,12 +22,23 @@ public class AudioSystem : MonoBehaviour
         audioMixer.SetFloat("MusicVolume", Settings.MusicVolume * 2 - 80);
         audioMixer.SetFloat("EffectVolume", Settings.EffectVolume * 2 - 80);
         SetMusic(SoundName.MenuMusic);
+        EventHandler.GameWin += GameWin;
+        EventHandler.GameOver += GameLose;
         //musicPlayer.Play();
     }
-    public void SwitchMusic(SoundName soundName)
+    public void GameWin()
+    {
+        SwitchMusic(SoundName.GameWinMusic,false);
+    }
+    public void GameLose()
+    {
+        SwitchMusic(SoundName.GameLoseMusic, false);
+    }
+    public void SwitchMusic(SoundName soundName,bool loop = true)
     {
         SetMusic(soundName);
         musicPlayer.Play();
+        musicPlayer.loop = loop;
     }
     void SetMusic(SoundName soundName)
     {
@@ -36,6 +47,7 @@ public class AudioSystem : MonoBehaviour
         musicPlayer.volume = soundDetails.soundVolume;
         musicPlayer.pitch = UnityEngine.Random.Range(soundDetails.soundPitchMin, soundDetails.soundPitchMax);
     }
+
     private void OnEnable()
     {
         
@@ -50,5 +62,5 @@ public class AudioSystem : MonoBehaviour
 public enum SoundName
 {
     MenuMusic,GameMusic,
-    BtnClick1,BtnClick2,BtnClick3,MissionFinish,Costruct,WrongPlace,SlotClick,Demolish
+    BtnClick1,BtnClick2,BtnClick3,MissionFinish,Costruct,WrongPlace,SlotClick,Demolish,GameWinMusic,GameLoseMusic
 }

@@ -6,7 +6,7 @@ using static Slot;
 
 public static partial class MapObjects
 {
-    public class Station5G : RippleEffectBuilding<FiveGArea>, IConstruction
+    public class Station5G : RippleEffectBuilding<FiveGArea>, IConstruction, IFocusable
     {
 
         public override bool CanBeUnjected => true;
@@ -23,6 +23,8 @@ public static partial class MapObjects
         public int phase => 2;
 
         public int energyConsumption => 2;
+
+        public string Lore => "图鉴已解锁：" + Name;
 
         protected override int RippleRadius => 5;
 

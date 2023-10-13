@@ -31,7 +31,7 @@ public class TimeController : MonoBehaviour
     private void OnMapLoaded(Map map)
     {
         this.map = map;
-        Play();
+        //Play();
         isMapLoaded=true;
     }
 

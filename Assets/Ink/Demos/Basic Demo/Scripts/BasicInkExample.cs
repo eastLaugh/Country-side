@@ -102,11 +102,16 @@ public class BasicInkExample : MonoBehaviour, IPointerClickHandler
     private void OnDisable()
     {
         GameManager.OnMapUnloaded -= OnMapUnloaded;
+
         //Debug.Log("Ondisable");
     }
     private void OnMapUnloaded()
     {
         isMaploaded = false;
+        Guide1.ResetState();
+        Guide2.ResetState();
+		isChoices = false;
+		LOCKED = false;
     }
 
     private void OnMapLoaded(Map map)
@@ -115,6 +120,7 @@ public class BasicInkExample : MonoBehaviour, IPointerClickHandler
         isMaploaded = true;
 		if(!map.isTurtorialDone) 
 		{
+			tourGuideUI.OpenWindow();
             CurrentStory = Guide1;
             RemoveChildren();
             StartStory();

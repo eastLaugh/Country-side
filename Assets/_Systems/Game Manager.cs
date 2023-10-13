@@ -107,6 +107,15 @@ public class GameManager : MonoBehaviour
         {
             RefreshNavMesh();
         }
+        if(Input.GetKey(KeyCode.LeftControl))
+        {
+            if(Input.GetKeyDown(KeyCode.L))
+            {
+                map.MainData.Money += 1E7f;
+                map.Phase = 4;
+                EventHandler.CallPhaseUpdate(map.Phase);
+            }
+        }
     }
 
     private void Awake()
@@ -149,6 +158,7 @@ public class GameManager : MonoBehaviour
     const string globalFileName = "GlobalSave.dat";
     // string autoFileName = "AutoSave.dat";
     string fileName = DefaultSaveName;
+    string currentfileName;
     const string DefaultSaveName = "[默认存档]";
     readonly GUILayoutOption[] textFieldLayout = new GUILayoutOption[] { GUILayout.Height(50) };
     readonly GUILayoutOption[] buttonLayout = new GUILayoutOption[] { GUILayout.Height(50) };
@@ -329,7 +339,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-
+    
     public void LoadFromLocalFile(string FileName)
     {
         if (!File.Exists(FileName))
@@ -338,6 +348,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            currentfileName = FileName.Split(".")[0];
             UnLoad();
             string jsonText = File.ReadAllText(FileName);
             Map map = JsonConvert.DeserializeObject<Map>(jsonText, SerializeSettings);
@@ -392,11 +403,11 @@ public class GameManager : MonoBehaviour
         Map map = JsonConvert.DeserializeObject<Map>(File.text, SerializeSettings);
         LoadMap(map);
         SaveCurrentMap(Path.Combine(SaveDirectory, fileName + ".dat"));
-
+        currentfileName = fileName;
     }
     public void AutoSave()
     {
-        SaveCurrentMap(Path.Combine(SaveDirectory, fileName + ".dat"));
+        SaveCurrentMap(Path.Combine(SaveDirectory, currentfileName + ".dat"));
         UnLoad();
 
     }

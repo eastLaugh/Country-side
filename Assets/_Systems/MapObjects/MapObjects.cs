@@ -13,7 +13,7 @@ public static partial class MapObjects
     {
         public float Cost => 250f;
 
-        public string Name => "秸秆处理厂";
+        public string Name => "氢能发电站";
 
         public ConstructType constructType => ConstructType.EAI;
 

@@ -71,7 +71,7 @@ public class GameDataView : MonoBehaviour
         while(Mathf.Abs(endValue - startValue) > 0.01f)
         {
             startValue = Mathf.Lerp(startValue,endValue,0.3f);          
-            if(startValue > 1E7)
+            if(startValue > 1E4)
             {
                 Money.text = (startValue / 1E4).ToString("F2") + "вк";
             }
@@ -82,7 +82,7 @@ public class GameDataView : MonoBehaviour
             yield return new WaitForSeconds(0.07f);
         }
         //Money.color = Color.white;
-        if (m_data.Money > 1E7)
+        if (m_data.Money > 1E4)
         {
             Money.text = (m_data.Money / 1E4).ToString("F2") + "вк";
         }

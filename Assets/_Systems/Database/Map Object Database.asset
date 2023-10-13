@@ -15,6 +15,13 @@ MonoBehaviour:
   Dict:
     _serializedList:
     - Key:
+        _: ECommerceServiceCenter
+      Value:
+        Prefab: {fileID: 4629083673076109880, guid: b221c57b7ff6dd840b8df6e7899f18c5,
+          type: 3}
+        Prefabs: []
+        Size: {x: 3, y: 2}
+    - Key:
         _: PitchRoad
       Value:
         Prefab: {fileID: 3305943240753798436, guid: 0f8273fdf02a20e4b81a732b627dad85,
