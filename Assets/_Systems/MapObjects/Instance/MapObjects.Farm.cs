@@ -9,7 +9,7 @@ using static Slot;
 
 public static partial class MapObjects
 {
-    #region Å©ÒµÉèÊ©
+    #region å†œä¸šè®¾æ–½
     public abstract class Farm : MapObject, IConstruction
     {
         public override bool CanBeUnjected => true;
@@ -37,7 +37,7 @@ public static partial class MapObjects
         {
             foreach (var holder in PlaceHolders)
             {
-                Road r = map[holder.slot.position + ÉÏÓÒÏÂ×ó[Direction]]?.GetMapObject<Road>();              
+                Road r = map[holder.slot.position + ä¸Šå³ä¸‹å·¦[Direction]]?.GetMapObject<Road>();              
                 if (r != null)
                 {
                     foreach (MapObject reachable in r.cluster.ReachableMapObjects)
@@ -49,7 +49,7 @@ public static partial class MapObjects
                     }
                 }
             }
-            Road r2 = map[slot.position + ÉÏÓÒÏÂ×ó[Direction]]?.GetMapObject<Road>();
+            Road r2 = map[slot.position + ä¸Šå³ä¸‹å·¦[Direction]]?.GetMapObject<Road>();
             if (r2 != null)
             {
                 foreach (MapObject reachable in r2.cluster.ReachableMapObjects)
@@ -66,7 +66,7 @@ public static partial class MapObjects
         {
             foreach(var ele in slot.map.Centers)
             {
-                if (ele.Name == "Ïç´åÊı×ÖÖĞĞÄ" && ele.Warning != "")
+                if (ele.Name == "ä¹¡æ‘æ•°å­—ä¸­å¿ƒ" && ele.Warning != "")
                     return true;
                 Debug.Log(ele.Name);
             }
@@ -106,7 +106,7 @@ public static partial class MapObjects
     {
         public override float Cost => 6f;
 
-        public override string Name => "Ë®µ¾Ìï";
+        public override string Name => "æ°´ç¨»ç”°";
 
         public override int phase => 1;
 
@@ -141,7 +141,7 @@ public static partial class MapObjects
     {
         public override float Cost => 16f;
 
-        public override string Name => "²ËÌï";
+        public override string Name => "èœç”°";
         public override int phase => 1;
         public override int energyConsumption => 0;
         public override string Requiments => "";
@@ -173,19 +173,19 @@ public static partial class MapObjects
     {
         public override float Cost => 30f;
         public override int energyConsumption => 1;
-        public override string Name => "ÎÂÊÒ´óÅï";
+        public override string Name => "æ¸©å®¤å¤§æ£š";
         public override int phase => 2;
-        public override string Requiments => "Ğè½¨ÔÚ²ËÌïÉÏ";
+        public override string Requiments => "éœ€å»ºåœ¨èœç”°ä¸Š";
 
         public override float HeightOffset => 0.7f;
 
-        public string Lore => "Í¼¼øÒÑ½âËø£º" + Name;
+        public string Lore => "å›¾é‰´å·²è§£é”ï¼š" + Name;
 
         public override void Check()
         {
             if (!CheckConnection())
             {
-                Warning = "Î´Á¬Í¨";
+                Warning = "æœªè¿é€š";
                 if (WarningIcon != null)
                 {
                     WarningIcon.SetActive(true);
@@ -234,19 +234,19 @@ public static partial class MapObjects
     {
         public override float Cost => 150f;
         public override int energyConsumption => 3;
-        public override string Name => "ÖÇ»Û´óÅï";
+        public override string Name => "æ™ºæ…§å¤§æ£š";
         public override int phase => 3;
-        public override string Requiments => "Ğè½¨ÔÚÎÂÊÒ´óÅïÉÏ";
+        public override string Requiments => "éœ€å»ºåœ¨æ¸©å®¤å¤§æ£šä¸Š";
 
         public override float HeightOffset => 0.7f;
 
-        public string Lore => "Í¼¼øÒÑ½âËø£º" + Name;
+        public string Lore => "å›¾é‰´å·²è§£é”ï¼š" + Name;
 
         public override void Check()
         {
             if (!CheckConnection())
             {
-                Warning = "Î´Á¬Í¨";
+                Warning = "æœªè¿é€š";
                 if (WarningIcon != null)
                 {
                     WarningIcon.SetActive(true);
@@ -257,7 +257,7 @@ public static partial class MapObjects
             }
             else if(!CheckDigital())
             {
-                Warning = "ĞèÒªÅ©ÒµÊı×ÖÖĞĞÄ";
+                Warning = "éœ€è¦å†œä¸šæ•°å­—ä¸­å¿ƒ";
                 if (WarningIcon != null)
                 {
                     WarningIcon.SetActive(true);
@@ -267,7 +267,7 @@ public static partial class MapObjects
             }
             else if (slot.GetMapObject<FiveGArea>() == null)
             {
-                Warning = "ĞèÒª5GÍøÂç";
+                Warning = "éœ€è¦5Gç½‘ç»œ";
                 if (WarningIcon != null)
                 {
                     WarningIcon.SetActive(true);
@@ -309,19 +309,19 @@ public static partial class MapObjects
     {
         public override float Cost => 35f;
         public override int energyConsumption => 1;
-        public override string Name => "Å©ÒµÎŞÈË»ú";
+        public override string Name => "å†œä¸šæ— äººæœº";
         public override int phase => 3;
-        public override string Requiments => "Ğè½¨ÔÚË®µ¾ÌïÉÏ";
+        public override string Requiments => "éœ€å»ºåœ¨æ°´ç¨»ç”°ä¸Š";
 
         public override float HeightOffset => 0.4f;
 
-        public string Lore => "Í¼¼øÒÑ½âËø£º" + Name;
+        public string Lore => "å›¾é‰´å·²è§£é”ï¼š" + Name;
 
         public override void Check()
         {
             if (!CheckDigital())
             {
-                Warning = "ĞèÒªÅ©ÒµÊı×ÖÖĞĞÄ";
+                Warning = "éœ€è¦å†œä¸šæ•°å­—ä¸­å¿ƒ";
                 if (WarningIcon != null)
                 {
                     WarningIcon.SetActive(true);
@@ -331,7 +331,7 @@ public static partial class MapObjects
             }
             else if (slot.GetMapObject<FiveGArea>() == null)
             {
-                Warning = "ĞèÒª5GÍøÂç";
+                Warning = "éœ€è¦5Gç½‘ç»œ";
                 if (WarningIcon != null)
                 {
                     WarningIcon.SetActive(true);

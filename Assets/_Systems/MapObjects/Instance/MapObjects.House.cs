@@ -6,13 +6,13 @@ using static Slot;
 
 public static partial class MapObjects
 {
-    #region ×¡Õ¬Â¥
+    #region ä½å®…æ¥¼
     /// <summary>
-    /// ×¡Õ¬»ùÀà
+    /// ä½å®…åŸºç±»
     /// </summary>
     public abstract class House : MapObject, IConstruction
     {
-        //ÈË¿ÚÈİÁ¿
+        //äººå£å®¹é‡
         [JsonProperty] protected SolidMiddleware<Int> m_capacity;
 
         public int Capacity => m_capacity.currentValue.m_value;
@@ -32,7 +32,7 @@ public static partial class MapObjects
         public abstract void HouseParaInit();
         public void CheckConnection()
         {
-            Road r = map[slot.position + ÉÏÓÒÏÂ×ó[Direction]]?.GetMapObject<Road>();
+            Road r = map[slot.position + ä¸Šå³ä¸‹å·¦[Direction]]?.GetMapObject<Road>();
             bool Connected = false;
             if (r != null)
             {
@@ -46,14 +46,14 @@ public static partial class MapObjects
                 }
             }
 
-            var ConnectCPU = m_capacity.CPUs.Find((cpu) => { return cpu.name == "Î´Á¬Í¨"; });
+            var ConnectCPU = m_capacity.CPUs.Find((cpu) => { return cpu.name == "æœªè¿é€š"; });
             if (!Connected)
             {
                 if (ConnectCPU.name == null)
                 {
                     m_capacity.AddCPU(new SolidMiddleware<Int>.CPU
-                    { name = "Î´Á¬Í¨", Addition = new Int(0), Multipliable = true, Multiplication = new Int(0) });
-                    Warning = "Î´Á¬Í¨";
+                    { name = "æœªè¿é€š", Addition = new Int(0), Multipliable = true, Multiplication = new Int(0) });
+                    Warning = "æœªè¿é€š";
                 }
                 if (WarningIcon != null)
                 {
@@ -115,13 +115,13 @@ public static partial class MapObjects
 
 
     /// <summary>
-    /// Ë®Äà·¿
+    /// æ°´æ³¥æˆ¿
     /// </summary>
     public class CementHouse : House, MustNotExist<IConstruction>
     {
         public override float Cost => 120;
 
-        public override string Name => "Ë®Äà·¿";
+        public override string Name => "æ°´æ³¥æˆ¿";
         public override int phase => 1;
 
         public override int energyConsumption => 1;
@@ -151,21 +151,21 @@ public static partial class MapObjects
         }
     }
     /// <summary>
-    /// ¹â·ü£¨×¡Õ¬£©
+    /// å…‰ä¼ï¼ˆä½å®…ï¼‰
     /// </summary>
     public class PV : House, MustExist<CementHouse>, IPowerSupply, IFocusable
     {
         public override float Cost => 25;
 
-        public override string Name => "¹â·ü(×¡Õ¬)";
+        public override string Name => "å…‰ä¼(ä½å®…)";
         public override int phase => 1;
         public override int energyConsumption => 1;
-        public override string Requiments => "Ğè½¨ÔÚË®Äà·¿ÉÏ";
+        public override string Requiments => "éœ€å»ºåœ¨æ°´æ³¥æˆ¿ä¸Š";
 
         public override float HeightOffset => 0.75f;
         public float Power => 1;
 
-        public string Lore => "Í¼¼øÒÑ½âËø£º" + Name;
+        public string Lore => "å›¾é‰´å·²è§£é”ï¼š" + Name;
 
         public override void HouseParaInit()
         {
@@ -193,13 +193,13 @@ public static partial class MapObjects
         }
     }
     /// <summary>
-    /// ÃñËŞ
+    /// æ°‘å®¿
     /// </summary>
     public class Homestay : House, MustNotExist<IConstruction>, IOtherProfit, IFocusable
     {
         public override float Cost => 90;
 
-        public override string Name => "ÃñËŞ";
+        public override string Name => "æ°‘å®¿";
         public override int phase => 4;
         public override int energyConsumption => 1;
         public override string Requiments => "";
@@ -207,7 +207,7 @@ public static partial class MapObjects
         public override float HeightOffset => 0.5f;
         public float Profit => 0.07f;
 
-        public string Lore => "Í¼¼øÒÑ½âËø£º" + Name;
+        public string Lore => "å›¾é‰´å·²è§£é”ï¼š" + Name;
 
         public override void HouseParaInit()
         {
