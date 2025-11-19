@@ -27,7 +27,12 @@ public class DayNightCycle : MonoBehaviour
     private void UpdateSunPosition()
     {
         // 计算当前时间的旋转角度，模拟太阳的轨迹
-        float angle = (timeOfDay / dayDuration) * 360.0f;
+        var ratio = timeOfDay / dayDuration;
+        float angle;
+        if (ratio < 0.5)
+            angle = ratio * 180f + 45f;
+        else
+            angle = (1 - ratio) * 180f + 45f;
 
         // 更新自身的旋转来改变光照方向
         sunTransform.rotation = Quaternion.Euler(angle, 0.0f, 0.0f);

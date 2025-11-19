@@ -15,60 +15,139 @@ MonoBehaviour:
   Dict:
     _serializedList:
     - Key:
-        _: house1
+        _: ECommerceServiceCenter
       Value:
-        Prefab: {fileID: 1812805813641912064, guid: 3b8d6b75408d1c04a80526a866c7d4e7,
+        Prefab: {fileID: 4629083673076109880, guid: b221c57b7ff6dd840b8df6e7899f18c5,
           type: 3}
         Prefabs: []
-        "\u5907\u6CE8": 
+        Size: {x: 3, y: 2}
     - Key:
-        _: Pollution
+        _: PitchRoad
       Value:
-        Prefab: {fileID: 4028269822862111206, guid: d724a54e695999f468572d768921fbd0,
+        Prefab: {fileID: 3305943240753798436, guid: 0f8273fdf02a20e4b81a732b627dad85,
           type: 3}
         Prefabs: []
-        "\u5907\u6CE8": 
+        Size: {x: 1, y: 1}
     - Key:
-        _: "\u5E02\u4E2D\u5FC3"
+        _: ChargingStation
       Value:
-        Prefab: {fileID: 919132149155446097, guid: 22bef38faeb0a384e9697a6975d3c964,
+        Prefab: {fileID: 2737203524700389178, guid: 24df1879ba805b94b93ac79fd7be5eee,
           type: 3}
         Prefabs: []
-        "\u5907\u6CE8": 
+        Size: {x: 1, y: 1}
     - Key:
-        _: TextileMill
+        _: VegeFarm
       Value:
-        Prefab: {fileID: 919132149155446097, guid: 6ac1d576ddec5e74d9b46549324afd64,
+        Prefab: {fileID: 5548319181378054883, guid: 2ee32772c28365c4badc52d1baf3ed36,
           type: 3}
         Prefabs: []
-        "\u5907\u6CE8": 
+        Size: {x: 1, y: 1}
     - Key:
-        _: Mulberry
+        _: Homestay
       Value:
-        Prefab: {fileID: 7283486670144764620, guid: 2b706258fd8dcb945901495109bdcb86,
+        Prefab: {fileID: 5896173636876415482, guid: 4653387e18d89b44f8225ed0931d466f,
           type: 3}
         Prefabs: []
-        "\u5907\u6CE8": 
+        Size: {x: 1, y: 1}
     - Key:
-        _: Road
+        _: GreenHouse
       Value:
-        Prefab: {fileID: 3275510535045769556, guid: 1e5c0348ceb1dcd46add68e0e7e69432,
+        Prefab: {fileID: 9027700337902997372, guid: 45088f809ccbaa14db1f37408e533be9,
           type: 3}
         Prefabs: []
-        "\u5907\u6CE8": 
+        Size: {x: 2, y: 3}
     - Key:
-        _: House
+        _: intelGreenHouse
       Value:
-        Prefab: {fileID: 919132149155446097, guid: e389191a0adf3094e97a6da0295330a2,
+        Prefab: {fileID: 7569635914832788990, guid: 685f1fb122cc26a46a9679dd2910e6a7,
           type: 3}
         Prefabs: []
-        "\u5907\u6CE8": 
+        Size: {x: 2, y: 3}
+    - Key:
+        _: FiveGArea
+      Value:
+        Prefab: {fileID: 4106138064997208481, guid: 13bf4b7afda86844e99dc7bb45d407bf,
+          type: 3}
+        Prefabs: []
+        Size: {x: 1, y: 1}
+    - Key:
+        _: PVPS
+      Value:
+        Prefab: {fileID: 6349964554226485413, guid: 4df57835308aac64e834ba44050c5c30,
+          type: 3}
+        Prefabs: []
+        Size: {x: 3, y: 2}
+    - Key:
+        _: Station5G
+      Value:
+        Prefab: {fileID: 8917210137871555974, guid: 3bc117b39010cba49bed7e0be1d40e20,
+          type: 3}
+        Prefabs: []
+        Size: {x: 1, y: 1}
+    - Key:
+        _: CementHouse
+      Value:
+        Prefab: {fileID: 5986377068519697553, guid: ae0e57a26cf7ba34f80b083e21433181,
+          type: 3}
+        Prefabs: []
+        Size: {x: 1, y: 1}
+    - Key:
+        _: DigitalCenter
+      Value:
+        Prefab: {fileID: 4224031146581005938, guid: 90803a4d1db060e4aaf7f34c50e73df5,
+          type: 3}
+        Prefabs: []
+        Size: {x: 3, y: 2}
+    - Key:
+        _: BiomassPlant
+      Value:
+        Prefab: {fileID: 7657071449364679538, guid: 406a7c0b6a423b14085aea4349e13ef1,
+          type: 3}
+        Prefabs: []
+        Size: {x: 2, y: 3}
+    - Key:
+        _: PV
+      Value:
+        Prefab: {fileID: 5986377068519697553, guid: 0eab5b352d9c99e46abccc2866b94a59,
+          type: 3}
+        Prefabs: []
+        Size: {x: 1, y: 1}
+    - Key:
+        _: Administration
+      Value:
+        Prefab: {fileID: 4180746334803348499, guid: 8fb3f343dd05d7747926893a40ae1f60,
+          type: 3}
+        Prefabs: []
+        Size: {x: 3, y: 2}
+    - Key:
+        _: RiceFarm
+      Value:
+        Prefab: {fileID: 5350475810461655204, guid: d7e984932d5a94847b6df2cc7a42d19c,
+          type: 3}
+        Prefabs: []
+        Size: {x: 1, y: 1}
+    - Key:
+        _: FarmDrone
+      Value:
+        Prefab: {fileID: 5350475810461655204, guid: ea4482b2208c53a4a8db19f0fa6188ac,
+          type: 3}
+        Prefabs: []
+        Size: {x: 1, y: 1}
     - Key:
         _: Tree
       Value:
-        Prefab: {fileID: 919132149155446097, guid: 003a7f6256ac5f6489151533beef0788,
+        Prefab: {fileID: 4095776568671301551, guid: 7a212fc463ee23f4a94741d1d7b11f2a,
+          type: 3}
+        Prefabs:
+        - {fileID: 4095776568671301551, guid: 7a212fc463ee23f4a94741d1d7b11f2a, type: 3}
+        - {fileID: 4261438231934615965, guid: d4c1bfbbcce3cda4d98e129597583e68, type: 3}
+        Size: {x: 1, y: 1}
+    - Key:
+        _: CementRoad
+      Value:
+        Prefab: {fileID: 2832345319450986506, guid: f12ef352c6fb69e41864e0eb7d2ea7f2,
           type: 3}
         Prefabs:
         - {fileID: 919132149155446097, guid: 003a7f6256ac5f6489151533beef0788, type: 3}
         - {fileID: 919132149155446097, guid: 33deef01251064942bdfb4b84e68c980, type: 3}
-        "\u5907\u6CE8": 
+        Size: {x: 1, y: 1}

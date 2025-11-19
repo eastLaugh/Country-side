@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 using System;
+using NaughtyAttributes;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -13,18 +15,16 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public static event Action<SlotRender> OnAnySlotClickedInBuildMode;
     public event Action<SlotRender> OnSlotClicked;
     public static event Action<SlotRender> OnAnySlotClicked;
+
     public static event Action<SlotRender> OnAnySlotEnter;
     public static event Action<SlotRender> OnAnySlotExit;
 
     public static event Action<SlotRender, PointerEventData> OnDragSlot;
-    
+
 
     public event Action OnRender;
 
-    public void RegisterRender(Action onRender)
-    {
-        OnRender += onRender;
-    }
+
 
     public void Refresh()
     {
@@ -34,34 +34,40 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (BuildMode.hasEntered)
+        if (!eventData.dragging && eventData.button == PointerEventData.InputButton.Left)
         {
-            OnAnySlotClickedInBuildMode?.Invoke(this); //仅建造模式
-        }
-        else
-        {
-            OnAnySlotClicked?.Invoke(this); //全局
-            OnSlotClicked?.Invoke(this);
-            slot.InvokeOnSlotUpdate();
+            if (BuildMode.hasEntered)
+            {
+                OnAnySlotClickedInBuildMode?.Invoke(this); //仅建造模式
+            }
+            else
+            {
+                OnAnySlotClicked?.Invoke(this); //全局(不包含建造模式)
+                OnSlotClicked?.Invoke(this);
+                slot.InvokeOnSlotUpdate();
+            }
         }
 
+        //double click detect
+        if (eventData.clickCount == 2)
+        {
 #if UNITY_EDITOR
-        Selection.SetActiveObjectWithContext(gameObject, null);
+            Selection.SetActiveObjectWithContext(gameObject, null);
 #endif
+        }
+
     }
 
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         OnAnySlotEnter?.Invoke(this);
-        //transform.position = new Vector3(transform.position.x, transform.position.y + 0.3f, transform.position.z);
 
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         OnAnySlotExit?.Invoke(this);
-        //transform.position = new Vector3(transform.position.x, transform.position.y - 0.3f, transform.position.z);
     }
 
     //加载动画
@@ -74,7 +80,7 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         var pos = slot.position;
         var index = (int)(pos.x * slot.map.size.y + pos.y);
         var proportion = 2 * Mathf.Min(index, totalNum - index) / (float)totalNum;
-        transform.DOLocalMoveY(Settings.相机初始高度, (-proportion * proportion + 1f) * 2f).From().SetEase(Ease.OutBack).SetDelay(LongestTime * (1f - proportion));
+        //transform.DOLocalMoveY(Settings.相机初始高度, (-proportion * proportion + 1f) * 2f).From().SetEase(Ease.OutBack).SetDelay(LongestTime * (1f - proportion));
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -82,5 +88,60 @@ public class SlotRender : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         OnDragSlot?.Invoke(this, eventData);
     }
 
+    Tween lastTween;
+    internal void Shake()
+    {
+        lastTween?.Complete();
+        lastTween = transform.DOShakePosition(0.5f, 0.1f, 10, 90, false, false);
+    }
 
+
+    Tween FloatTween;
+    public void Float()
+    {
+        StopAllFloat += StopFloat;
+        if (Settings.开启浮动效果)
+            FloatTween = transform.DOLocalMoveY(transform.localPosition.y + 0.3f, 0.5f).SetEase(Ease.OutBack).SetLoops(-1, LoopType.Yoyo);
+    }
+    public void StopFloat()
+    {
+        StopAllFloat -= StopFloat;
+        //如何在这里让FloatTween销毁并回到初始状态
+        FloatTween?.Restart();
+        FloatTween?.Kill();
+    }
+
+    public static Action StopAllFloat { get; set; } = null;
+    public static void ResetFloat()
+    {
+        StopAllFloat?.Invoke();
+    }
+
+    public int SetLayer(int v)
+    {
+        int origin = gameObject.layer;
+        gameObject.layer = v;
+        return origin;
+    }
+
+    private void OnEnable()
+    {
+        GameManager.OnMapUnloaded += OnMapUnloaded;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnMapUnloaded -= OnMapUnloaded;
+    }
+    private void OnMapUnloaded()
+    {
+        StopAllFloat = null;
+
+    }
+
+    [Button]
+    void Focus()
+    {
+        CamerasController.Focus(gameObject);
+    }
 }

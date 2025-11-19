@@ -1,15 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Newtonsoft.Json;
 using TMPro;
 using System;
-using Newtonsoft.Json.Linq;
-using DG.Tweening;
+using System.Linq;
+using System.Collections.Generic;
+using static MapObjects;
 
 public class SlotWindow : MonoBehaviour
 {
     public TextMeshProUGUI content;
+    public TextMeshProUGUI nameText;
+    public TextMeshProUGUI warining;
 
     // Start is called before the first frame update
     private void Awake()
@@ -19,11 +19,96 @@ public class SlotWindow : MonoBehaviour
     private void OnEnable()
     {
         SlotRender.OnAnySlotEnter += OnSlotSelected;
+        SlotRender.OnAnySlotClicked += OnSlotClicked;
+    }
+
+    private void OnSlotClicked(SlotRender render)
+    {
+        EventHandler.CallInitSoundEffect(SoundName.SlotClick);
+        if (!BuildMode.hasEntered)
+        {
+            var mapObjects = render.slot.mapObjects;
+            if(mapObjects.Count > 0 )
+            {
+                foreach (var mapObject in mapObjects)
+                {
+                    Slot.MapObject RMapObject;
+                    if (mapObject is FiveGArea) continue;
+                    if(mapObject is PlaceHolder)
+                    {
+                        RMapObject = (mapObject as PlaceHolder).mapObject;
+                    }
+                    else
+                        RMapObject = mapObject;
+                    if (typeof(IConstruction).IsAssignableFrom(RMapObject.GetType()))
+                    {
+                        Debug.Log("construction");
+                        IConstruction construction = (IConstruction)RMapObject;
+                        nameText.text = construction.Name;
+                        if (construction.energyConsumption != 0)
+                            content.text = "能源消耗：" + construction.energyConsumption.ToString() + "\n";
+                        else
+                            content.text = "";
+                        warining.text = "";
+                    }
+                    else
+                    {
+                        var cfg = SlotDatabase.main[render.slot.GetType()];
+                        nameText.text = cfg.name;
+                        content.text = "";
+                        warining.text = "";
+                    }
+                    if (RMapObject is House house)
+                    {
+                        content.text += "容载人口：" + house.Capacity.ToString() + "\n";
+                        warining.text = house.Warning;
+                        
+                    }
+                    if (RMapObject is Farm farm)
+                    {
+                        var profitTotal = GameManager.current.map.FarmProfitTotal;
+                        var profitTotal_c =  new SolidMiddleware<Float>(new Float(0));
+                        foreach (var ele in profitTotal.CPUs)
+                        {
+                            profitTotal_c.AddCPU(ele);
+                        }                            
+                        profitTotal_c.UpdateValue(new Float(farm.Profit));
+                        var profit = profitTotal_c.currentValue.m_value;
+                        content.text += "产出：" + profit.ToString("F2") + "万" + "\n";
+                        warining.text = farm.Warning;                     
+                    }
+                    if(RMapObject is Center center)
+                    {
+                        warining.text = center.Warning;
+                    }
+                    if(RMapObject is IPowerSupply power)
+                    {
+                        content.text += "能源供给：" + power.Power.ToString() + "\n";
+                    }
+                    if (RMapObject is IOtherProfit otherProfit)
+                    {
+                        content.text += "附加产出：" + otherProfit.Profit.ToString() + "万" + "\n";
+                    }
+
+                }
+            }
+            else
+            {
+                var cfg = SlotDatabase.main[render.slot.GetType()];
+                nameText.text = cfg.name;
+                content.text = "";
+                warining.text = "";
+            }
+            
+            return;
+        }
+            
     }
 
     private void OnDisable()
     {
         SlotRender.OnAnySlotExit -= OnSlotSelected;
+        SlotRender.OnAnySlotClicked -= OnSlotClicked;
     }
 
     void OnSlotSelected(SlotRender slotRender)
@@ -47,11 +132,9 @@ public class SlotWindow : MonoBehaviour
         // var text = JsonConvert.SerializeObject(selected, GameManager.SerializeSettings);
         // JObject jObject = JObject.FromObject(selected, JsonSerializer.CreateDefault(GameManager.SerializeSettings));
         // jObject.Remove("map");
-        content.SetText(selectedSlot.GetInfo());
+        //content.SetText(selectedSlot.GetInfo());
 
-        GetComponent<Window>().SetTitle(selectedSlot.GetType().Name);
-
-
+        
     }
 
 

@@ -31,8 +31,7 @@ public class SlotDatabase : ScriptableObject
         [NaughtyAttributes.ShowAssetPreview]
         public GameObject Prefab;
 
-        [NaughtyAttributes.ResizableTextArea]
-        public string 备注;
+        public string name;
     }
 
     public Config this[Type type]{

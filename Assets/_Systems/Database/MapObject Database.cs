@@ -34,8 +34,8 @@ public class MapObjectDatabase : ScriptableObject
 
         public GameObject[] Prefabs;
 
-        [NaughtyAttributes.ResizableTextArea]
-        public string 备注;
+        public Vector2Int Size;
+
     }
 
     public Config this[Type type]{

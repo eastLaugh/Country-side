@@ -10,38 +10,60 @@ public class BuildMode : StateMachineBehaviour
     public static bool hasEntered { get; private set; }
     public static event Action OnBuildModeEnter;
     public static event Action OnBuildModeExit;
+
+    public static event Action<Slot.MapObject> OnPlayerBuild;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        // 
-        // InfoWindow infoWindow = InfoWindow.Create("你已进入建造模式\n点击右下角×以退出");
-        // infoWindow.GetComponent<Window>().OnClose.AddListener(() =>
-        // {
-        //     animator.SetTrigger("BuildEnd");
-        // });
-
         hasEntered = true;
         SlotRender.OnAnySlotClickedInBuildMode += OnAnySlotClickedInBuildMode;
-
         OnBuildModeEnter?.Invoke();
     }
 
-    void OnAnySlotClickedInBuildMode(SlotRender slotRender)
+    void OnAnySlotClickedInBuildMode(SlotRender render)
     {
-        Type selectedType = BuildingWindow.SelectedType;
-        if (Slot.MapObject.CanBeInjected(slotRender.slot, selectedType))
+        if (BuildingWindow.TryGetSelectedTypeConfig(out Type selectedType, out MapObjectDatabase.Config config))
         {
-            Slot.MapObject mapObject = Activator.CreateInstance(selectedType) as Slot.MapObject;
-            mapObject.Inject(slotRender.slot);
-            slotRender.Refresh();
-        }
-        else
-        {
-            Debug.LogWarning("不能在此处建造");
-        }
 
+            Vector2 delta = config.Size;
 
+            bool canBuild = true;
+            Action<Slot.MapObject> ApplyTo = null;
+            BuildingWindow.Foreach(render.slot.position, config.Size, (x, y) =>
+            {
+                if (Slot.MapObject.CanBeInjected(render.slot.map[x, y], selectedType))
+                {
+                    if (x != render.slot.position.x || y != render.slot.position.y)
+                    {
+                        ApplyTo += host =>
+                        {
+                            new MapObjects.PlaceHolder(host).Inject(render.slot.map[x, y], direction: BuildingWindow.selectedDirection);
+                        };
+                    }
+                }
+                else
+                {
+                    canBuild = false;
+                }
+            });
+
+            if (canBuild)
+            {
+                Slot.MapObject mapObject = Activator.CreateInstance(selectedType) as Slot.MapObject;
+                ApplyTo?.Invoke(mapObject);
+                mapObject.Inject(render.slot, direction: BuildingWindow.selectedDirection);
+                OnPlayerBuild?.Invoke(mapObject);
+                //render.Refresh();
+                EventHandler.CallInitSoundEffect(SoundName.Costruct);
+            }
+            else
+            {
+                Debug.LogWarning("占位符不能在此处创建");
+                EventHandler.CallInitSoundEffect(SoundName.WrongPlace);
+            }
+        }
     }
+
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -54,7 +76,6 @@ public class BuildMode : StateMachineBehaviour
     {
         hasEntered = false;
         SlotRender.OnAnySlotClickedInBuildMode -= OnAnySlotClickedInBuildMode;
-
         OnBuildModeExit?.Invoke();
     }
 

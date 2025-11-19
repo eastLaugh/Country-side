@@ -6,6 +6,7 @@ using UnityEngine;
 public class BuildingDetails
 {
     public string name;
+    public string chineseName;
     public Sprite icon;
     public string description;
     public string function;
@@ -23,6 +24,14 @@ public class GlobalData
     //记录存档列表
     [JsonProperty]
     public HashSet<string> GameSaveFiles = new();
+    [JsonProperty]
+    public float MasterVolume = 45;
+    [JsonProperty]
+    public float MusicVolume = 35;
+    [JsonProperty]
+    public float EffectVolume = 35;
+    [JsonProperty]
+    public bool GridOn = true;
 
     public GlobalData()
     {

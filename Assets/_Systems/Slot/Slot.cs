@@ -24,6 +24,8 @@ public abstract partial class Slot
     public GameObject gameObject { get; private set; }
 
     public event Action OnSlotUpdate; //当Slot更新时触发:被单击、注入建筑物时（频繁被调用，仅用于替代表现层的一些Update消息。相关逻辑实现不要使用这个）
+    public event Action<Slot, MapObject> OnInjected;
+    public event Action<Slot, MapObject> OnUnjected;
     internal void InvokeOnSlotUpdate()
     {
         OnSlotUpdate?.Invoke();
@@ -36,6 +38,11 @@ public abstract partial class Slot
         IEnumerable potentialProviders = new object[] { map, this, slotRender }.Concat(mapObjects);
         foreach (var obj in potentialProviders)
         {
+            if (debugDetailed)
+            {
+                builder.AppendLine("    " + obj.ToString() + " :");
+            }
+
             if (obj is IInfoProvider provider)
             {
                 bool appended = false;
@@ -49,10 +56,6 @@ public abstract partial class Slot
                     builder.Append(obj.ToString() + " :未提供信息");
                 }
                 builder.AppendLine();
-            }
-            else if (debugDetailed)
-            {
-                builder.AppendLine("[隐藏] " + obj.ToString());
             }
         }
         return builder.ToString();
@@ -75,19 +78,64 @@ public abstract partial class Slot
 
         foreach (var item in mapObjects)
         {
-            item.Inject(this, true);//反序列化注入
+            item.Inject(this, true, item.Direction);//反序列化注入
         }
     }
 
 
     //上下左右
-    public static readonly Vector2[] 上下左右 = new Vector2[] { new Vector2(0, 1), new Vector2(0, -1), new Vector2(-1, 0), new Vector2(1, 0) };
+    public static readonly Vector2[] 上右下左 = new Vector2[] { new Vector2(0, 1), new Vector2(1, 0), new Vector2(0, -1), new Vector2(-1, 0) };
     public static readonly Vector2[] AllDirections = { new Vector2(0, 1), new Vector2(-1, 1), new Vector2(-1, 0), new Vector2(-1, -1), new Vector2(0, -1), new Vector2(1, -1), new Vector2(1, 0), new Vector2(1, 1) };
 
-
-    public T GetMapObject<T>() where T : MapObject
+    public T GetMapObject<T>() /*where T : MapObject*/ where T : class
     {
-        return mapObjects.SingleOrDefault(mapObject => mapObject is T) as T;
+        return mapObjects.FirstOrDefault(mapObject => mapObject is T) as T;
     }
 
+    public IEnumerable<T> GetMapObjectsIfPlaceHolder<T>()
+    {
+        return mapObjects.SelectMany(m =>
+        {
+            if (m is T t)
+                return new T[] { t };
+            else if (m is MapObjects.PlaceHolder p && p.mapObject is T t2)
+                return new T[] { t2 };
+            else
+                return new T[] { };
+        });
+    }
+
+    public MapObject GetMapObject(Type type)
+    {
+        return mapObjects.FirstOrDefault(mapObject => type.IsAssignableFrom(mapObject.GetType()));
+    }
+
+
+    /// <summary>
+    /// 获取所有指向该单元格的MapObject
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerable<MapObject> GetReachableMapObject()
+    {
+        foreach (var dir in Slot.上右下左)
+        {
+            Slot neighborSlot = map[position + dir];
+
+            if (neighborSlot != null)
+            {
+                foreach (MapObject neighbor in neighborSlot.mapObjects)
+                {
+                    if (上右下左[neighbor.Direction] == -dir)
+                    {
+                        yield return neighbor;
+                    }
+                }
+            }
+        }
+    }
+
+    internal IEnumerable<T> GetMapObjects<T>() where T : class
+    {
+        return mapObjects.Where(mapObject => mapObject is T) as IEnumerable<T>;
+    }
 }

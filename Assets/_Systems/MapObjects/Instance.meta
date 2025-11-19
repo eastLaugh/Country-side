@@ -1,5 +1,7 @@
 fileFormatVersion: 2
 guid: 1c7c2b5d36ab0a74baae271b6a16c6c1
+labels:
+- WorkFlow
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

@@ -7,16 +7,15 @@ using UnityEngine.EventSystems;
 using Cinemachine;
 using System;
 using DG.Tweening;
+using UnityEngine.UI;
 
 // 有待重构
 public class InputForCamera : MonoBehaviour
 {
-
+    [SerializeField] List<GraphicRaycaster> raycasterList;
+    private EventSystem eventSystem;
+    private PointerEventData eventData;
     public static event Action<CinemachineVirtualCamera> OnCameraInput;
-    enum CameraState
-    {
-        Overlook, Focus
-    };
     public PlayerInput playerInput;
     public CinemachineVirtualCamera virtualCamera;
     public float DragRatio = 0.01f;
@@ -29,6 +28,7 @@ public class InputForCamera : MonoBehaviour
     private void Start()
     {
         OnZoom(null);
+
 
     }
     public void OnDrag()
@@ -57,26 +57,49 @@ public class InputForCamera : MonoBehaviour
         virtualCamera.transform.position -= new Vector3(data.delta.x, 0, data.delta.y) * DragRatio;
         OnCameraInput?.Invoke(virtualCamera);
     }
+    public bool IsOnUIElement()
+    {
+        eventSystem = EventSystem.current;
+        if (eventData == null)
+            eventData = new PointerEventData(eventSystem);
+        List<RaycastResult> list = new List<RaycastResult>();
+        foreach (GraphicRaycaster graphicRaycaster in raycasterList)
+        {
+            list.Clear();
+            eventData.pressPosition = Input.mousePosition;
+            eventData.position = Input.mousePosition;
+            graphicRaycaster.Raycast(eventData, list);
+            foreach (var temp in list)
+            {
+                if (temp.gameObject.layer.Equals(5)) return true;
+            }
+        }
+        return false;
+    }
 
     Sequence seq;
     public void OnZoom(InputValue value)
     {
+        if (IsOnUIElement()) { return; }
         float time = 0.02f;
 
         float delta = (value?.Get<float>() ?? 0f) * ZoomRatio;
 
         seq?.Kill();
         seq = DOTween.Sequence();
-        if (virtualCamera.transform.position.y < 10f)
+        if (true|| virtualCamera.transform.position.y < Settings.相机高度限制)
         {
-            seq.Append(virtualCamera.transform.DOMove(virtualCamera.transform.position + virtualCamera.transform.forward * delta, time));
+            var des = virtualCamera.transform.position + virtualCamera.transform.forward * delta;
+            des.y = Mathf.Clamp(des.y, 0.1f, Settings.相机高度限制);
+            seq.Append(virtualCamera.transform.DOMove(des, time));
         }
         else
         {
-            seq.Append(virtualCamera.transform.DOMoveY(virtualCamera.transform.position.y - delta, time));
+            //seq.Append(virtualCamera.transform.DOMoveY(virtualCamera.transform.position.y - delta, time));
         }
 
         float PicthAngle = HeightToPicthAngleCurve.Evaluate(virtualCamera.transform.position.y);
+        PicthAngle = Mathf.Clamp(PicthAngle, 5f, 90f);
 
         seq.Join(virtualCamera.transform.DORotate(new Vector3(PicthAngle, virtualCamera.transform.rotation.eulerAngles.y, virtualCamera.transform.rotation.eulerAngles.z), time));
 
@@ -85,4 +108,5 @@ public class InputForCamera : MonoBehaviour
 
         OnCameraInput?.Invoke(virtualCamera);
     }
+
 }

@@ -16,6 +16,8 @@ public class IconPattern : MonoBehaviour
 
     [SerializedDictionary("Icon Identify", "Prefab")]
     public SerializedDictionary<string, GameObject> Prefabs;
+
+    public CinemachineVirtualCamera VirtualCamera;
     private void Awake()
     {
         if (Ovary == null)
@@ -57,7 +59,10 @@ public class IconPattern : MonoBehaviour
         {
             GameObject instance = Instantiate(prefab, prefab.transform.parent);
             instance.SetActive(true);
+            OnCameraZoom(VirtualCamera);
+            
             return instance;
+            
         }
         else
         {

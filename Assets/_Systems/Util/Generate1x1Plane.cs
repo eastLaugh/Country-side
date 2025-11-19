@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 
@@ -11,7 +10,7 @@ public class Generate1x1Plane : MonoBehaviour
     private void CreateAndSaveMesh()
     {
         Mesh mesh = new Mesh();
-        
+
         Vector3[] vertices = new Vector3[4]
         {
             new Vector3(-0.5f, 0f, -0.5f),
@@ -34,10 +33,11 @@ public class Generate1x1Plane : MonoBehaviour
         mesh.triangles = triangles;
         mesh.uv = uv;
         mesh.RecalculateNormals();
-        
+
         //Selection.activeObject = mesh;
         AssetDatabase.CreateAsset(mesh, "Assets/1x1Plane.asset");
         AssetDatabase.SaveAssets();
 
     }
 }
+#endif

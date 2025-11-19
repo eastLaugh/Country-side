@@ -3,6 +3,15 @@ using Newtonsoft.Json;
 using System.IO;
 using System;
 using Cinemachine;
+using Unity.AI.Navigation;
+using NaughtyAttributes;
+using System.Collections;
+using Unity.VisualScripting;
+using UnityEngine.Events;
+
+
+
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -10,32 +19,17 @@ using UnityEditor;
 public class GameManager : MonoBehaviour
 {
     public static event Action<Map> OnMapLoaded;
-    public static event Action<Map> AfterMapLoaded;
-    public static event Action OnGameUpdate;
-    public static event Action OnGameExit;
     public static GameManager current;
-    public static int saveIndex = 0;
-
     public Grid grid;
 
-    [SerializeField]
-    public string CurrentSate;
-    [SerializeField] GameObject Overlay;
-    [SerializeField] UIManager uiManager;
-
+#if Unity_Editor
+    public static bool DebugMode { get; private set; } = true;
+#else
+    public static bool DebugMode { get; private set; } = false;
+#endif
     public CinemachineVirtualCamera CinemachineVirtualCamera;
-    public RoadRenderer roadRenderer;
+    public Transform PlaneIndicator;
     public static GlobalData globalData { get; private set; }
-    private TimeSystem timeSystem;
-    private illuBookSystem illuBookSystem;
-
-
-    [Obsolete]
-    public enum GameState
-    {
-        Unload, NewGame, Loading, Playing
-    }
-
 
     public Vector2Int size;
     [Header("存储")]
@@ -47,7 +41,9 @@ public class GameManager : MonoBehaviour
     public MapObjectDatabase MapObjectDatabase;
     public SlotDatabase SlotDatabase;
     public illuBookData_SO illuBookData;
-
+    [Header("游戏状态")]
+    public UnityEvent gameWin;
+    public UnityEvent gameOver;
     #region  For Json.Net
     public static readonly JsonSerializerSettings SerializeSettings = new JsonSerializerSettings
     {
@@ -69,29 +65,24 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-
+        EventHandler.GameWin += GameWin;
+        EventHandler.GameOver += GameOver;
     }
 
     #region 调试 debug
     SlotRender debugSlotRender = null;
-    string debugSlotInfo = "此处显示你点击方块的调试信息。";
+    string debugSlotInfo = "此处显示你鼠标所在方块的调试信息。";
     void OnAnySlotClickedInAllMode(SlotRender slotRender)
     {
         if (debugSlotRender != null)
             debugSlotRender.slot.OnSlotUpdate -= UpdateDebugInfo;
         debugSlotRender = slotRender;
         debugSlotRender.slot.OnSlotUpdate += UpdateDebugInfo;
+        UpdateDebugInfo();
         void UpdateDebugInfo()
         {
             debugSlotInfo = debugSlotRender.slot.GetInfo(true);
         }
-    }
-
-    EconomyVector currentEconomyVector;
-
-    private void OnEconomyDataUpdated(EconomyVector _new)
-    {
-        currentEconomyVector = _new;
     }
 
     #endregion
@@ -100,18 +91,31 @@ public class GameManager : MonoBehaviour
     {
         SlotRender.OnAnySlotClicked += OnAnySlotClickedInAllMode;
         SlotRender.OnAnySlotClickedInBuildMode += OnAnySlotClickedInAllMode;
+        SlotRender.OnAnySlotEnter += OnAnySlotClickedInAllMode;  //触摸时实时更新调试信息
     }
 
     private void OnDisable()
     {
         SlotRender.OnAnySlotClicked -= OnAnySlotClickedInAllMode;
         SlotRender.OnAnySlotClickedInBuildMode -= OnAnySlotClickedInAllMode;
-
+        SlotRender.OnAnySlotEnter -= OnAnySlotClickedInAllMode;
 
     }
     private void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Slash))
+        {
+            RefreshNavMesh();
+        }
+        if(Input.GetKey(KeyCode.LeftControl))
+        {
+            if(Input.GetKeyDown(KeyCode.L))
+            {
+                map.MainData.Money += 1E7f;
+                map.Phase = 4;
+                EventHandler.CallPhaseUpdate(map.Phase);
+            }
+        }
     }
 
     private void Awake()
@@ -120,7 +124,7 @@ public class GameManager : MonoBehaviour
         SaveDirectory = Path.Combine(Application.persistentDataPath, "beta");
 
         DG.Tweening.DOTween.Init();
-        DG.Tweening.DOTween.SetTweensCapacity(size.x * size.y, 50);
+        DG.Tweening.DOTween.SetTweensCapacity(size.x * size.y * 10, 50);
 
         LoadGlobalData();
     }
@@ -135,10 +139,15 @@ public class GameManager : MonoBehaviour
         {
             globalData = new GlobalData();
             SaveGlobalData();
+
         }
+        Settings.GetSettings();
+
     }
+
     public static void SaveGlobalData()
     {
+        Settings.ExportSettings();
         Directory.CreateDirectory(SaveDirectory);
         // if (File.Exists(Path.Combine(SaveDirectory, globalFileName)))
         //     File.Delete(Path.Combine(SaveDirectory, globalFileName));
@@ -149,16 +158,22 @@ public class GameManager : MonoBehaviour
     const string globalFileName = "GlobalSave.dat";
     // string autoFileName = "AutoSave.dat";
     string fileName = DefaultSaveName;
-    const string DefaultSaveName = "[默认存档].dat";
+    string currentfileName;
+    const string DefaultSaveName = "[默认存档]";
     readonly GUILayoutOption[] textFieldLayout = new GUILayoutOption[] { GUILayout.Height(50) };
     readonly GUILayoutOption[] buttonLayout = new GUILayoutOption[] { GUILayout.Height(50) };
     private void OnGUI()
     {
+        if (!Application.isEditor)
+            return;
 
         GUI.skin.textField.fontSize = 25;
         GUI.skin.button.fontSize = 25;
         GUI.skin.label.fontSize = 25;
+        GUI.skin.toggle.fontSize = 25;
 
+        DebugMode = GUILayout.Toggle(DebugMode, "开发者模式");
+        if (!DebugMode) return;
 
         GUILayout.BeginHorizontal();
         fileName = GUILayout.TextField(fileName, textFieldLayout);
@@ -185,38 +200,17 @@ public class GameManager : MonoBehaviour
             seed = -1;
         }
         GUILayout.EndHorizontal();
-        // if (seed != -1)
-        // {
-        //     if (GUILayout.Button("新地图", layout2))
-        //     {
-        //         fsm.ChangeState(GameState.Loading);
-        //         seed = -1;
-        //         UnLoad();
-        //         var map = Map.Generate(size, seed);
-        //         LoadMap(map);
-        //         fsm.ChangeState(GameState.Playing);
-        //     }
-        // }
+
         if (GUILayout.Button("创建", buttonLayout))
         {
-            UnLoad();
+            if (this.map != null)
+            {
+                UnLoad();
+            }
             var map = Map.Generate(size, seed);
             LoadMap(map);
-            SaveCurrentMap(Path.Combine(SaveDirectory, fileName));
+            SaveCurrentMap(Path.Combine(SaveDirectory, fileName + ".dat"));
         }
-        // if (GUILayout.Button("自动加载", layout2))
-        // {
-        //     fsm.ChangeState(GameState.Loading);
-        //     GenerateFromLocalFile(Path.Combine(SaveDirectory, autoFileName));
-        //     fsm.ChangeState(GameState.Playing);
-        // }
-
-        // if (GUILayout.Button("加载", buttonLayout))
-        // {
-        //     //fsm.ChangeState(GameState.Loading);
-        //     LoadFromLocalFile(Path.Combine(SaveDirectory, fileName));
-        //     //fsm.ChangeState(GameState.Playing);
-        // }
 
         if (globalData?.GameSaveFiles != null)
         {
@@ -234,6 +228,7 @@ public class GameManager : MonoBehaviour
                     if (GUILayout.Button("x", GUILayout.Width(40f)))
                     {
                         globalData.GameSaveFiles.Remove(filePath);
+                        //EventHandler.CallSavefileDeleted();
                         SaveGlobalData();
                         //以防万一暂时不真的删除源文件
                         break;
@@ -253,7 +248,7 @@ public class GameManager : MonoBehaviour
 
         if (map == null)
         {
-            GUILayout.Label("地图未创建。点击R自动填入随机地图名称和种子。点击-1讲种子设置为-1.", GUILayout.Width(200f));
+            GUILayout.Label("地图未创建。", GUILayout.Width(200f));
         }
         else
         {
@@ -285,22 +280,30 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (map != null)
+        if (GUILayout.Button("卸载", buttonLayout))
         {
-            //显示一些经济参数
-            GUILayout.BeginArea(new Rect(Screen.width - 200, 0, 200, Screen.height), GUI.skin.box);
-            {
-                GUILayout.Label("经济参数");
-                GUILayout.Label(JsonConvert.SerializeObject(currentEconomyVector, Formatting.Indented));
-
-            }
-            GUILayout.EndArea();
+            UnLoad();
         }
+        if (GUILayout.Button("金手指", buttonLayout))
+        {
+            map.MainData.Money = float.MaxValue;
+            map.Phase = 4;
+            EventHandler.CallPhaseUpdate(map.Phase);
+        }
+        // if (map != null)
+        // {
+        //     //显示一些经济参数
+        //     GUILayout.BeginArea(new Rect(Screen.width - 200, 0, 200, Screen.height), GUI.skin.box);
+        //     {
+        //         GUILayout.Label("参数");
+        //         GUILayout.Label(JsonConvert.SerializeObject(currentEconomyVector, Formatting.Indented));
 
-
+        //     }
+        //     GUILayout.EndArea();
+        // }
     }
     public Map map { get; private set; }
-    void SaveCurrentMap(string filePath, bool temp = false)
+    public void SaveCurrentMap(string filePath, bool temp = false)
     {
         if (map == null)
         {
@@ -328,16 +331,16 @@ public class GameManager : MonoBehaviour
     public static event Action OnMapUnloaded;
     void UnLoad()
     {
-        if (map != null)
-            map.economyWrapper.OnDataUpdated -= OnEconomyDataUpdated;
-        grid.transform.DestroyAllChild();
+        //if (map != null)
+        //    map.economyWrapper.OnMiddlewareUpdated -= OnEconomyDataUpdated;
+        grid.transform.DestroyAllChildren();
         map = null;
         OnMapUnloaded?.Invoke();
 
     }
 
-
-    void LoadFromLocalFile(string FileName)
+    
+    public void LoadFromLocalFile(string FileName)
     {
         if (!File.Exists(FileName))
         {
@@ -345,6 +348,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            currentfileName = FileName.Split(".")[0];
             UnLoad();
             string jsonText = File.ReadAllText(FileName);
             Map map = JsonConvert.DeserializeObject<Map>(jsonText, SerializeSettings);
@@ -354,21 +358,69 @@ public class GameManager : MonoBehaviour
 
     private void LoadMap(Map map)
     {
-        OnMapLoaded?.Invoke(map);
 
         this.map = map;
         seed = map.MainRandomSeed;
 
-        //grid.transform.position = new Vector3(-map.size.x * grid.cellSize.x / 2f, 0, /*-map.size.y * grid.cellSize.z / 2f*/0); //对齐到左下角
+        //对齐到左下角
         CinemachineVirtualCamera.transform.position = new Vector3(map.size.x * grid.cellSize.x / 2f, CinemachineVirtualCamera.transform.position.y, map.size.y * grid.cellSize.z / 2f);
 
-        map.economyWrapper.OnDataUpdated += OnEconomyDataUpdated;
-        OnEconomyDataUpdated(map.economyWrapper.GetValue());
+        PlaneIndicator.transform.position = new Vector3(map.size.x * grid.cellSize.x / 2f, PlaneIndicator.transform.position.y, map.size.y * grid.cellSize.z / 2f);
+        //
+        PlaneIndicator.transform.localScale = new Vector3(map.size.x / 10f, 1, map.size.y / 10f);
 
-        AfterMapLoaded?.Invoke(map);
+        OnMapLoaded?.Invoke(map);
 
+        RefreshNavMesh();
     }
 
+    Coroutine RefreshNavMeshCoroutine;
+    [Button]
+    public void RefreshNavMesh()
+    {
+        if (RefreshNavMeshCoroutine == null)
+        {
+            RefreshNavMeshCoroutine = StartCoroutine(WaitOneTick());
+            IEnumerator WaitOneTick()
+            {
+                yield return new WaitForSecondsRealtime(0.1f);
+                NavMeshSurface navMeshSurface = PlaneIndicator.GetComponent<NavMeshSurface>();
+                if (navMeshSurface)
+                {
+                    //navMeshSurface.RemoveData();
+                    navMeshSurface.BuildNavMesh();
+                }
+
+                RefreshNavMeshCoroutine = null;
+            }
+        }
+    }
+
+    public void NewGame(string fileName)
+    {
+        UnLoad();
+        var File = Resources.Load<TextAsset>("Template");
+        Map map = JsonConvert.DeserializeObject<Map>(File.text, SerializeSettings);
+        LoadMap(map);
+        SaveCurrentMap(Path.Combine(SaveDirectory, fileName + ".dat"));
+        currentfileName = fileName;
+    }
+    public void AutoSave()
+    {
+        SaveCurrentMap(Path.Combine(SaveDirectory, currentfileName + ".dat"));
+        UnLoad();
+
+    }
+    private void GameOver()
+    {
+        gameOver?.Invoke();
+        UnLoad();
+    }
+    private void GameWin()
+    {
+        gameWin?.Invoke();
+        UnLoad();
+    }
 }
 
 

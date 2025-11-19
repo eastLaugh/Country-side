@@ -1,0 +1,1 @@
+﻿{"inkVersion":21,"root":[["\n",{"->":"Enter"},["done",{"#f":5,"#n":"g-0"}],null],"done",{"Enter":[["^有什么问题吗?","\n","ev","str","^关于任务","/str","/ev",{"*":".^.c-0","flg":20},{"c-0":["\n","ev",{"x()":"GiveAssignmentHint"},"pop","/ev","\n","end",{"#f":5}]}],{"#f":1}],"#f":1}],"listDefs":{}}

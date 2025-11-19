@@ -40,8 +40,8 @@ public class BarUI : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, I
     public void UpdateBuildingBar(BuildingDetails Building)     //更新并获取物品的名称和数量
     {
         BuildingDetails = Building;
-        BuildingName.text = BuildingDetails.name;
-        image.sprite = BuildingDetails.icon;
+        BuildingName.text = BuildingDetails.chineseName;
+        image.sprite = null;
         if(BuildingDetails.unclock)
         {
             Mask.gameObject.SetActive(false); 
@@ -62,6 +62,7 @@ public class BarUI : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, I
     public void OnPointerDown(PointerEventData eventData)
     {
         if (!BuildingDetails.unclock) return;
+        EventHandler.CallInitSoundEffect(SoundName.BtnClick2);
         Selected = true;
         var color = image.color;
         color.a = 0.5f;                     //设置image的透明度设置为50%

@@ -1,26 +1,13 @@
 using System.Collections;
 using System.Linq;
 using System;
-using System.Collections.Generic;
-using static Slot;
-
-[System.Obsolete("Use MustNotExist instead")]
-public interface IReject<T>
-{
-
-}
-[System.Obsolete("Use MustExist instead")]
-public interface IAccept<T>
-{
-
-}
 //建筑物冲突
-public interface MustNotExist<T>
+public interface MustNotExist<in T>
 {
 
 }
 //建筑物相容
-public interface MustExist<T>
+public interface MustExist<in T>
 {
 
 }
@@ -30,22 +17,44 @@ public static class TypeUtil
 
     public static bool Accessible(this IEnumerable set, Type type)
     {
-        foreach (var element in set)
+        //foreach (var element in set)
+        //{
+        //    if (typeof(MustNotExist<>).MakeGenericType(type).IsAssignableFrom(FindTypeIfPlaceHolder(element)))
+        //        return false;
+        //}
+
+        foreach (Type interf in type.GetInterfaces().Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(MustNotExist<>)))
         {
-            if (typeof(MustNotExist<>).MakeGenericType(type).IsAssignableFrom(element.GetType()))
-                return false;
+            foreach (var element in set)
+            {
+                if (interf.GetGenericArguments().First().IsAssignableFrom(FindTypeIfPlaceHolder(element)))
+                    return false;
+            }
         }
+
         foreach (Type interf in type.GetInterfaces().Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(MustExist<>)))
         {
             foreach (var element in set)
             {
-                if (element.GetType() == interf.GetGenericArguments().First())
+                if (interf.GetGenericArguments().First().IsAssignableFrom(FindTypeIfPlaceHolder(element)))
                     goto go_on;
             }
             return false;
         go_on:;
         }
         return true;
+    }
+
+    public static Type FindTypeIfPlaceHolder(object unknownType)
+    {
+        if (unknownType is MapObjects.PlaceHolder placeholder)
+        {
+            return placeholder.mapObject.GetType();
+        }
+        else
+        {
+            return unknownType.GetType();
+        }
     }
 }
 

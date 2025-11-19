@@ -6,6 +6,8 @@ using Newtonsoft.Json.Serialization;
 using System.Collections.Generic;
 using static MapObjects;
 using System.Linq;
+using static Person;
+using System.Runtime.Serialization;
 
 public class Map
 {
@@ -14,29 +16,56 @@ public class Map
     [JsonProperty]
     public List<Lake.LakeEcosystem> lakeEcosystems { get; protected set; } = new();
     [JsonProperty]
-    public GameDataWrapper<EconomyVector> economyWrapper { get; private set; }
-    [JsonProperty(Order = 9)]
+    public GameDataVector MainData { get; private set; }
+    [JsonProperty]
     private Slot[] Slots;
-    [JsonProperty(Order = 99)]
+    [JsonProperty]
     public readonly int MainRandomSeed;
-    [JsonProperty(Order = 999)]
+    [JsonProperty]
     public Vector2Int size { get; private set; }
     [JsonProperty]
-    public DateTime dateTime;
+    public DateTime dateTime = Convert.ToDateTime("2020/01/01");
+    [JsonProperty]
+    public List<string> FinishedAssignments = new List<string>();
+    [JsonProperty]
+    public List<string> UnlockedAssignments = new List<string>();
+    [JsonProperty]
+    public Dictionary<Type, int> BuildingsNum = new Dictionary<Type, int>();
+    [JsonProperty]
+    public List<House> Houses = new List<House>();
+    [JsonProperty]
+    public List<Farm> Farms = new List<Farm>();
+    [JsonProperty]
+    public List<Center> Centers = new List<Center>();
+    [JsonProperty]
+    public List<IOtherProfit> OtherProfits = new List<IOtherProfit>();
+    [JsonProperty]
+    public List<IPowerSupply> PowerSupplies = new List<IPowerSupply>();
+    [JsonProperty]
+    public SolidMiddleware<Float> FarmProfitTotal = new SolidMiddleware<Float>(new Float(0f));
+    [JsonProperty]
+    public SolidMiddleware<Int> HappinessTotal = new SolidMiddleware<Int>(new Int(0));
+    [JsonProperty]
+    public bool isTurtorialDone = false;
+    [JsonProperty]
+    public bool isPrefaceDone = false;
+    [JsonProperty]
+    public PersonSystem PersonSystem = new PersonSystem();
+    [JsonProperty]
+    public int Phase = 1;
 
-    public Map(Vector2Int size, Slot[] Slots, int RandomSeed, GameDataWrapper<EconomyVector> economyWrapper)
+
+    public Map(Vector2Int size, Slot[] Slots, int RandomSeed, GameDataVector mainData)
     {
-        Debug.Log("Map公共有参构造函数");
         this.size = size;
         this.Slots = Slots;
         this.MainRandomSeed = RandomSeed;
-        this.economyWrapper = economyWrapper;
+        this.MainData = mainData;
     }
 
     [JsonConstructor]
     public Map()
     {
-        Debug.Log("Map公共无参构造函数");
     }
     public Slot this[Vector2 pos] => this[(int)pos.x, (int)pos.y];
     public Slot this[int x, int y]
@@ -64,9 +93,7 @@ public class Map
 
 
         //创建地图
-        GameDataWrapper<EconomyVector> economyWrapper = new GameDataWrapper<EconomyVector>(new() { new SolidMiddleware<EconomyVector>(new EconomyVector(Random.Range(100f, 1000f), Random.Range(10000f, 1000000f), Random.Range(0f, 1f))) });
-
-        var map = new Map(size, slots, seed, economyWrapper);
+        Map map = new Map(size, slots, seed,new GameDataVector(631, 8000, 0, 50));
 
         //去中心化
         foreach (MapGenerator generator in InitAllGenerators())
@@ -79,11 +106,10 @@ public class Map
     }
 
 
-    [System.Runtime.Serialization.OnDeserialized]
+    [OnDeserialized]
     void OnDeserializedMethod(System.Runtime.Serialization.StreamingContext context)
     {
-        Debug.Log("反序列化完成");
-        //OnLoad?.Invoke(this);
+        //反序列化完成回调
     }
 
     static IEnumerable<MapGenerator> InitAllGenerators()
@@ -93,5 +119,23 @@ public class Map
         {
             yield return (MapGenerator)Activator.CreateInstance(type);
         }
+    }
+
+
+    public int GetBuildingNum(Type name)
+    {
+        if (BuildingsNum.ContainsKey(name))
+        {
+            return BuildingsNum[name];
+        }
+        else
+        {
+            BuildingsNum.Add(name, 0);
+            return 0;
+        }
+    }
+
+    public Slot GetRandomSlot(){
+        return this[Random.Range(0, size.x), Random.Range(0, size.y)];
     }
 }

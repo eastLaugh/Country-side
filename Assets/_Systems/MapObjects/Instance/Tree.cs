@@ -4,12 +4,13 @@ using DG.Tweening;
 using Newtonsoft.Json;
 using System;
 using Random = UnityEngine.Random;
+using System.Collections;
 partial class MapObjects
 {
 
     public class Tree : MapObject /* , IReject<House>, IReject<Road> */ , IInfoProvider
     {
-        
+
 
 
         //实现这个接口（可选），用以显示在Slot Window上
@@ -32,11 +33,12 @@ partial class MapObjects
             public int prefabIndex;
         }
         #endregion
-        protected override GameObject[] Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
+
+        protected override void Render(GameObject prefab, GameObject[] prefabs, SlotRender slotRender)
         {
             // base.Render(prefab, prefabs, slotRender); 我们不需要默认的渲染方式，故注释
 
-            father.DestroyAllChild();  //Render()这是个可能被系统多次调用的API，所以请确保可以被重复调用的健全性，需要删除“上次”的已渲染物体，避免重复
+            father.DestroyAllChildren();  //Render()这是个可能被系统多次调用的API，所以请确保可以被重复调用的健全性，需要删除“上次”的已渲染物体，避免重复
 
             if (TreeModels == null)
             {
@@ -54,11 +56,23 @@ partial class MapObjects
             }
 
             //根据已有信息加载模型
-            var trees = new GameObject[TreeModels.Length];
             for (int i = 0; i < TreeModels.Length; i++)
             {
-                trees[i] = MonoBehaviour.Instantiate(prefabs[TreeModels[i].prefabIndex], slotRender.transform.position + TreeModels[i].offset, Quaternion.identity, father);
-                trees[i].transform.DOScale(Vector3.zero, Settings.建筑时物体缓动持续时间).From().SetEase(Ease.OutBack);
+                GameObject tree = UnityEngine.Object.Instantiate(prefabs[TreeModels[i].prefabIndex], slotRender.transform.position + TreeModels[i].offset, Quaternion.identity, father);
+                // tree.SetActive(false);
+
+                GameManager.current.StartCoroutine(WaitOneTick());
+                IEnumerator WaitOneTick()
+                {
+                    yield return null;
+                    if (tree)
+                    {
+                        tree.SetActive(true);
+                        tree.transform.DOScale(Vector3.zero, Settings.建筑时物体缓动持续时间).From().SetEase(Ease.OutBack);
+                    }else{
+                        //这里我百思不得其解，为啥会有 诡异的树木
+                    }
+                }
             }
 
             //创建 图标的“调色盘”
@@ -66,7 +80,6 @@ partial class MapObjects
 
             // RefreshChopping(); 这里不能写这个，因为这里是Render（） API 仅限于渲染相关
 
-            return null; //无用
         }
 
         [JsonProperty] //树木是否正在砍伐，这需要记录下来
@@ -76,15 +89,15 @@ partial class MapObjects
         public static event Action<Tree, bool> OnTreeChopped;
         IconPattern iconPattern;
         GameObject ChoppingIcon;
-        protected override void OnClick()
+        public override void OnClick()
         {
-            base.OnClick();
-            isChopping = !isChopping;
-            RefreshChoppingState();
+            //base.OnClick();
+            //isChopping = !isChopping;
+            //RefreshChoppingState();
 
         }
 
-        
+
         //刷新砍树相关的事件
         void RefreshChoppingState()
         {
@@ -102,19 +115,18 @@ partial class MapObjects
             }
         }
 
+
         //地图一旦创建好就会立刻执行，且永远只执行一次
         protected override void OnEnable()
         {
             RefreshChoppingState();
         }
 
-
-
         public override bool CanBeUnjected => false; //树木不可被玩家移除，因为需要玩家砍伐
 
         protected override void OnDisable()
         {
-            throw new NotImplementedException();
+
         }
 
         protected override void OnCreated()
